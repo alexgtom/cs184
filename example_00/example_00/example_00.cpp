@@ -103,26 +103,21 @@ void myDisplay() {
   glLoadIdentity();                            // make sure transformation is "zero'd"
 
   //----------------------- code to draw objects --------------------------
-  // Rectangle Code
-  //glColor3f(red component, green component, blue component);
-  glColor3f(1.0f,0.0f,0.0f);                   // setting the color to pure red 90% for the rect
 
-  glBegin(GL_POLYGON);                         // draw rectangle 
-  //glVertex3f(x val, y val, z val (won't change the point because of the projection type));
-  glVertex3f(-0.8f, 0.0f, 0.0f);               // bottom left corner of rectangle
-  glVertex3f(-0.8f, 0.5f, 0.0f);               // top left corner of rectangle
-  glVertex3f( 0.0f, 0.5f, 0.0f);               // top right corner of rectangle
-  glVertex3f( 0.0f, 0.0f, 0.0f);               // bottom right corner of rectangle
-  glEnd();
-  // Triangle Code
-  glColor3f(1.0f,0.5f,0.0f);                   // setting the color to orange for the triangle
+  for( int i = 0; i < 10; i++) {
+      // Rectangle Code
+      //glColor3f(red component, green component, blue component);
+      glColor3f(i / 10.0f, 0.0f, 1.0f - i / 10.0f);                   // setting the color to pure red 90% for the rect
 
-  float basey = -sqrt(0.48f);                  // height of triangle = sqrt(.8^2-.4^2)
-  glBegin(GL_POLYGON);
-  glVertex3f(tip,  0.0f, 0.0f);                // top tip of triangle
-  glVertex3f(0.1f, basey, 0.0f);               // lower left corner of triangle
-  glVertex3f(0.9f, basey, 0.0f);               // lower right corner of triangle
-  glEnd();
+      glBegin(GL_POLYGON);                         // draw rectangle
+      //glVertex3f(x val, y val, z val (won't change the point because of the projection type));
+      float offset = i * 0.2;
+      glVertex3f(-1.0f, 0.8f - offset, 0.0f);               // bottom left corner of rectangle
+      glVertex3f(-1.0f, 1.0f - offset, 0.0f);               // top left corner of rectangle
+      glVertex3f( 1.0f, 1.0f - offset, 0.0f);               // top right corner of rectangle
+      glVertex3f( 1.0f, 0.8f - offset, 0.0f);               // bottom right corner of rectangle
+      glEnd();
+  }
   //-----------------------------------------------------------------------
 
   glFlush();
@@ -149,7 +144,7 @@ int main(int argc, char *argv[]) {
   //This initializes glut
   glutInit(&argc, argv);
 
-  //This tells glut to use a double-buffered window with red, green, and blue channels 
+  //This tells glut to use a double-buffered window with red, green, and blue channels
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 
   // Initalize theviewport size
