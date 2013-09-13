@@ -118,6 +118,22 @@ void myDisplay() {
       glVertex3f( 1.0f, 0.8f - offset, 0.0f);               // bottom right corner of rectangle
       glEnd();
   }
+
+
+
+  for( int i = 10; i >= 0; i--) {
+      float width = i * 0.2 * tip * 2.0f;
+      float origin_x = -width / 2.0;
+      float origin_y = -width / 2.0;
+      glColor3f(i / 10.0f, i / 10.0f, i / 10.0f);                   // setting the color to pure red 90% for the rect
+      glBegin(GL_POLYGON);
+      glVertex3f(origin_x * tip, tip * origin_y, 0.0f);               // bottom left corner of rectangle
+      glVertex3f(origin_x * tip, (origin_y + width) * tip, 0.0f);               // top left corner of rectangle
+      glVertex3f((origin_x + width) * tip, (origin_y + width) * tip, 0.0f);               // top right corner of rectangle
+      glVertex3f((origin_x + width) * tip, origin_y * tip, 0.0f);               // bottom right corner of rectangle
+      glEnd();
+  }
+
   //-----------------------------------------------------------------------
 
   glFlush();
