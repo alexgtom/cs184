@@ -39,6 +39,42 @@ class Viewport {
 };
 
 
+class PixelOps;
+
+class PixelOps {
+  public:
+    int x, y;
+    float r, g, b;
+
+    PixelOps(int x, int y, float r, float g, float b) {
+      this->x = x;
+      this->y = y;
+      this->r = r;
+      this->g = g;
+      this->b = b;
+    }
+
+    /* Example
+     * -------
+     *
+     * Function Chaining: (new PixelOps(...))->opacity(0.4f)->negative()
+     */
+    PixelOps* opacity(float o) {
+      r = r * o;
+      g = g * o;
+      b = b * o;
+
+      return this;
+    }
+
+    PixelOps* negative() {
+      x = -x;
+      y = -y;
+
+      return this;
+    }
+};
+
 //****************************************************
 // Global Variables
 //****************************************************
