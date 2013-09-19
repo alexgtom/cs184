@@ -10,7 +10,7 @@ else
 	LDFLAGS = -lglut -lGLU
 endif
 	
-RM = /bin/rm -f 
+RM = /bin/rm -rf 
 
 default: test
 
@@ -38,4 +38,4 @@ test: compile
 	./$(TEST)
 
 clean:
-	$(RM) libgtest.a gtest-all.o $(TEST) *.o as1
+	$(RM) libgtest.a gtest-all.o $(TEST) *.o as1 *.dSYM
