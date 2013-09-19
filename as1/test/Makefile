@@ -32,7 +32,7 @@ gtest:
 
 compile: example gtest
 	$(CC) $(CFLAGS) -isystem $(GTEST_DIR)/include -pthread $(TEST).cc libgtest.a \
-		 -I$(AS_DIR) -o $(TEST) $(LDFLAGS) -e gmain
+		 -I$(AS_DIR) -o $(TEST) $(LDFLAGS)
 
 test: compile
 	./$(TEST)
