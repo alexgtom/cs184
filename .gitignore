@@ -1,1 +1,22 @@
-.DS_Store
+*.DS_Store
+
+### C++ ###
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Ignore project binaries
+as1/as1
+as2/as2
+as3/as3
+as4/as4
