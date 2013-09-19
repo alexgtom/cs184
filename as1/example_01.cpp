@@ -196,6 +196,12 @@ void myDisplay() {
 //****************************************************
 // the usual stuff, nothing exciting here
 //****************************************************
+
+// Allows us to define another main() function somewhere else.
+// This allows us to run the tests
+#ifndef _MAIN
+#define _MAIN
+
 int main(int argc, char *argv[]) {
   //This initializes glut
   glutInit(&argc, argv);
@@ -224,8 +230,7 @@ int main(int argc, char *argv[]) {
 }
 
 
-
-
+#endif
 
 
 
