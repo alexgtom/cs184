@@ -44,6 +44,24 @@ TEST_F(FooTest, DoesXyz) {
   // Exercises the Xyz feature of Foo.
 }
 
+
+// ------------------------------------------------------------
+// PixelOpsTest
+// ------------------------------------------------------------
+
+class PixelOpsTest : public ::testing::Test {
+};
+
+// Tests that the Foo::Bar() method does Abc.
+TEST_F(FooTest, ConstructorTest) {
+  PixelOps* p = new PixelOps(1, 2, 1.0f, 2.0f, 3.0f);
+  EXPECT_EQ(p->x, 1);
+  EXPECT_EQ(p->y, 2);
+  EXPECT_EQ(p->r, 1.0f);
+  EXPECT_EQ(p->g, 2.0f);
+  EXPECT_EQ(p->b, 3.0f);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
