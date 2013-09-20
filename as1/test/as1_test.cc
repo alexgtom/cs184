@@ -103,6 +103,30 @@ TEST_F(ParseArgsTest, dlTest) {
   EXPECT_EQ(3.0f, dl_b);
 }
 
+TEST_F(ParseArgsTest, MultiArgTest) {
+  char *args[17] = {"./as0", 
+    "-dl", "0.0", "0.5", "1.0", "1.0", "2.0", "3.0",
+    "-pl", "0.0", "0.5", "1.0", "1.0", "2.0", "3.0",
+    "-sp", "1.0"
+  };
+  parseArgs(17, args);
+  EXPECT_EQ(0.0f, dl_x);
+  EXPECT_EQ(0.5f, dl_y);
+  EXPECT_EQ(1.0f, dl_z);
+  EXPECT_EQ(1.0f, dl_r);
+  EXPECT_EQ(2.0f, dl_g);
+  EXPECT_EQ(3.0f, dl_b);
+
+  EXPECT_EQ(0.0f, pl_x);
+  EXPECT_EQ(0.5f, pl_y);
+  EXPECT_EQ(1.0f, pl_z);
+  EXPECT_EQ(1.0f, pl_r);
+  EXPECT_EQ(2.0f, pl_g);
+  EXPECT_EQ(3.0f, pl_b);
+
+  EXPECT_EQ(1.0f, sp_v);
+}
+
 // ------------------------------------------------------------
 // PixelOpsTest
 // ------------------------------------------------------------
