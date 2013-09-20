@@ -44,6 +44,64 @@ TEST_F(FooTest, DoesXyz) {
   // Exercises the Xyz feature of Foo.
 }
 
+// ------------------------------------------------------------
+// ParseArgsTest
+// ------------------------------------------------------------
+
+class ParseArgsTest : public ::testing::Test {
+};
+
+TEST_F(ParseArgsTest, kaTest) {
+  char *args[5] = {"./as0", "-ka", "0.0", "0.5", "1.0"};
+  parseArgs(5, args);
+  EXPECT_EQ(0.0f, ka_r);
+  EXPECT_EQ(0.5f, ka_g);
+  EXPECT_EQ(1.0f, ka_b);
+}
+
+TEST_F(ParseArgsTest, kdTest) {
+  char *args[5] = {"./as0", "-kd", "0.0", "0.5", "1.0"};
+  parseArgs(5, args);
+  EXPECT_EQ(0.0f, kd_r);
+  EXPECT_EQ(0.5f, kd_g);
+  EXPECT_EQ(1.0f, kd_b);
+}
+
+TEST_F(ParseArgsTest, ksTest) {
+  char *args[5] = {"./as0", "-ks", "0.0", "0.5", "1.0"};
+  parseArgs(5, args);
+  EXPECT_EQ(0.0f, ks_r);
+  EXPECT_EQ(0.5f, ks_g);
+  EXPECT_EQ(1.0f, ks_b);
+}
+
+TEST_F(ParseArgsTest, spTest) {
+  char *args[3] = {"./as0", "-sp", "1.0"};
+  parseArgs(3, args);
+  EXPECT_EQ(1.0f, sp_v);
+}
+
+TEST_F(ParseArgsTest, plTest) {
+  char *args[8] = {"./as0", "-pl", "0.0", "0.5", "1.0", "1.0", "2.0", "3.0"};
+  parseArgs(8, args);
+  EXPECT_EQ(0.0f, pl_x);
+  EXPECT_EQ(0.5f, pl_y);
+  EXPECT_EQ(1.0f, pl_z);
+  EXPECT_EQ(1.0f, pl_r);
+  EXPECT_EQ(2.0f, pl_g);
+  EXPECT_EQ(3.0f, pl_b);
+}
+
+TEST_F(ParseArgsTest, dlTest) {
+  char *args[8] = {"./as0", "-dl", "0.0", "0.5", "1.0", "1.0", "2.0", "3.0"};
+  parseArgs(8, args);
+  EXPECT_EQ(0.0f, dl_x);
+  EXPECT_EQ(0.5f, dl_y);
+  EXPECT_EQ(1.0f, dl_z);
+  EXPECT_EQ(1.0f, dl_r);
+  EXPECT_EQ(2.0f, dl_g);
+  EXPECT_EQ(3.0f, dl_b);
+}
 
 // ------------------------------------------------------------
 // PixelOpsTest

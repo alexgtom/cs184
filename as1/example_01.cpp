@@ -3,6 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <cstring>
+#include <stdexcept>
+#include <cstdlib>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -23,9 +26,43 @@
 
 
 #define PI 3.14159265  // Should be used from mathlib
+#define DEBUG_ARGS false
 inline float sqr(float x) { return x*x; }
 
 using namespace std;
+
+
+//****************************************************
+// Arguments
+//****************************************************
+
+float ka_r = 0.0f;
+float ka_g = 0.0f;
+float ka_b = 0.0f;
+
+float kd_r = 0.0f;
+float kd_g = 0.0f;
+float kd_b = 0.0f;
+
+float ks_r = 0.0f;
+float ks_g = 0.0f;
+float ks_b = 0.0f;
+
+float sp_v = 0.0f;
+
+float pl_x = 0.0f;
+float pl_y = 0.0f;
+float pl_z = 0.0f;
+float pl_r = 0.0f;
+float pl_g = 0.0f;
+float pl_b = 0.0f;
+
+float dl_x = 0.0f;
+float dl_y = 0.0f;
+float dl_z = 0.0f;
+float dl_r = 0.0f;
+float dl_g = 0.0f;
+float dl_b = 0.0f;
 
 //****************************************************
 // Some Classes
@@ -197,12 +234,67 @@ void myDisplay() {
 // the usual stuff, nothing exciting here
 //****************************************************
 
+void parseArgs(int argc, char *argv[]) {
+  if (DEBUG_ARGS) {
+    cout << "---[ DEBUG ARGS ] -------------------"  << endl;
+    for(int i = 0; i < argc; i++) {
+      cout << i << ": " << argv[i] << endl;
+    }
+  }
+
+  for(int i = 1; i < argc;) {
+    char *option = argv[i];
+
+    if (strcmp(option, "-ka") == 0) {
+      ka_r = atof(argv[i + 1]);
+      ka_g = atof(argv[i + 2]);
+      ka_b = atof(argv[i + 3]);
+      i += 4;
+    } else if (strcmp(option, "-kd") == 0) {
+      kd_r = atof(argv[i + 1]);
+      kd_g = atof(argv[i + 2]);
+      kd_b = atof(argv[i + 3]);
+      i += 4;
+    } else if (strcmp(option, "-ks") == 0) {
+      ks_r = atof(argv[i + 1]);
+      ks_g = atof(argv[i + 2]);
+      ks_b = atof(argv[i + 3]);
+      i += 4;
+    } else if (strcmp(option, "-sp") == 0) {
+      sp_v = atof(argv[i + 1]);
+      i += 2;
+    } else if (strcmp(option, "-pl") == 0) {
+      pl_x = atof(argv[i + 1]);
+      pl_y = atof(argv[i + 2]);
+      pl_z = atof(argv[i + 3]);
+      pl_r = atof(argv[i + 4]);
+      pl_g = atof(argv[i + 5]);
+      pl_b = atof(argv[i + 6]);
+      i += 7;
+    } else if (strcmp(option, "-dl") == 0) {
+      dl_x = atof(argv[i + 1]);
+      dl_y = atof(argv[i + 2]);
+      dl_z = atof(argv[i + 3]);
+      dl_r = atof(argv[i + 4]);
+      dl_g = atof(argv[i + 5]);
+      dl_b = atof(argv[i + 6]);
+      i += 7;
+    } else {
+      cerr << "Invalid argument: " << option << endl;
+      exit(1);
+    }
+  }
+}
+
 // Allows us to define another main() function somewhere else.
 // This allows us to run the tests
 #ifndef _MAIN
 #define _MAIN
 
 int main(int argc, char *argv[]) {
+  // parse args
+  parseArgs(argc, argv);
+
   //This initializes glut
   glutInit(&argc, argv);
 
