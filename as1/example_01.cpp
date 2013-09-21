@@ -81,19 +81,52 @@ class PixelOps;
 
 class PixelOps {
   public:
+    // coordinates on sphere
+    float x, y, z;
+
     float r, g, b;
+
+    PixelOps(float x, float y, float z) {
+      this->x = x;
+      this->y = y;
+      this->z = z;
+      r = g = b = 0.0f;
+    }
+    /* 
+     * Ambient Component
+     */
+    PixelOps& ambientComponent(float x, float y, float z, float r, float g, float b) {
+      return *this;
+    }
+
+    /*
+     * Diffuse Shading
+     */
+    PixelOps& diffuseComponent(float x, float y, float z, float r, float g, float b) {
+      return *this;
+    }
+
+    /*
+     * Specular Component
+     */
+    PixelOps& specularComponent(float x, float y, float z, float r, float g, float b) {
+      return *this;
+    }
 
     /* Example
      * -------
      *
-     * Function Chaining: (new PixelOps(...))->opacity(0.4f)->negative()
+     * Function Chaining: 
+     *
+     * PixelOps op;
+     * op.opacity(0.4f).opacity(0.2f)
      */
-    PixelOps* opacity(float o) {
+    PixelOps& opacity(float o) {
       r = r * o;
       g = g * o;
       b = b * o;
 
-      return this;
+      return *this;
     }
 };
 
@@ -181,8 +214,23 @@ void circle(float centerX, float centerY, float radius) {
 
         // This is the front-facing Z coordinate
         float z = sqrt(radius*radius-dist*dist);
+        PixelOps po(x, y, z);
 
-        setPixel(i,j, 1.0, 0.0, 0.0);
+        // iterate through each point light
+        for(int a = 0; a < pl_x.size(); a++) {
+          po.ambientComponent(pl_x[i], pl_y[i], pl_z[i], pl_r[i], pl_g[i], pl_b[i]);
+          po.diffuseComponent(pl_x[i], pl_y[i], pl_z[i], pl_r[i], pl_g[i], pl_b[i]);
+          po.specularComponent(pl_x[i], pl_y[i], pl_z[i], pl_r[i], pl_g[i], pl_b[i]);
+        }
+
+        // iterate through each directional light
+        for(int a = 0; a < dl_x.size(); a++) {
+          po.ambientComponent(dl_x[i], dl_y[i], dl_z[i], dl_r[i], dl_g[i], dl_b[i]);
+          po.diffuseComponent(dl_x[i], dl_y[i], dl_z[i], dl_r[i], dl_g[i], dl_b[i]);
+          po.specularComponent(dl_x[i], dl_y[i], dl_z[i], dl_r[i], dl_g[i], dl_b[i]);
+        }
+
+        setPixel(i, j, po.r, po.g, po.b);
 
         // This is amusing, but it assumes negative color values are treated reasonably.
         // setPixel(i,j, x/radius, y/radius, z/radius );
