@@ -84,23 +84,65 @@ TEST_F(ParseArgsTest, spTest) {
 TEST_F(ParseArgsTest, plTest) {
   char *args[8] = {"./as0", "-pl", "0.0", "0.5", "1.0", "1.0", "2.0", "3.0"};
   parseArgs(8, args);
-  EXPECT_EQ(0.0f, pl_x);
-  EXPECT_EQ(0.5f, pl_y);
-  EXPECT_EQ(1.0f, pl_z);
-  EXPECT_EQ(1.0f, pl_r);
-  EXPECT_EQ(2.0f, pl_g);
-  EXPECT_EQ(3.0f, pl_b);
+  EXPECT_EQ(0.0f, pl_x.at(0));
+  EXPECT_EQ(0.5f, pl_y.at(0));
+  EXPECT_EQ(1.0f, pl_z.at(0));
+  EXPECT_EQ(1.0f, pl_r.at(0));
+  EXPECT_EQ(2.0f, pl_g.at(0));
+  EXPECT_EQ(3.0f, pl_b.at(0));
+}
+
+TEST_F(ParseArgsTest, plMultipleTest) {
+  char *args[15] = {"./as0", 
+    "-pl", "0.0", "0.5", "1.0", "1.0", "2.0", "3.0",
+    "-pl", "0.0", "0.5", "1.0", "1.0", "2.0", "3.0"
+  };
+  parseArgs(15, args);
+  EXPECT_EQ(0.0f, pl_x.at(0));
+  EXPECT_EQ(0.5f, pl_y.at(0));
+  EXPECT_EQ(1.0f, pl_z.at(0));
+  EXPECT_EQ(1.0f, pl_r.at(0));
+  EXPECT_EQ(2.0f, pl_g.at(0));
+  EXPECT_EQ(3.0f, pl_b.at(0));
+
+  EXPECT_EQ(0.0f, pl_x.at(1));
+  EXPECT_EQ(0.5f, pl_y.at(1));
+  EXPECT_EQ(1.0f, pl_z.at(1));
+  EXPECT_EQ(1.0f, pl_r.at(1));
+  EXPECT_EQ(2.0f, pl_g.at(1));
+  EXPECT_EQ(3.0f, pl_b.at(1));
 }
 
 TEST_F(ParseArgsTest, dlTest) {
   char *args[8] = {"./as0", "-dl", "0.0", "0.5", "1.0", "1.0", "2.0", "3.0"};
   parseArgs(8, args);
-  EXPECT_EQ(0.0f, dl_x);
-  EXPECT_EQ(0.5f, dl_y);
-  EXPECT_EQ(1.0f, dl_z);
-  EXPECT_EQ(1.0f, dl_r);
-  EXPECT_EQ(2.0f, dl_g);
-  EXPECT_EQ(3.0f, dl_b);
+  EXPECT_EQ(0.0f, dl_x.at(0));
+  EXPECT_EQ(0.5f, dl_y.at(0));
+  EXPECT_EQ(1.0f, dl_z.at(0));
+  EXPECT_EQ(1.0f, dl_r.at(0));
+  EXPECT_EQ(2.0f, dl_g.at(0));
+  EXPECT_EQ(3.0f, dl_b.at(0));
+}
+
+TEST_F(ParseArgsTest, dlMultipleTest) {
+  char *args[15] = {"./as0", 
+    "-dl", "0.0", "0.5", "1.0", "1.0", "2.0", "3.0",
+    "-dl", "0.0", "0.5", "1.0", "1.0", "2.0", "3.0"
+  };
+  parseArgs(15, args);
+  EXPECT_EQ(0.0f, dl_x.at(0));
+  EXPECT_EQ(0.5f, dl_y.at(0));
+  EXPECT_EQ(1.0f, dl_z.at(0));
+  EXPECT_EQ(1.0f, dl_r.at(0));
+  EXPECT_EQ(2.0f, dl_g.at(0));
+  EXPECT_EQ(3.0f, dl_b.at(0));
+
+  EXPECT_EQ(0.0f, dl_x.at(1));
+  EXPECT_EQ(0.5f, dl_y.at(1));
+  EXPECT_EQ(1.0f, dl_z.at(1));
+  EXPECT_EQ(1.0f, dl_r.at(1));
+  EXPECT_EQ(2.0f, dl_g.at(1));
+  EXPECT_EQ(3.0f, dl_b.at(1));
 }
 
 TEST_F(ParseArgsTest, MultiArgTest) {
@@ -110,19 +152,19 @@ TEST_F(ParseArgsTest, MultiArgTest) {
     "-sp", "1.0"
   };
   parseArgs(17, args);
-  EXPECT_EQ(0.0f, dl_x);
-  EXPECT_EQ(0.5f, dl_y);
-  EXPECT_EQ(1.0f, dl_z);
-  EXPECT_EQ(1.0f, dl_r);
-  EXPECT_EQ(2.0f, dl_g);
-  EXPECT_EQ(3.0f, dl_b);
+  EXPECT_EQ(0.0f, dl_x.at(0));
+  EXPECT_EQ(0.5f, dl_y.at(0));
+  EXPECT_EQ(1.0f, dl_z.at(0));
+  EXPECT_EQ(1.0f, dl_r.at(0));
+  EXPECT_EQ(2.0f, dl_g.at(0));
+  EXPECT_EQ(3.0f, dl_b.at(0));
 
-  EXPECT_EQ(0.0f, pl_x);
-  EXPECT_EQ(0.5f, pl_y);
-  EXPECT_EQ(1.0f, pl_z);
-  EXPECT_EQ(1.0f, pl_r);
-  EXPECT_EQ(2.0f, pl_g);
-  EXPECT_EQ(3.0f, pl_b);
+  EXPECT_EQ(0.0f, pl_x.at(1));
+  EXPECT_EQ(0.5f, pl_y.at(1));
+  EXPECT_EQ(1.0f, pl_z.at(1));
+  EXPECT_EQ(1.0f, pl_r.at(1));
+  EXPECT_EQ(2.0f, pl_g.at(1));
+  EXPECT_EQ(3.0f, pl_b.at(1));
 
   EXPECT_EQ(1.0f, sp_v);
 }

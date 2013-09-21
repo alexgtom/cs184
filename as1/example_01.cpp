@@ -50,19 +50,20 @@ float ks_b = 0.0f;
 
 float sp_v = 0.0f;
 
-float pl_x = 0.0f;
-float pl_y = 0.0f;
-float pl_z = 0.0f;
-float pl_r = 0.0f;
-float pl_g = 0.0f;
-float pl_b = 0.0f;
+// there can be multuple light sources
+vector<float> pl_x;
+vector<float> pl_y;
+vector<float> pl_z;
+vector<float> pl_r;
+vector<float> pl_g;
+vector<float> pl_b;
 
-float dl_x = 0.0f;
-float dl_y = 0.0f;
-float dl_z = 0.0f;
-float dl_r = 0.0f;
-float dl_g = 0.0f;
-float dl_b = 0.0f;
+vector<float> dl_x;
+vector<float> dl_y;
+vector<float> dl_z;
+vector<float> dl_r;
+vector<float> dl_g;
+vector<float> dl_b;
 
 //****************************************************
 // Some Classes
@@ -264,20 +265,20 @@ void parseArgs(int argc, char *argv[]) {
       sp_v = atof(argv[i + 1]);
       i += 2;
     } else if (strcmp(option, "-pl") == 0) {
-      pl_x = atof(argv[i + 1]);
-      pl_y = atof(argv[i + 2]);
-      pl_z = atof(argv[i + 3]);
-      pl_r = atof(argv[i + 4]);
-      pl_g = atof(argv[i + 5]);
-      pl_b = atof(argv[i + 6]);
+      pl_x.push_back(atof(argv[i + 1]));
+      pl_y.push_back(atof(argv[i + 2]));
+      pl_z.push_back(atof(argv[i + 3]));
+      pl_r.push_back(atof(argv[i + 4]));
+      pl_g.push_back(atof(argv[i + 5]));
+      pl_b.push_back(atof(argv[i + 6]));
       i += 7;
     } else if (strcmp(option, "-dl") == 0) {
-      dl_x = atof(argv[i + 1]);
-      dl_y = atof(argv[i + 2]);
-      dl_z = atof(argv[i + 3]);
-      dl_r = atof(argv[i + 4]);
-      dl_g = atof(argv[i + 5]);
-      dl_b = atof(argv[i + 6]);
+      dl_x.push_back(atof(argv[i + 1]));
+      dl_y.push_back(atof(argv[i + 2]));
+      dl_z.push_back(atof(argv[i + 3]));
+      dl_r.push_back(atof(argv[i + 4]));
+      dl_g.push_back(atof(argv[i + 5]));
+      dl_b.push_back(atof(argv[i + 6]));
       i += 7;
     } else {
       cerr << "Invalid argument: " << option << endl;
