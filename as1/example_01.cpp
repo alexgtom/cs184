@@ -144,7 +144,6 @@ class PixelOps {
     
       // n.v
       float c = max(0.0f, l_x * n_x + l_y * n_y + l_z * n_z);
-      //float c = abs(l_x * n_x + l_y * n_y + l_z * n_z);
       cout << c << endl;
 
       
@@ -183,7 +182,7 @@ class PixelOps {
      * Calculate everything
      */
     void render(float x, float y, float z, float r, float g, float b) {
-      //diffuseAmbientComponent(x, y, z, r, g, b);
+      diffuseAmbientComponent(x, y, z, r, g, b);
       diffuseComponent(x, y, z, r, g, b);
       specularComponent(x, y, z, r, g, b);
     }
