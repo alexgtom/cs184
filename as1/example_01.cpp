@@ -142,10 +142,8 @@ class PixelOps {
       float n_z = this->z;
       normalize_vector(n_x, n_y, n_z);
     
-      // n.v
+      // max(0, n.v)
       float c = max(0.0f, l_x * n_x + l_y * n_y + l_z * n_z);
-      cout << c << endl;
-
       
       // add diffuse component
       this->r += c * kd_r * r;
