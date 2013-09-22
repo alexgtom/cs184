@@ -218,16 +218,21 @@ void circle(float centerX, float centerY, float radius) {
 
         // iterate through each point light
         for(int a = 0; a < pl_x.size(); a++) {
-          po.ambientComponent(pl_x[i], pl_y[i], pl_z[i], pl_r[i], pl_g[i], pl_b[i]);
-          po.diffuseComponent(pl_x[i], pl_y[i], pl_z[i], pl_r[i], pl_g[i], pl_b[i]);
-          po.specularComponent(pl_x[i], pl_y[i], pl_z[i], pl_r[i], pl_g[i], pl_b[i]);
+          // convert colors from (0-255) to decimal using CIE XYZ
+          float r = pl_r[i] / (pl_r[i] + pl_g[i] + pl_b[i]);
+          float g = pl_r[i] / (pl_r[i] + pl_g[i] + pl_b[i]);
+          float b = pl_r[i] / (pl_r[i] + pl_g[i] + pl_b[i]);
+
+          po.render(pl_x[i], pl_y[i], pl_z[i], r, g, b);
         }
 
         // iterate through each directional light
         for(int a = 0; a < dl_x.size(); a++) {
-          po.ambientComponent(dl_x[i], dl_y[i], dl_z[i], dl_r[i], dl_g[i], dl_b[i]);
-          po.diffuseComponent(dl_x[i], dl_y[i], dl_z[i], dl_r[i], dl_g[i], dl_b[i]);
-          po.specularComponent(dl_x[i], dl_y[i], dl_z[i], dl_r[i], dl_g[i], dl_b[i]);
+          float r = dl_r[i] / (dl_r[i] + dl_g[i] + dl_b[i]);
+          float g = dl_r[i] / (dl_r[i] + dl_g[i] + dl_b[i]);
+          float b = dl_r[i] / (dl_r[i] + dl_g[i] + dl_b[i]);
+
+          po.render(dl_x[i], dl_y[i], dl_z[i], r, g, b);
         }
 
         setPixel(i, j, po.r, po.g, po.b);
