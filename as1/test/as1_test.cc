@@ -198,24 +198,25 @@ class PixelOpsTest : public ::testing::Test {
 };
 
 TEST_F(PixelOpsTest, DiffuseTestDefault) {
+  kd_r = kd_g = kd_b = 0.0f;
   PixelOps po(1.0f, 0.0f, 0.0f);
-  po.diffuseComponent(1.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0);
+  po.diffuseComponent(0.0f, 1.0f, 0.0f, 1.0, 0.0, 0.0);
 
   // assert all zero arguments work
-  kd_r = kd_g = kd_b = 0.0f;
   EXPECT_FLOAT_EQ(po.r, 0.0f);
   EXPECT_FLOAT_EQ(po.g, 0.0f);
   EXPECT_FLOAT_EQ(po.b, 0.0f);
 }
 
 TEST_F(PixelOpsTest, DiffuseTest) {
-  PixelOps po(1.0f, 0.0f, 0.0f);
-  po.diffuseComponent(2.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0);
-
   // real values
   kd_r = 1.0f;
   kd_g = 0.0f;
   kd_b = 0.0f;
+
+  PixelOps po(1.0f, 0.0f, 0.0f);
+  po.diffuseComponent(2.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0);
+
   EXPECT_FLOAT_EQ(1.0f, po.r);
   EXPECT_FLOAT_EQ(0.0f, po.g);
   EXPECT_FLOAT_EQ(0.0f, po.b);
