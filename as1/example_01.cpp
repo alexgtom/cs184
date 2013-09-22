@@ -26,7 +26,7 @@
 
 
 #define PI 3.14159265  // Should be used from mathlib
-#define DEBUG_ARGS true
+#define DEBUG_ARGS false
 inline float sqr(float x) { return x*x; }
 
 using namespace std;
@@ -142,21 +142,10 @@ class PixelOps {
       float n_z = this->z;
       normalize_vector(n_x, n_y, n_z);
     
-      cout << "*************" << endl;
-      cout << "(" << this->x << ", " << this->y << ", " << this->z << ")" << endl;
-      cout << x << " - " << this->x << endl;
-      cout << y << " - " << this->y << endl;
-      cout << z << " - " << this->z << endl;
-      cout << l_x << endl;
-      cout << l_y << endl;
-      cout << l_z << endl;
-      cout << n_x << endl;
-      cout << n_y << endl;
-      cout << n_z << endl;
-      cout << l_x * n_x + l_y * n_y + l_z * n_z << endl;
-      
       // n.v
       float c = max(0.0f, l_x * n_x + l_y * n_y + l_z * n_z);
+      //float c = abs(l_x * n_x + l_y * n_y + l_z * n_z);
+      cout << c << endl;
 
       
       // add diffuse component
@@ -194,8 +183,7 @@ class PixelOps {
      * Calculate everything
      */
     void render(float x, float y, float z, float r, float g, float b) {
-      //cout << "(" << x << ", " << y << ", " << z << ")" << endl;
-      diffuseAmbientComponent(x, y, z, r, g, b);
+      //diffuseAmbientComponent(x, y, z, r, g, b);
       diffuseComponent(x, y, z, r, g, b);
       specularComponent(x, y, z, r, g, b);
     }
@@ -285,25 +273,24 @@ void circle(float centerX, float centerY, float radius) {
 
         // This is the front-facing Z coordinate
         float z = sqrt(radius*radius-dist*dist);
-        //cout << "(" << x << ", " << y << ", " << z << ")" << endl;
         PixelOps po(x, y, z);
 
         // iterate through each point light
         for(int a = 0; a < pl_x.size(); a++) {
-          float r = pl_r[i] / (pl_r[i] + pl_g[i] + pl_b[i]);
-          float g = pl_r[i] / (pl_r[i] + pl_g[i] + pl_b[i]);
-          float b = pl_r[i] / (pl_r[i] + pl_g[i] + pl_b[i]);
+          float r = pl_r[a] / (pl_r[a] + pl_g[a] + pl_b[a]);
+          float g = pl_r[a] / (pl_r[a] + pl_g[a] + pl_b[a]);
+          float b = pl_r[a] / (pl_r[a] + pl_g[a] + pl_b[a]);
 
-          po.render(pl_x[i], pl_y[i], pl_z[i], r, g, b);
+          po.render(pl_x[a], pl_y[a], pl_z[a], r, g, b);
         }
 
         // iterate through each directional light
         for(int a = 0; a < dl_x.size(); a++) {
-          float r = dl_r[i] / (dl_r[i] + dl_g[i] + dl_b[i]);
-          float g = dl_r[i] / (dl_r[i] + dl_g[i] + dl_b[i]);
-          float b = dl_r[i] / (dl_r[i] + dl_g[i] + dl_b[i]);
+          float r = dl_r[a] / (dl_r[a] + dl_g[a] + dl_b[a]);
+          float g = dl_r[a] / (dl_r[a] + dl_g[a] + dl_b[a]);
+          float b = dl_r[a] / (dl_r[a] + dl_g[a] + dl_b[a]);
 
-          po.render(dl_x[i], dl_y[i], dl_z[i], r, g, b);
+          po.render(dl_x[a], dl_y[a], dl_z[a], r, g, b);
         }
 
         setPixel(i, j, po.r, po.g, po.b);
