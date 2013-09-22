@@ -168,13 +168,59 @@ TEST_F(ParseArgsTest, MultiArgTest) {
 
   EXPECT_EQ(1.0f, sp_v);
 }
+// ------------------------------------------------------------
+// Math Operations Test
+// ------------------------------------------------------------
+
+class MathOpsTest : public ::testing::Test {
+};
+
+TEST_F(MathOpsTest, NormalizeVectorTest) {
+  float x = 1.0f;
+  float y = 2.0f;
+  float z = 3.0f;
+  normalize_vector(x, y, z);
+  EXPECT_FLOAT_EQ(0.26726124f, x);
+  EXPECT_FLOAT_EQ(0.53452247f, y);
+  EXPECT_FLOAT_EQ(0.80178368f, z);
+}
+
+TEST_F(MathOpsTest, MaxTest) {
+  float x = 1.0f;
+  float y = 2.0f;
+  EXPECT_FLOAT_EQ(y, max(x, y));
+}
 
 // ------------------------------------------------------------
 // PixelOpsTest
 // ------------------------------------------------------------
-
 class PixelOpsTest : public ::testing::Test {
 };
+
+TEST_F(PixelOpsTest, DiffuseTestDefault) {
+  PixelOps po(1.0f, 0.0f, 0.0f);
+  po.diffuseComponent(1.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0);
+
+  // assert all zero arguments work
+  kd_r = kd_g = kd_b = 0.0f;
+  EXPECT_FLOAT_EQ(po.r, 0.0f);
+  EXPECT_FLOAT_EQ(po.g, 0.0f);
+  EXPECT_FLOAT_EQ(po.b, 0.0f);
+}
+
+TEST_F(PixelOpsTest, DiffuseTest) {
+  PixelOps po(1.0f, 0.0f, 0.0f);
+  po.diffuseComponent(2.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0);
+
+  // real values
+  kd_r = 1.0f;
+  kd_g = 0.0f;
+  kd_b = 0.0f;
+  EXPECT_FLOAT_EQ(1.0f, po.r);
+  EXPECT_FLOAT_EQ(0.0f, po.g);
+  EXPECT_FLOAT_EQ(0.0f, po.b);
+}
+
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);

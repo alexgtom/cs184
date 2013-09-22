@@ -76,6 +76,26 @@ class Viewport {
     int w, h; // width and height
 };
 
+/* 
+ * Math Operations
+ */
+float magnitude(float x, float y, float z) {
+  return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+}
+
+void normalize_vector(float& x, float& y, float& z) {
+  float m = magnitude(x, y, z);
+  x = x / m;
+  y = y / m;
+  z = z / m;
+}
+
+float max(float a, float b) {
+  if (a > b)
+    return a;
+  else
+    return b;
+}
 
 class PixelOps;
 
@@ -84,6 +104,7 @@ class PixelOps {
     // coordinates on sphere
     float x, y, z;
 
+    // r, g, b, are values between [0.0f, 1.9f]
     float r, g, b;
 
     PixelOps(float x, float y, float z) {
@@ -92,10 +113,16 @@ class PixelOps {
       this->z = z;
       r = g = b = 0.0f;
     }
+
     /* 
      * Ambient Component
      */
-    PixelOps& ambientComponent(float x, float y, float z, float r, float g, float b) {
+    PixelOps& diffuseAmbientComponent(float x, float y, float z, float r, float g, float b) {
+      // add ambient component
+      this->r += ka_r * r;
+      this->g += ka_g * g;
+      this->b += ka_b * b;
+      
       return *this;
     }
 
@@ -103,6 +130,26 @@ class PixelOps {
      * Diffuse Shading
      */
     PixelOps& diffuseComponent(float x, float y, float z, float r, float g, float b) {
+      // light vector
+      float l_x = x - this->x;
+      float l_y = y - this->y;
+      float l_z = z - this->z;
+      normalize_vector(l_x, l_y, l_z);
+
+      // normal vector
+      float n_x = this->x;
+      float n_y = this->y;
+      float n_z = this->z;
+      normalize_vector(n_x, n_y, n_z);
+      
+      // n.v
+      float c = max(0.0f, l_x * n_x + l_y * n_y + l_z * n_z);
+      
+      // add diffuse component
+      this->r += c * kd_r * r;
+      this->g += c * kd_g * g;
+      this->b += c * kd_b * b;
+      
       return *this;
     }
 
@@ -127,6 +174,15 @@ class PixelOps {
       b = b * o;
 
       return *this;
+    }
+
+    /*
+     * Calculate everything
+     */
+    void render(float x, float y, float z, float r, float g, float b) {
+      diffuseAmbientComponent(x, y, z, r, g, b);
+      diffuseComponent(x, y, z, r, g, b);
+      specularComponent(x, y, z, r, g, b);
     }
 };
 
