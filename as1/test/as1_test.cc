@@ -49,6 +49,23 @@ TEST_F(FooTest, DoesXyz) {
 // ------------------------------------------------------------
 
 class ParseArgsTest : public ::testing::Test {
+  protected:
+    virtual void SetUp() {
+      pl_x.clear();
+      pl_y.clear();
+      pl_z.clear();
+      pl_r.clear();
+      pl_g.clear();
+      pl_b.clear();
+
+      dl_x.clear();
+      dl_y.clear();
+      dl_z.clear();
+      dl_r.clear();
+      dl_g.clear();
+      dl_b.clear();
+    }
+
 };
 
 TEST_F(ParseArgsTest, kaTest) {
@@ -159,14 +176,37 @@ TEST_F(ParseArgsTest, MultiArgTest) {
   EXPECT_EQ(200.0f, dl_g.at(0));
   EXPECT_EQ(255.0f, dl_b.at(0));
 
-  EXPECT_EQ(0.0f, pl_x.at(1));
-  EXPECT_EQ(0.5f, pl_y.at(1));
-  EXPECT_EQ(1.0f, pl_z.at(1));
-  EXPECT_EQ(100.0f, pl_r.at(1));
-  EXPECT_EQ(200.0f, pl_g.at(1));
-  EXPECT_EQ(255.0f, pl_b.at(1));
+  EXPECT_EQ(0.0f, pl_x.at(0));
+  EXPECT_EQ(0.5f, pl_y.at(0));
+  EXPECT_EQ(1.0f, pl_z.at(0));
+  EXPECT_EQ(100.0f, pl_r.at(0));
+  EXPECT_EQ(200.0f, pl_g.at(0));
+  EXPECT_EQ(255.0f, pl_b.at(0));
 
   EXPECT_EQ(1.0f, sp_v);
+}
+
+TEST_F(ParseArgsTest, MultiArgTest2) {
+  char *args[16] = {"./as1",
+    "-ka", "0.9", "0.9", "1.0", 
+    "-kd", "0.2", "0.2", "0.2", 
+    "-pl", "1.0", "1.0", "1.0", "255.0", "255.0", "255.0"
+  };
+  parseArgs(16, args);
+  EXPECT_EQ(0.9f, ka_r);
+  EXPECT_EQ(0.9f, ka_g);
+  EXPECT_EQ(1.0f, ka_b);
+
+  EXPECT_EQ(0.2f, kd_r);
+  EXPECT_EQ(0.2f, kd_g);
+  EXPECT_EQ(0.2f, kd_b);
+
+  EXPECT_EQ(1.0f, pl_x.at(0));
+  EXPECT_EQ(1.0f, pl_y.at(0));
+  EXPECT_EQ(1.0f, pl_z.at(0));
+  EXPECT_EQ(255.0f, pl_r.at(0));
+  EXPECT_EQ(255.0f, pl_g.at(0));
+  EXPECT_EQ(255.0f, pl_b.at(0));
 }
 // ------------------------------------------------------------
 // Math Operations Test

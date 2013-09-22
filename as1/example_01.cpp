@@ -26,7 +26,7 @@
 
 
 #define PI 3.14159265  // Should be used from mathlib
-#define DEBUG_ARGS false
+#define DEBUG_ARGS true
 inline float sqr(float x) { return x*x; }
 
 using namespace std;
@@ -141,9 +141,23 @@ class PixelOps {
       float n_y = this->y;
       float n_z = this->z;
       normalize_vector(n_x, n_y, n_z);
+    
+      cout << "*************" << endl;
+      cout << "(" << this->x << ", " << this->y << ", " << this->z << ")" << endl;
+      cout << x << " - " << this->x << endl;
+      cout << y << " - " << this->y << endl;
+      cout << z << " - " << this->z << endl;
+      cout << l_x << endl;
+      cout << l_y << endl;
+      cout << l_z << endl;
+      cout << n_x << endl;
+      cout << n_y << endl;
+      cout << n_z << endl;
+      cout << l_x * n_x + l_y * n_y + l_z * n_z << endl;
       
       // n.v
       float c = max(0.0f, l_x * n_x + l_y * n_y + l_z * n_z);
+
       
       // add diffuse component
       this->r += c * kd_r * r;
@@ -180,6 +194,7 @@ class PixelOps {
      * Calculate everything
      */
     void render(float x, float y, float z, float r, float g, float b) {
+      //cout << "(" << x << ", " << y << ", " << z << ")" << endl;
       diffuseAmbientComponent(x, y, z, r, g, b);
       diffuseComponent(x, y, z, r, g, b);
       specularComponent(x, y, z, r, g, b);
@@ -270,11 +285,11 @@ void circle(float centerX, float centerY, float radius) {
 
         // This is the front-facing Z coordinate
         float z = sqrt(radius*radius-dist*dist);
+        //cout << "(" << x << ", " << y << ", " << z << ")" << endl;
         PixelOps po(x, y, z);
 
         // iterate through each point light
         for(int a = 0; a < pl_x.size(); a++) {
-          // convert colors from (0-255) to decimal using CIE XYZ
           float r = pl_r[i] / (pl_r[i] + pl_g[i] + pl_b[i]);
           float g = pl_r[i] / (pl_r[i] + pl_g[i] + pl_b[i]);
           float b = pl_r[i] / (pl_r[i] + pl_g[i] + pl_b[i]);
@@ -376,6 +391,38 @@ void parseArgs(int argc, char *argv[]) {
     } else {
       cerr << "Invalid argument: " << option << endl;
       exit(1);
+    }
+  }
+
+  if (DEBUG_ARGS) {
+    cout << "---[ ARGS PARSED ] -------------------" << endl;
+    cout << "ka_r" << ": " << ka_r << endl;
+    cout << "ka_g" << ": " << ka_g << endl;
+    cout << "ka_b" << ": " << ka_b << endl;
+    cout << "kd_r" << ": " << kd_r << endl;
+    cout << "kd_g" << ": " << kd_g << endl;
+    cout << "kd_b" << ": " << kd_b << endl;
+    cout << "ks_r" << ": " << ks_r << endl;
+    cout << "ks_g" << ": " << ks_g << endl;
+    cout << "ks_b" << ": " << ks_b << endl;
+    cout << "sp_v" << ": " << sp_v << endl;
+
+    for(int i = 0; i < pl_x.size(); i++) {
+      cout << "pl_x[" << i << "]" << ": " << pl_x[i] << endl;
+      cout << "pl_y[" << i << "]" << ": " << pl_y[i] << endl;
+      cout << "pl_z[" << i << "]" << ": " << pl_z[i] << endl;
+      cout << "pl_r[" << i << "]" << ": " << pl_r[i] << endl;
+      cout << "pl_g[" << i << "]" << ": " << pl_g[i] << endl;
+      cout << "pl_b[" << i << "]" << ": " << pl_b[i] << endl;
+    }
+
+    for(int i = 0; i < dl_x.size(); i++) {
+      cout << "dl_x[" << i << "]" << ": " << dl_x[i] << endl;
+      cout << "dl_y[" << i << "]" << ": " << dl_y[i] << endl;
+      cout << "dl_z[" << i << "]" << ": " << dl_z[i] << endl;
+      cout << "dl_r[" << i << "]" << ": " << dl_r[i] << endl;
+      cout << "dl_g[" << i << "]" << ": " << dl_g[i] << endl;
+      cout << "dl_b[" << i << "]" << ": " << dl_b[i] << endl;
     }
   }
 }
