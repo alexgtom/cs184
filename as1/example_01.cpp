@@ -263,7 +263,9 @@ void circle(float centerX, float centerY, float radius) {
 
         // This is the front-facing Z coordinate
         float z = sqrt(radius*radius-dist*dist);
-        PixelOps po(x, y, z);
+
+        // normalize x, y, and z into coordinate system
+        PixelOps po(x / radius, y / radius, z / radius);
 
         // iterate through each point light
         for(int a = 0; a < pl_x.size(); a++) {
