@@ -225,12 +225,6 @@ TEST_F(MathOpsTest, NormalizeVectorTest) {
   EXPECT_FLOAT_EQ(0.80178368f, z);
 }
 
-TEST_F(MathOpsTest, MaxTest) {
-  float x = 1.0f;
-  float y = 2.0f;
-  EXPECT_FLOAT_EQ(y, max(x, y));
-}
-
 // ------------------------------------------------------------
 // PixelOpsTest
 // ------------------------------------------------------------

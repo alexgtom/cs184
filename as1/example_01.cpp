@@ -90,13 +90,6 @@ void normalize_vector(float& x, float& y, float& z) {
   z = z / m;
 }
 
-float max(float a, float b) {
-  if (a > b)
-    return a;
-  else
-    return b;
-}
-
 class PixelOps;
 
 class PixelOps {
