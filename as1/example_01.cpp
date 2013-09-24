@@ -150,6 +150,38 @@ class PixelOps {
      * Specular Component
      */
     PixelOps& specularComponent(float x, float y, float z, float r, float g, float b) {
+      // light vector
+      float l_x = x - this->x;
+      float l_y = y - this->y;
+      float l_z = z - this->z;
+      normalize_vector(l_x, l_y, l_z);
+      
+      // normal vector
+      float n_x = this->x;
+      float n_y = this->y;
+      float n_z = this->z;
+      normalize_vector(n_x, n_y, n_z);
+
+      // reflected direction
+      float l_dot_n = (l_x * n_x + l_y * n_y + l_z * n_z);
+      float r_x = -l_x + (2 * l_dot_n * n_x);
+      float r_y = -l_y + (2 * l_dot_n * n_y);
+      float r_z = -l_z + (2 * l_dot_n * n_z);
+      normalize_vector(r_x, r_y, r_z);
+
+      // viewer position
+      float v_x = 0.0f;
+      float v_y = 0.0f;
+      float v_z = 1.0f; //TODO: this is supposed to be infinity
+
+      // max term
+      float m = max(0.0f, r_x * v_x + r_y * v_y + r_z * v_z);
+
+      // add specular component
+      this->r += pow(m, sp_v) * ks_r * r;
+      this->g += pow(m, sp_v) * ks_g * g;
+      this->b += pow(m, sp_v) * ks_b * b;
+
       return *this;
     }
 
@@ -435,7 +467,7 @@ int main(int argc, char *argv[]) {
   glutDisplayFunc(myDisplay);				// function to run when its time to draw something
   glutReshapeFunc(myReshape);				// function to run when the window gets resized
 
-  glutMainLoop();							// infinite loop that will keep drawing and resizing
+  glutMainLoop();							// 999  //TODO: this is supposed to be infinityloop that will keep drawing and resizing
   // and whatever else
 
   return 0;
