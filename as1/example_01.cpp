@@ -110,7 +110,7 @@ class PixelOps {
     /* 
      * Ambient Component
      */
-    PixelOps& diffuseAmbientComponent(float x, float y, float z, float r, float g, float b) {
+    PixelOps& diffuseAmbientComponent(float r, float g, float b) {
       // add ambient component
       this->r += ka_r * r;
       this->g += ka_g * g;
@@ -121,6 +121,8 @@ class PixelOps {
 
     /*
      * Diffuse Shading
+     *
+     * x, y, z is the direction of the light
      */
     PixelOps& diffuseComponent(float x, float y, float z, float r, float g, float b) {
       // light vector
@@ -204,9 +206,15 @@ class PixelOps {
     /*
      * Calculate everything
      */
-    void render(float x, float y, float z, float r, float g, float b) {
-      diffuseAmbientComponent(x, y, z, r, g, b);
+    void renderDirectionalLight(float x, float y, float z, float r, float g, float b) {
+      diffuseAmbientComponent(r, g, b);
       diffuseComponent(x, y, z, r, g, b);
+      specularComponent(x, y, z, r, g, b);
+    }
+
+    void renderPointLight(float x, float y, float z, float r, float g, float b) {
+      diffuseAmbientComponent(r, g, b);
+      diffuseComponent(-x, -y, -z, r, g, b);
       specularComponent(x, y, z, r, g, b);
     }
 };
@@ -305,7 +313,7 @@ void circle(float centerX, float centerY, float radius) {
           float g = pl_r[a] / (pl_r[a] + pl_g[a] + pl_b[a]);
           float b = pl_r[a] / (pl_r[a] + pl_g[a] + pl_b[a]);
 
-          po.render(pl_x[a], pl_y[a], pl_z[a], r, g, b);
+          po.renderPointLight(pl_x[a], pl_y[a], pl_z[a], r, g, b);
         }
 
         // iterate through each directional light
@@ -314,7 +322,7 @@ void circle(float centerX, float centerY, float radius) {
           float g = dl_r[a] / (dl_r[a] + dl_g[a] + dl_b[a]);
           float b = dl_r[a] / (dl_r[a] + dl_g[a] + dl_b[a]);
 
-          po.render(dl_x[a], dl_y[a], dl_z[a], r, g, b);
+          po.renderDirectionalLight(dl_x[a], dl_y[a], dl_z[a], r, g, b);
         }
 
         setPixel(i, j, po.r, po.g, po.b);
