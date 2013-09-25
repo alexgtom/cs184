@@ -124,9 +124,9 @@ class PixelOps {
      */
     PixelOps& diffuseComponent(float x, float y, float z, float r, float g, float b) {
       // light vector
-      float l_x = x - this->x;
-      float l_y = y - this->y;
-      float l_z = z - this->z;
+      float l_x = -x;
+      float l_y = -y;
+      float l_z = -z;
       normalize_vector(l_x, l_y, l_z);
 
       // normal vector
