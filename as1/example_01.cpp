@@ -226,8 +226,8 @@ class PixelOps {
      */
     void renderDirectionalLight(float x, float y, float z, float r, float g, float b) {
       diffuseAmbientComponent(r, g, b);
-      diffuseComponent(-x, -y, -z, r, g, b);
-      specularComponent(-x, -y, -z, r, g, b);
+      diffuseComponent(x, y, z, r, g, b);
+      specularComponent(x, y, z, r, g, b);
     }
 
     void renderPointLight(float x, float y, float z, float r, float g, float b) {
