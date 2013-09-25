@@ -249,7 +249,7 @@ TEST_F(PixelOpsTest, DiffuseTest) {
   kd_b = 0.0f;
 
   PixelOps po(1.0f, 0.0f, 0.0f);
-  po.diffuseComponent(2.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0);
+  po.diffuseComponent(-2.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0);
 
   EXPECT_FLOAT_EQ(1.0f, po.r);
   EXPECT_FLOAT_EQ(0.0f, po.g);
