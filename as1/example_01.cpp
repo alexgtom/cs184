@@ -128,7 +128,7 @@ class PixelOps {
     /* 
      * Ambient Component
      */
-    PixelOps& diffuseAmbientComponent(float r, float g, float b) {
+    PixelOps& ambientComponent(float r, float g, float b) {
       // add ambient component
       this->r += ka_r * r;
       this->g += ka_g * g;
@@ -171,9 +171,9 @@ class PixelOps {
      */
     PixelOps& specularComponent(float x, float y, float z, float r, float g, float b) {
       // light vector
-      float l_x = x - this->x;
-      float l_y = y - this->y;
-      float l_z = z - this->z;
+      float l_x = -x;
+      float l_y = -y;
+      float l_z = -z;
       normalize_vector(l_x, l_y, l_z);
       
       // normal vector
@@ -193,6 +193,8 @@ class PixelOps {
       float v_x = 0.0f;
       float v_y = 0.0f;
       float v_z = 1.0f;
+      normalize_vector(v_x, v_y, v_z);
+
 
       // max term
       float m = max(0.0f, r_x * v_x + r_y * v_y + r_z * v_z);
@@ -225,17 +227,17 @@ class PixelOps {
      * Calculate everything
      */
     void renderDirectionalLight(float x, float y, float z, float r, float g, float b) {
-      diffuseAmbientComponent(r, g, b);
+      ambientComponent(r, g, b);
       diffuseComponent(x, y, z, r, g, b);
       specularComponent(x, y, z, r, g, b);
     }
 
     void renderPointLight(float x, float y, float z, float r, float g, float b) {
-      diffuseAmbientComponent(r, g, b);
+      ambientComponent(r, g, b);
 
       // make light shine to point
       diffuseComponent(this->x - x, this->y - y, this->z - z, r, g, b);
-      specularComponent(x, y, z, r, g, b);
+      specularComponent(this->x - x, this->y - y, this->z - z, r, g, b);
     }
 };
 
@@ -476,6 +478,13 @@ void parseArgs(int argc, char *argv[]) {
   }
 }
 
+// Spacebar quit
+void spacebarQuit(unsigned char key, int x, int y) {
+  if(key == 32) {
+    exit(0);
+  }
+}
+
 // Allows us to define another main() function somewhere else.
 // This allows us to run the tests
 #ifndef _MAIN
@@ -505,7 +514,9 @@ int main(int argc, char *argv[]) {
   glutDisplayFunc(myDisplay);				// function to run when its time to draw something
   glutReshapeFunc(myReshape);				// function to run when the window gets resized
 
-  glutMainLoop();							// 999  //TODO: this is supposed to be infinityloop that will keep drawing and resizing
+  glutKeyboardFunc(spacebarQuit);
+
+  glutMainLoop();						// 999  //TODO: this is supposed to be infinityloop that will keep drawing and resizing
   // and whatever else
 
   return 0;
