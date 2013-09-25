@@ -80,6 +80,19 @@ class Viewport {
  * Math Operations
  */
 
+void print_vector(vector<float>& v) {
+  for(int i = 0; i < v.size(); i++) {
+    cout << v[i] << endl;
+  }
+}
+
+float max_num_from_vector(vector<float>& v) {
+  float m = 0.0f;
+  for (int i = 0; i < v.size(); i++)
+    m = max(v[i], m);
+  return m;
+}
+
 float max3(float a1, float a2, float a3) {
   return max(max(a1, a2), a3);
 }
@@ -314,20 +327,30 @@ void circle(float centerX, float centerY, float radius) {
         // normalize x, y, and z into coordinate system
         PixelOps po(x / radius, y / radius, z / radius);
 
+        // finds the maximum color value out of all the lights
+        float max_color_value = max(max3(max_num_from_vector(pl_r),
+                                         max_num_from_vector(pl_g),
+                                         max_num_from_vector(pl_b)),
+                                    max3(max_num_from_vector(dl_r),
+                                         max_num_from_vector(dl_g),
+                                         max_num_from_vector(dl_b)));
+
         // iterate through each point light
         for(int a = 0; a < pl_x.size(); a++) {
-          float r = pl_r[a] / max3(pl_r[a], pl_g[a], pl_b[a]);
-          float g = pl_g[a] / max3(pl_r[a], pl_g[a], pl_b[a]);
-          float b = pl_b[a] / max3(pl_r[a], pl_g[a], pl_b[a]);
+          // normalize each light intensity to between [0.0, 1.0]
+          float r = pl_r[a] / max_color_value;
+          float g = pl_g[a] / max_color_value;
+          float b = pl_b[a] / max_color_value;
 
           po.renderPointLight(pl_x[a], pl_y[a], pl_z[a], r, g, b);
         }
 
         // iterate through each directional light
         for(int a = 0; a < dl_x.size(); a++) {
-          float r = dl_r[a] / max3(dl_r[a], dl_g[a], dl_b[a]);
-          float g = dl_g[a] / max3(dl_r[a], dl_g[a], dl_b[a]);
-          float b = dl_b[a] / max3(dl_r[a], dl_g[a], dl_b[a]);
+          // normalize each light intensity to between [0.0, 1.0]
+          float r = dl_r[a] / max_color_value;
+          float g = dl_g[a] / max_color_value;
+          float b = dl_b[a] / max_color_value;
 
           po.renderDirectionalLight(dl_x[a], dl_y[a], dl_z[a], r, g, b);
         }
