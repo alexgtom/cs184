@@ -79,6 +79,11 @@ class Viewport {
 /* 
  * Math Operations
  */
+
+float max3(float a1, float a2, float a3) {
+  return max(max(a1, a2), a3);
+}
+
 float magnitude(float x, float y, float z) {
   return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
 }
@@ -115,7 +120,7 @@ class PixelOps {
       this->r += ka_r * r;
       this->g += ka_g * g;
       this->b += ka_b * b;
-      
+
       return *this;
     }
 
@@ -214,7 +219,9 @@ class PixelOps {
 
     void renderPointLight(float x, float y, float z, float r, float g, float b) {
       diffuseAmbientComponent(r, g, b);
-      diffuseComponent(-x, -y, -z, r, g, b);
+
+      // make light shine to point
+      diffuseComponent(this->x - x, this->y - y, this->z - z, r, g, b);
       specularComponent(x, y, z, r, g, b);
     }
 };
@@ -309,18 +316,18 @@ void circle(float centerX, float centerY, float radius) {
 
         // iterate through each point light
         for(int a = 0; a < pl_x.size(); a++) {
-          float r = pl_r[a] / (pl_r[a] + pl_g[a] + pl_b[a]);
-          float g = pl_r[a] / (pl_r[a] + pl_g[a] + pl_b[a]);
-          float b = pl_r[a] / (pl_r[a] + pl_g[a] + pl_b[a]);
+          float r = pl_r[a] / max3(pl_r[a], pl_g[a], pl_b[a]);
+          float g = pl_g[a] / max3(pl_r[a], pl_g[a], pl_b[a]);
+          float b = pl_b[a] / max3(pl_r[a], pl_g[a], pl_b[a]);
 
           po.renderPointLight(pl_x[a], pl_y[a], pl_z[a], r, g, b);
         }
 
         // iterate through each directional light
         for(int a = 0; a < dl_x.size(); a++) {
-          float r = dl_r[a] / (dl_r[a] + dl_g[a] + dl_b[a]);
-          float g = dl_r[a] / (dl_r[a] + dl_g[a] + dl_b[a]);
-          float b = dl_r[a] / (dl_r[a] + dl_g[a] + dl_b[a]);
+          float r = dl_r[a] / max3(dl_r[a], dl_g[a], dl_b[a]);
+          float g = dl_g[a] / max3(dl_r[a], dl_g[a], dl_b[a]);
+          float b = dl_b[a] / max3(dl_r[a], dl_g[a], dl_b[a]);
 
           po.renderDirectionalLight(dl_x[a], dl_y[a], dl_z[a], r, g, b);
         }
