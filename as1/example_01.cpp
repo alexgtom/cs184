@@ -189,10 +189,10 @@ class PixelOps {
       float r_z = -l_z + (2 * l_dot_n * n_z);
       normalize_vector(r_x, r_y, r_z);
 
-      // viewer position
+      // viewer direction
       float v_x = 0.0f;
       float v_y = 0.0f;
-      float v_z = 1.0f; //TODO: this is supposed to be infinity
+      float v_z = 1.0f;
 
       // max term
       float m = max(0.0f, r_x * v_x + r_y * v_y + r_z * v_z);
@@ -226,8 +226,8 @@ class PixelOps {
      */
     void renderDirectionalLight(float x, float y, float z, float r, float g, float b) {
       diffuseAmbientComponent(r, g, b);
-      diffuseComponent(x, y, z, r, g, b);
-      specularComponent(x, y, z, r, g, b);
+      diffuseComponent(-x, -y, -z, r, g, b);
+      specularComponent(-x, -y, -z, r, g, b);
     }
 
     void renderPointLight(float x, float y, float z, float r, float g, float b) {
