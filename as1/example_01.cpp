@@ -67,44 +67,6 @@ class Viewport {
  * Math Operations
  */
 
-//TODO: print_vector does not work for new vectors yet
-void print_vector(const vector<float>& v) {
-  for(int i = 0; i < v.size(); i++) {
-    cout << v[i] << endl;
-  }
-}
-
-float max3(float a1, float a2, float a3) {
-  return max(max(a1, a2), a3);
-}
-
-float max_num_from_vector(vector<float>& v) {
-  float m = 0.0f;
-  for (int i = 0; i < v.size(); i++) {
-    m = max(v[i], m);
-  }
-  return m;
-}
-
-float magnitude(float x, float y, float z) {
-  return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
-}
-
-float vector_magnitude(vector<float>& v) {
-  float total = 0.0f;
-  for(int i = 0; i < v.size(); i++) {
-    total += pow(v[i], 2);
-  }
-  return sqrt(total);
-}
-
-void normalize_vector(float& x, float& y, float& z) {
-  float m = magnitude(x, y, z);
-  x = x / m;
-  y = y / m;
-  z = z / m;
-}
-
 class PixelOps;
 
 class PixelOps {

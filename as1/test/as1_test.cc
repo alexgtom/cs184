@@ -173,32 +173,6 @@ TEST_F(VectorTest, DotProduct) {
 }
 
 // ------------------------------------------------------------
-// Math Operations Test
-// ------------------------------------------------------------
-
-class MathOpsTest : public ::testing::Test {
-};
-
-TEST_F(MathOpsTest, NormalizeVectorTest) {
-  float x = 1.0f;
-  float y = 2.0f;
-  float z = 3.0f;
-  normalize_vector(x, y, z);
-  EXPECT_FLOAT_EQ(0.26726124f, x);
-  EXPECT_FLOAT_EQ(0.53452247f, y);
-  EXPECT_FLOAT_EQ(0.80178368f, z);
-}
-
-TEST_F(MathOpsTest, MaxNumFromVector) {
-  vector<float> v;
-  v.push_back(1.0f);
-  v.push_back(2.0f);
-  v.push_back(3.0f);
-
-  EXPECT_FLOAT_EQ(3.0f, max_num_from_vector(v));
-}
-
-// ------------------------------------------------------------
 // PixelOpsTest
 // ------------------------------------------------------------
 class PixelOpsTest : public ::testing::Test {
