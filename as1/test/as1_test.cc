@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "as1/Vec3.h"
 
 // override the main function in the included file below
 #define _MAIN  
@@ -35,12 +36,12 @@ class FooTest : public ::testing::Test {
 };
 
 // Tests that the Foo::Bar() method does Abc.
-TEST_F(FooTest, MethodBarDoesAbc) {
+TEST(FooTest, MethodBarDoesAbc) {
   EXPECT_EQ(0, 0);
 }
 
 // Tests that Foo does Xyz.
-TEST_F(FooTest, DoesXyz) {
+TEST(FooTest, DoesXyz) {
   // Exercises the Xyz feature of Foo.
 }
 
@@ -68,7 +69,7 @@ class ParseArgsTest : public ::testing::Test {
 
 };
 
-TEST_F(ParseArgsTest, kaTest) {
+TEST(ParseArgsTest, kaTest) {
   const char *args[5] = {"./as0", "-ka", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
   EXPECT_EQ(0.0f, ka_r);
@@ -76,7 +77,7 @@ TEST_F(ParseArgsTest, kaTest) {
   EXPECT_EQ(1.0f, ka_b);
 }
 
-TEST_F(ParseArgsTest, kdTest) {
+TEST(ParseArgsTest, kdTest) {
   const char *args[5] = {"./as0", "-kd", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
   EXPECT_EQ(0.0f, kd_r);
@@ -84,7 +85,7 @@ TEST_F(ParseArgsTest, kdTest) {
   EXPECT_EQ(1.0f, kd_b);
 }
 
-TEST_F(ParseArgsTest, ksTest) {
+TEST(ParseArgsTest, ksTest) {
   const char *args[5] = {"./as0", "-ks", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
   EXPECT_EQ(0.0f, ks_r);
@@ -92,13 +93,13 @@ TEST_F(ParseArgsTest, ksTest) {
   EXPECT_EQ(1.0f, ks_b);
 }
 
-TEST_F(ParseArgsTest, spTest) {
+TEST(ParseArgsTest, spTest) {
   const char *args[3] = {"./as0", "-sp", "1.0"};
   parseArgs(3, const_cast<char **>(args));
   EXPECT_EQ(1.0f, sp_v);
 }
 
-TEST_F(ParseArgsTest, plTest) {
+TEST(ParseArgsTest, plTest) {
   const char *args[8] = {"./as0", "-pl", "0.0", "0.5", "1.0", "100", "200", "255"};
   parseArgs(8, const_cast<char **>(args));
   EXPECT_EQ(0.0f, pl_x.at(0));
@@ -109,7 +110,7 @@ TEST_F(ParseArgsTest, plTest) {
   EXPECT_EQ(255.0f, pl_b.at(0));
 }
 
-TEST_F(ParseArgsTest, plMultipleTest) {
+TEST(ParseArgsTest, plMultipleTest) {
   const char *args[15] = {"./as0", 
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255"
@@ -130,7 +131,7 @@ TEST_F(ParseArgsTest, plMultipleTest) {
   EXPECT_EQ(255.0f, pl_b.at(1));
 }
 
-TEST_F(ParseArgsTest, dlTest) {
+TEST(ParseArgsTest, dlTest) {
   const char *args[8] = {"./as0", "-dl", "0.0", "0.5", "1.0", "100", "200", "255"};
   parseArgs(8, const_cast<char **>(args));
   EXPECT_EQ(0.0f, dl_x.at(0));
@@ -141,7 +142,7 @@ TEST_F(ParseArgsTest, dlTest) {
   EXPECT_EQ(255.0f, dl_b.at(0));
 }
 
-TEST_F(ParseArgsTest, dlMultipleTest) {
+TEST(ParseArgsTest, dlMultipleTest) {
   const char *args[15] = {"./as0", 
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255"
@@ -162,7 +163,7 @@ TEST_F(ParseArgsTest, dlMultipleTest) {
   EXPECT_EQ(255.0f, dl_b.at(1));
 }
 
-TEST_F(ParseArgsTest, MultiArgTest) {
+TEST(ParseArgsTest, MultiArgTest) {
   const char *args[17] = {"./as0", 
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255",
@@ -186,7 +187,7 @@ TEST_F(ParseArgsTest, MultiArgTest) {
   EXPECT_EQ(1.0f, sp_v);
 }
 
-TEST_F(ParseArgsTest, MultiArgTest2) {
+TEST(ParseArgsTest, MultiArgTest2) {
   const char *args[16] = {"./as1",
     "-ka", "0.9", "0.9", "1.0", 
     "-kd", "0.2", "0.2", "0.2", 
@@ -208,6 +209,24 @@ TEST_F(ParseArgsTest, MultiArgTest2) {
   EXPECT_EQ(255.0f, pl_g.at(0));
   EXPECT_EQ(255.0f, pl_b.at(0));
 }
+
+// ------------------------------------------------------------
+// Vector Operations Test
+// ------------------------------------------------------------
+
+class Vec3Test : public ::testing::Test {
+};
+
+TEST(Vec3Test, Subtraction) {
+  Vec3 v(1, 2, 3);
+  EXPECT_EQ(v-v, Vec3());
+}
+
+TEST(Vec3Test, DotProduct) {
+  Vec3 v(1, 2, 3);
+  EXPECT_FLOAT_EQ(v.dot(v), 14);
+}
+
 // ------------------------------------------------------------
 // Math Operations Test
 // ------------------------------------------------------------
@@ -215,7 +234,7 @@ TEST_F(ParseArgsTest, MultiArgTest2) {
 class MathOpsTest : public ::testing::Test {
 };
 
-TEST_F(MathOpsTest, NormalizeVectorTest) {
+TEST(MathOpsTest, NormalizeVectorTest) {
   float x = 1.0f;
   float y = 2.0f;
   float z = 3.0f;
@@ -225,7 +244,7 @@ TEST_F(MathOpsTest, NormalizeVectorTest) {
   EXPECT_FLOAT_EQ(0.80178368f, z);
 }
 
-TEST_F(MathOpsTest, MaxNumFromVector) {
+TEST(MathOpsTest, MaxNumFromVector) {
   vector<float> v;
   v.push_back(1.0f);
   v.push_back(2.0f);
@@ -240,7 +259,7 @@ TEST_F(MathOpsTest, MaxNumFromVector) {
 class PixelOpsTest : public ::testing::Test {
 };
 
-TEST_F(PixelOpsTest, DiffuseTestDefault) {
+TEST(PixelOpsTest, DiffuseTestDefault) {
   kd_r = kd_g = kd_b = 0.0f;
   PixelOps po(1.0f, 0.0f, 0.0f);
   po.diffuseComponent(0.0f, 1.0f, 0.0f, 1.0, 0.0, 0.0);
@@ -251,7 +270,7 @@ TEST_F(PixelOpsTest, DiffuseTestDefault) {
   EXPECT_FLOAT_EQ(po.b, 0.0f);
 }
 
-TEST_F(PixelOpsTest, DiffuseTest) {
+TEST(PixelOpsTest, DiffuseTest) {
   // real values
   kd_r = 1.0f;
   kd_g = 0.0f;
@@ -264,6 +283,8 @@ TEST_F(PixelOpsTest, DiffuseTest) {
   EXPECT_FLOAT_EQ(0.0f, po.g);
   EXPECT_FLOAT_EQ(0.0f, po.b);
 }
+
+//TODO: Add tests for specular component
 
 
 int main(int argc, char **argv) {

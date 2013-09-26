@@ -24,6 +24,8 @@
 #include <time.h>
 #include <math.h>
 
+#include "Vec3.h"
+
 
 #define PI 3.14159265  // Should be used from mathlib
 #define DEBUG_ARGS false
@@ -51,16 +53,14 @@ float ks_b = 0.0f;
 float sp_v = 0.0f;
 
 // there can be multuple light sources
-vector<float> pl_x;
-vector<float> pl_y;
-vector<float> pl_z;
+vector<Vec3> pl;
+
 vector<float> pl_r;
 vector<float> pl_g;
 vector<float> pl_b;
 
-vector<float> dl_x;
-vector<float> dl_y;
-vector<float> dl_z;
+vector<Vec3> dl;
+
 vector<float> dl_r;
 vector<float> dl_g;
 vector<float> dl_b;
@@ -80,21 +80,23 @@ class Viewport {
  * Math Operations
  */
 
-void print_vector(vector<float>& v) {
+//TODO: print_vector does not work for new vectors yet
+void print_vector(const vector<float>& v) {
   for(int i = 0; i < v.size(); i++) {
     cout << v[i] << endl;
   }
 }
 
-float max_num_from_vector(vector<float>& v) {
-  float m = 0.0f;
-  for (int i = 0; i < v.size(); i++)
-    m = max(v[i], m);
-  return m;
-}
-
 float max3(float a1, float a2, float a3) {
   return max(max(a1, a2), a3);
+}
+
+float max_num_from_vector(vector<float>& v) {
+  float m = 0.0f;
+  for (int i = 0; i < v.size(); i++) {
+    m = max(v[i], m);
+  }
+  return m;
 }
 
 float magnitude(float x, float y, float z) {
@@ -113,15 +115,12 @@ class PixelOps;
 class PixelOps {
   public:
     // coordinates on sphere
-    float x, y, z;
+    Vec3 v;
 
     // r, g, b, are values between [0.0f, 1.9f]
     float r, g, b;
 
-    PixelOps(float x, float y, float z) {
-      this->x = x;
-      this->y = y;
-      this->z = z;
+    PixelOps(Vec3 v) : v(v) {
       r = g = b = 0.0f;
     }
 
@@ -142,26 +141,20 @@ class PixelOps {
      *
      * x, y, z is the direction of the light
      */
-    PixelOps& diffuseComponent(float x, float y, float z, float r, float g, float b) {
+    PixelOps& diffuseComponent(Vec3 light_direction, float r, float g, float b) {
       // light vector
-      float l_x = x;
-      float l_y = y;
-      float l_z = z;
-      normalize_vector(l_x, l_y, l_z);
+      light_direction = light_direction.norm();
 
       // normal vector
-      float n_x = this->x;
-      float n_y = this->y;
-      float n_z = this->z;
-      normalize_vector(n_x, n_y, n_z);
+      Vec3 normal = this->v.norm();
     
       // max(0, n.v)
-      float c = max(0.0f, l_x * n_x + l_y * n_y + l_z * n_z);
+      float m = max(0.0f, light_direction.dot(normal));
       
       // add diffuse component
-      this->r += c * kd_r * r;
-      this->g += c * kd_g * g;
-      this->b += c * kd_b * b;
+      this->r += m * kd_r * r;
+      this->g += m * kd_g * g;
+      this->b += m * kd_b * b;
       
       return *this;
     }
@@ -169,35 +162,22 @@ class PixelOps {
     /*
      * Specular Component
      */
-    PixelOps& specularComponent(float x, float y, float z, float r, float g, float b) {
+    PixelOps& specularComponent(Vec3 light_direction, float r, float g, float b) {
       // light vector
-      float l_x = x;
-      float l_y = y;
-      float l_z = z;
-      normalize_vector(l_x, l_y, l_z);
-      
+      light_direction = light_direction.norm();
+
       // normal vector
-      float n_x = this->x;
-      float n_y = this->y;
-      float n_z = this->z;
-      normalize_vector(n_x, n_y, n_z);
+      Vec3 normal = this->v.norm();
 
       // reflected direction
-      float l_dot_n = (l_x * n_x + l_y * n_y + l_z * n_z);
-      float r_x = -l_x + (2 * l_dot_n * n_x);
-      float r_y = -l_y + (2 * l_dot_n * n_y);
-      float r_z = -l_z + (2 * l_dot_n * n_z);
-      normalize_vector(r_x, r_y, r_z);
+      Vec3 reflected_direction = -light_direction + (2 * light_direction.dot(normal) * normal);
+      reflected_direction = reflected_direction.norm();
 
       // viewer direction
-      float v_x = 0.0f;
-      float v_y = 0.0f;
-      float v_z = 1.0f;
-      normalize_vector(v_x, v_y, v_z);
-
+      Vec3 viewer_direction = Vec3(0, 0, 1); //normalized
 
       // max term
-      float m = max(0.0f, r_x * v_x + r_y * v_y + r_z * v_z);
+      float m = max(0.0f, reflected_direction.dot(viewer_direction));
 
       // add specular component
       this->r += pow(m, sp_v) * ks_r * r;
@@ -226,18 +206,18 @@ class PixelOps {
     /*
      * Calculate everything
      */
-    void renderDirectionalLight(float x, float y, float z, float r, float g, float b) {
+    void renderDirectionalLight(Vec3 light_direction, float r, float g, float b) {
       ambientComponent(r, g, b);
-      diffuseComponent(-x, -y, -z, r, g, b);
-      specularComponent(-x, -y, -z, r, g, b);
+      diffuseComponent(-light_direction, r, g, b);
+      specularComponent(-light_direction, r, g, b);
     }
 
-    void renderPointLight(float x, float y, float z, float r, float g, float b) {
+    void renderPointLight(Vec3 light_location, float r, float g, float b) {
       ambientComponent(r, g, b);
 
       // make light shine to point
-      diffuseComponent(x - this->x, y - this->y, z - this->z, r, g, b);
-      specularComponent(x - this->x, y - this->y, z - this->z, r, g, b);
+      diffuseComponent(light_location - this->v, r, g, b);
+      specularComponent(light_location - this->v, r, g, b);
     }
 };
 
@@ -327,7 +307,7 @@ void circle(float centerX, float centerY, float radius) {
         float z = sqrt(radius*radius-dist*dist);
 
         // normalize x, y, and z into coordinate system
-        PixelOps po(x / radius, y / radius, z / radius);
+        PixelOps po(Vec3(x / radius, y / radius, z / radius));
 
         // finds the maximum color value out of all the lights
         float max_color_value = max(max3(max_num_from_vector(pl_r),
@@ -338,23 +318,23 @@ void circle(float centerX, float centerY, float radius) {
                                          max_num_from_vector(dl_b)));
 
         // iterate through each point light
-        for(int a = 0; a < pl_x.size(); a++) {
+        for(int a = 0; a < pl.size(); a++) {
           // normalize each light intensity to between [0.0, 1.0]
           float r = pl_r[a] / max_color_value;
           float g = pl_g[a] / max_color_value;
           float b = pl_b[a] / max_color_value;
 
-          po.renderPointLight(pl_x[a], pl_y[a], pl_z[a], r, g, b);
+          po.renderPointLight(pl[a], r, g, b);
         }
 
         // iterate through each directional light
-        for(int a = 0; a < dl_x.size(); a++) {
+        for(int a = 0; a < dl.size(); a++) {
           // normalize each light intensity to between [0.0, 1.0]
           float r = dl_r[a] / max_color_value;
           float g = dl_g[a] / max_color_value;
           float b = dl_b[a] / max_color_value;
 
-          po.renderDirectionalLight(dl_x[a], dl_y[a], dl_z[a], r, g, b);
+          po.renderDirectionalLight(dl[a], r, g, b);
         }
 
         setPixel(i, j, po.r, po.g, po.b);
@@ -424,17 +404,17 @@ void parseArgs(int argc, char *argv[]) {
       sp_v = atof(argv[i + 1]);
       i += 2;
     } else if (strcmp(option, "-pl") == 0) {
-      pl_x.push_back(atof(argv[i + 1]));
-      pl_y.push_back(atof(argv[i + 2]));
-      pl_z.push_back(atof(argv[i + 3]));
+      pl.push_back(Vec3(atof(argv[i + 1]), 
+                        atof(argv[i + 2]), 
+                        atof(argv[i + 3])));
       pl_r.push_back(atof(argv[i + 4]));
       pl_g.push_back(atof(argv[i + 5]));
       pl_b.push_back(atof(argv[i + 6]));
       i += 7;
     } else if (strcmp(option, "-dl") == 0) {
-      dl_x.push_back(atof(argv[i + 1]));
-      dl_y.push_back(atof(argv[i + 2]));
-      dl_z.push_back(atof(argv[i + 3]));
+      dl.push_back(Vec3(atof(argv[i + 1]), 
+                        atof(argv[i + 2]), 
+                        atof(argv[i + 3])));
       dl_r.push_back(atof(argv[i + 4]));
       dl_g.push_back(atof(argv[i + 5]));
       dl_b.push_back(atof(argv[i + 6]));
@@ -458,19 +438,19 @@ void parseArgs(int argc, char *argv[]) {
     cout << "ks_b" << ": " << ks_b << endl;
     cout << "sp_v" << ": " << sp_v << endl;
 
-    for(int i = 0; i < pl_x.size(); i++) {
-      cout << "pl_x[" << i << "]" << ": " << pl_x[i] << endl;
-      cout << "pl_y[" << i << "]" << ": " << pl_y[i] << endl;
-      cout << "pl_z[" << i << "]" << ": " << pl_z[i] << endl;
+    for(int i = 0; i < pl.size(); i++) {
+      cout << "pl_x[" << i << "]" << ": " << pl[i].x << endl;
+      cout << "pl_y[" << i << "]" << ": " << pl[i].y << endl;
+      cout << "pl_z[" << i << "]" << ": " << pl[i].z << endl;
       cout << "pl_r[" << i << "]" << ": " << pl_r[i] << endl;
       cout << "pl_g[" << i << "]" << ": " << pl_g[i] << endl;
       cout << "pl_b[" << i << "]" << ": " << pl_b[i] << endl;
     }
 
-    for(int i = 0; i < dl_x.size(); i++) {
-      cout << "dl_x[" << i << "]" << ": " << dl_x[i] << endl;
-      cout << "dl_y[" << i << "]" << ": " << dl_y[i] << endl;
-      cout << "dl_z[" << i << "]" << ": " << dl_z[i] << endl;
+    for(int i = 0; i < dl.size(); i++) {
+      cout << "dl_x[" << i << "]" << ": " << dl[i].x << endl;
+      cout << "dl_y[" << i << "]" << ": " << dl[i].y << endl;
+      cout << "dl_z[" << i << "]" << ": " << dl[i].z << endl;
       cout << "dl_r[" << i << "]" << ": " << dl_r[i] << endl;
       cout << "dl_g[" << i << "]" << ": " << dl_g[i] << endl;
       cout << "dl_b[" << i << "]" << ": " << dl_b[i] << endl;
