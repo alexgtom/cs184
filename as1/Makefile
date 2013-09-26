@@ -19,4 +19,4 @@ clean:
 	$(RM) *.o as1
  
 
-
+include Makefile.cases
