@@ -1,47 +1,47 @@
 #include <cmath>
 
-class Vec3 {
+class Vector {
 public:
 	float x, y, z;
 
-	Vec3(float x=0, float y=0, float z=0) : x(x), y(y), z(z) {}
-	Vec3(const Vec3& v) : x(v.x), y(v.y), z(v.z) {}
-	Vec3& operator=(const Vec3& v) {
+	Vector(float x=0, float y=0, float z=0) : x(x), y(y), z(z) {}
+	Vector(const Vector& v) : x(v.x), y(v.y), z(v.z) {}
+	Vector& operator=(const Vector& v) {
 		x = v.x;
 		y = v.y;
 		z = v.z;
 	}
-	~Vec3() {}
+	~Vector() {}
 
-	bool operator==(const Vec3& v) const {
+	bool operator==(const Vector& v) const {
 		return x==v.x && y==v.y && z==v.z;
 	}
 
-	Vec3 operator*(const Vec3& v) {
-		return Vec3(x * v.x, y * v.y, z * v.z);
+	Vector operator*(const Vector& v) {
+		return Vector(x * v.x, y * v.y, z * v.z);
 	}
 
-	Vec3 operator/(float d) {
-		return Vec3(x/d, y/d, z/d);
+	Vector operator/(float d) {
+		return Vector(x/d, y/d, z/d);
 	}
 
-	Vec3 operator+(const Vec3& v) {
-		return Vec3(x + v.x, y + v.y, z + v.z);
+	Vector operator+(const Vector& v) {
+		return Vector(x + v.x, y + v.y, z + v.z);
 	}
 
-	Vec3 operator-() {
-		return Vec3(-x, -y, -z);
+	Vector operator-() {
+		return Vector(-x, -y, -z);
 	}
 
-	Vec3 operator-(const Vec3& v) {
-		return Vec3(x - v.x, y - v.y, z - v.z);
+	Vector operator-(const Vector& v) {
+		return Vector(x - v.x, y - v.y, z - v.z);
 	}
 
 	float sum() {
 		return x + y + z;
 	}
 
-	float dot(const Vec3& v) {
+	float dot(const Vector& v) {
 		return (*this * v).sum();
 	}
 
@@ -49,11 +49,11 @@ public:
 		return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
 	}
 
-	Vec3 norm() {
+	Vector norm() {
 		return *this / this->mag();
 	}
 };
 
-	Vec3 operator*(float a, const Vec3& v) {
-		return Vec3(a * v.x, a * v.y, a * v.z);
+	Vector operator*(float a, const Vector& v) {
+		return Vector(a * v.x, a * v.y, a * v.z);
 	}

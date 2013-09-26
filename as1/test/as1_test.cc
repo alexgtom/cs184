@@ -62,10 +62,9 @@ class ParseArgsTest : public ::testing::Test {
       dl_b.clear();
     }
 
-
 };
 
-TEST_F(ParseArgsTest, kaTest) {
+TEST(ParseArgsTest, kaTest) {
   const char *args[5] = {"./as0", "-ka", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
   EXPECT_EQ(0.0f, ka_r);
@@ -73,7 +72,7 @@ TEST_F(ParseArgsTest, kaTest) {
   EXPECT_EQ(1.0f, ka_b);
 }
 
-TEST_F(ParseArgsTest, kdTest) {
+TEST(ParseArgsTest, kdTest) {
   const char *args[5] = {"./as0", "-kd", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
   EXPECT_EQ(0.0f, kd_r);
@@ -81,7 +80,7 @@ TEST_F(ParseArgsTest, kdTest) {
   EXPECT_EQ(1.0f, kd_b);
 }
 
-TEST_F(ParseArgsTest, ksTest) {
+TEST(ParseArgsTest, ksTest) {
   const char *args[5] = {"./as0", "-ks", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
   EXPECT_EQ(0.0f, ks_r);
@@ -89,80 +88,77 @@ TEST_F(ParseArgsTest, ksTest) {
   EXPECT_EQ(1.0f, ks_b);
 }
 
-TEST_F(ParseArgsTest, spTest) {
+TEST(ParseArgsTest, spTest) {
   const char *args[3] = {"./as0", "-sp", "1.0"};
   parseArgs(3, const_cast<char **>(args));
   EXPECT_EQ(1.0f, sp_v);
 }
 
-TEST_F(ParseArgsTest, plTest) {
+TEST(ParseArgsTest, plTest) {
   const char *args[8] = {"./as0", "-pl", "0.0", "0.5", "1.0", "100", "200", "255"};
   parseArgs(8, const_cast<char **>(args));
-  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), pl.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl.at(0));
   EXPECT_EQ(100.0f, pl_r.at(0));
   EXPECT_EQ(200.0f, pl_g.at(0));
   EXPECT_EQ(255.0f, pl_b.at(0));
 }
 
-TEST_F(ParseArgsTest, plMultipleTest) {
+TEST(ParseArgsTest, plMultipleTest) {
   const char *args[15] = {"./as0", 
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255"
   };
   parseArgs(15, const_cast<char **>(args));
-  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), pl.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl.at(0));
   EXPECT_EQ(100.0f, pl_r.at(0));
   EXPECT_EQ(200.0f, pl_g.at(0));
   EXPECT_EQ(255.0f, pl_b.at(0));
 
-  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), pl.at(1));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl.at(1));
   EXPECT_EQ(100.0f, pl_r.at(1));
   EXPECT_EQ(200.0f, pl_g.at(1));
   EXPECT_EQ(255.0f, pl_b.at(1));
 }
 
-TEST_F(ParseArgsTest, dlTest) {
+TEST(ParseArgsTest, dlTest) {
   const char *args[8] = {"./as0", "-dl", "0.0", "0.5", "1.0", "100", "200", "255"};
   parseArgs(8, const_cast<char **>(args));
-  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), dl.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl.at(0));
   EXPECT_EQ(100.0f, dl_r.at(0));
   EXPECT_EQ(200.0f, dl_g.at(0));
   EXPECT_EQ(255.0f, dl_b.at(0));
 }
 
-TEST_F(ParseArgsTest, dlMultipleTest) {
+TEST(ParseArgsTest, dlMultipleTest) {
   const char *args[15] = {"./as0", 
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255"
   };
   parseArgs(15, const_cast<char **>(args));
-  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), dl.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl.at(0));
   EXPECT_EQ(100.0f, dl_r.at(0));
   EXPECT_EQ(200.0f, dl_g.at(0));
   EXPECT_EQ(255.0f, dl_b.at(0));
 
-  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), dl.at(1));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl.at(1));
   EXPECT_EQ(100.0f, dl_r.at(1));
   EXPECT_EQ(200.0f, dl_g.at(1));
   EXPECT_EQ(255.0f, dl_b.at(1));
 }
 
-TEST_F(ParseArgsTest, MultiArgTest) {
-  ASSERT_TRUE(pl_r.size() == 0);
-  ASSERT_TRUE(pl_g.size() == 0);
-  ASSERT_TRUE(pl_b.size() == 0);
+TEST(ParseArgsTest, MultiArgTest) {
   const char *args[17] = {"./as0", 
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-sp", "1.0"
   };
   parseArgs(17, const_cast<char **>(args));
-  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), dl.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl.at(0));
   EXPECT_EQ(100.0f, dl_r.at(0));
   EXPECT_EQ(200.0f, dl_g.at(0));
   EXPECT_EQ(255.0f, dl_b.at(0));
 
-  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), pl.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl.at(0));
   EXPECT_EQ(100.0f, pl_r.at(0));
   EXPECT_EQ(200.0f, pl_g.at(0));
   EXPECT_EQ(255.0f, pl_b.at(0));
@@ -170,10 +166,7 @@ TEST_F(ParseArgsTest, MultiArgTest) {
   EXPECT_EQ(1.0f, sp_v);
 }
 
-TEST_F(ParseArgsTest, MultiArgTest2) {
-  ASSERT_TRUE(pl_r.size() == 0);
-  ASSERT_TRUE(pl_g.size() == 0);
-  ASSERT_TRUE(pl_b.size() == 0);
+TEST(ParseArgsTest, MultiArgTest2) {
   const char *args[16] = {"./as1",
     "-ka", "0.9", "0.9", "1.0", 
     "-kd", "0.2", "0.2", "0.2", 
@@ -188,26 +181,26 @@ TEST_F(ParseArgsTest, MultiArgTest2) {
   EXPECT_EQ(0.2f, kd_g);
   EXPECT_EQ(0.2f, kd_b);
 
+  EXPECT_EQ(Vector(1.0f, 1.0f, 1.0f), pl.at(0));
   EXPECT_EQ(255.0f, pl_r.at(0));
   EXPECT_EQ(255.0f, pl_g.at(0));
   EXPECT_EQ(255.0f, pl_b.at(0));
-  EXPECT_EQ(Vec3(1.0f, 1.0f, 1.0f), pl.at(0));
 }
 
 // ------------------------------------------------------------
 // Vector Operations Test
 // ------------------------------------------------------------
 
-class Vec3Test : public ::testing::Test {
+class VectorTest : public ::testing::Test {
 };
 
-TEST(Vec3Test, Subtraction) {
-  Vec3 v(1, 2, 3);
-  EXPECT_EQ(v-v, Vec3());
+TEST(VectorTest, Subtraction) {
+  Vector v(1, 2, 3);
+  EXPECT_EQ(v-v, Vector());
 }
 
-TEST(Vec3Test, DotProduct) {
-  Vec3 v(1, 2, 3);
+TEST(VectorTest, DotProduct) {
+  Vector v(1, 2, 3);
   EXPECT_FLOAT_EQ(v.dot(v), 14);
 }
 
@@ -245,8 +238,8 @@ class PixelOpsTest : public ::testing::Test {
 
 TEST(PixelOpsTest, DiffuseTestDefault) {
   kd_r = kd_g = kd_b = 0.0f;
-  PixelOps po(Vec3(0.0f, 1.0f, 0.0f));
-  po.diffuseComponent(Vec3(0.0f, 1.0f, 0.0f), 1.0, 0.0, 0.0);
+  PixelOps po(Vector(0.0f, 1.0f, 0.0f));
+  po.diffuseComponent(Vector(0.0f, 1.0f, 0.0f), 1.0, 0.0, 0.0);
 
   // assert all zero arguments work
   EXPECT_FLOAT_EQ(po.r, 0.0f);
@@ -260,8 +253,8 @@ TEST(PixelOpsTest, DiffuseTest) {
   kd_g = 0.0f;
   kd_b = 0.0f;
 
-  PixelOps po(Vec3(-2.0f, 0.0f, 0.0f));
-  po.diffuseComponent(Vec3(-2.0f, 0.0f, 0.0f), 1.0, 0.0, 0.0);
+  PixelOps po(Vector(-2.0f, 0.0f, 0.0f));
+  po.diffuseComponent(Vector(-2.0f, 0.0f, 0.0f), 1.0, 0.0, 0.0);
 
   EXPECT_FLOAT_EQ(1.0f, po.r);
   EXPECT_FLOAT_EQ(0.0f, po.g);

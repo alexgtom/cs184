@@ -24,7 +24,7 @@
 #include <time.h>
 #include <math.h>
 
-#include "Vec3.h"
+#include "Vector.h"
 
 
 #define PI 3.14159265  // Should be used from mathlib
@@ -53,13 +53,13 @@ float ks_b = 0.0f;
 float sp_v = 0.0f;
 
 // there can be multuple light sources
-vector<Vec3> pl;
+vector<Vector> pl;
 
 vector<float> pl_r;
 vector<float> pl_g;
 vector<float> pl_b;
 
-vector<Vec3> dl;
+vector<Vector> dl;
 
 vector<float> dl_r;
 vector<float> dl_g;
@@ -123,12 +123,12 @@ class PixelOps;
 class PixelOps {
   public:
     // coordinates on sphere
-    Vec3 v;
+    Vector v;
 
     // r, g, b, are values between [0.0f, 1.9f]
     float r, g, b;
 
-    PixelOps(Vec3 v) : v(v) {
+    PixelOps(Vector v) : v(v) {
       r = g = b = 0.0f;
     }
 
@@ -149,12 +149,12 @@ class PixelOps {
      *
      * x, y, z is the direction of the light
      */
-    PixelOps& diffuseComponent(Vec3 light_direction, float r, float g, float b) {
+    PixelOps& diffuseComponent(Vector light_direction, float r, float g, float b) {
       // light vector
       light_direction = light_direction.norm();
 
       // normal vector
-      Vec3 normal = this->v.norm();
+      Vector normal = this->v.norm();
     
       // max(0, n.v)
       float m = max(0.0f, light_direction.dot(normal));
@@ -170,19 +170,19 @@ class PixelOps {
     /*
      * Specular Component
      */
-    PixelOps& specularComponent(Vec3 light_direction, float r, float g, float b) {
+    PixelOps& specularComponent(Vector light_direction, float r, float g, float b) {
       // light vector
       light_direction = light_direction.norm();
 
       // normal vector
-      Vec3 normal = this->v.norm();
+      Vector normal = this->v.norm();
 
       // reflected direction
-      Vec3 reflected_direction = -light_direction + (2 * light_direction.dot(normal) * normal);
+      Vector reflected_direction = -light_direction + (2 * light_direction.dot(normal) * normal);
       reflected_direction = reflected_direction.norm();
 
       // viewer direction
-      Vec3 viewer_direction = Vec3(0, 0, 1); //normalized
+      Vector viewer_direction = Vector(0, 0, 1); //normalized
 
       // max term
       float m = max(0.0f, reflected_direction.dot(viewer_direction));
@@ -214,13 +214,13 @@ class PixelOps {
     /*
      * Calculate everything
      */
-    void renderDirectionalLight(Vec3 light_direction, float r, float g, float b) {
+    void renderDirectionalLight(Vector light_direction, float r, float g, float b) {
       ambientComponent(r, g, b);
       diffuseComponent(-light_direction, r, g, b);
       specularComponent(-light_direction, r, g, b);
     }
 
-    void renderPointLight(Vec3 light_location, float r, float g, float b) {
+    void renderPointLight(Vector light_location, float r, float g, float b) {
       ambientComponent(r, g, b);
 
       // make light shine to point
@@ -315,7 +315,7 @@ void circle(float centerX, float centerY, float radius) {
         float z = sqrt(radius*radius-dist*dist);
 
         // normalize x, y, and z into coordinate system
-        PixelOps po(Vec3(x / radius, y / radius, z / radius));
+        PixelOps po(Vector(x / radius, y / radius, z / radius));
 
         // iterate through each point light
         for(int a = 0; a < pl.size(); a++) {
@@ -394,7 +394,7 @@ void parseArgs(int argc, char *argv[]) {
       sp_v = atof(argv[i + 1]);
       i += 2;
     } else if (strcmp(option, "-pl") == 0) {
-      pl.push_back(Vec3(atof(argv[i + 1]), 
+      pl.push_back(Vector(atof(argv[i + 1]), 
                         atof(argv[i + 2]), 
                         atof(argv[i + 3])));
       pl_r.push_back(atof(argv[i + 4]));
@@ -402,7 +402,7 @@ void parseArgs(int argc, char *argv[]) {
       pl_b.push_back(atof(argv[i + 6]));
       i += 7;
     } else if (strcmp(option, "-dl") == 0) {
-      dl.push_back(Vec3(atof(argv[i + 1]), 
+      dl.push_back(Vector(atof(argv[i + 1]), 
                         atof(argv[i + 2]), 
                         atof(argv[i + 3])));
       dl_r.push_back(atof(argv[i + 4]));
