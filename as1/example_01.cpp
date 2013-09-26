@@ -25,6 +25,7 @@
 #include <math.h>
 
 #include "Vector.h"
+#include "Color.h"
 
 
 #define PI 3.14159265  // Should be used from mathlib
@@ -38,32 +39,18 @@ using namespace std;
 // Arguments
 //****************************************************
 
-float ka_r = 0.0f;
-float ka_g = 0.0f;
-float ka_b = 0.0f;
-
-float kd_r = 0.0f;
-float kd_g = 0.0f;
-float kd_b = 0.0f;
-
-float ks_r = 0.0f;
-float ks_g = 0.0f;
-float ks_b = 0.0f;
+Color ka;
+Color kd;
+Color ks;
 
 float sp_v = 0.0f;
 
 // there can be multuple light sources
-vector<Vector> pl;
+vector<Vector> pl_vector;
+vector<Color> pl_color;
 
-vector<float> pl_r;
-vector<float> pl_g;
-vector<float> pl_b;
-
-vector<Vector> dl;
-
-vector<float> dl_r;
-vector<float> dl_g;
-vector<float> dl_b;
+vector<Vector> dl_vector;
+vector<Color> dl_color;
 
 //****************************************************
 // Some Classes
@@ -126,20 +113,18 @@ class PixelOps {
     Vector v;
 
     // r, g, b, are values between [0.0f, 1.9f]
-    float r, g, b;
+    Color c;
 
     PixelOps(Vector v) : v(v) {
-      r = g = b = 0.0f;
+      Color c;
     }
 
     /* 
      * Ambient Component
      */
-    PixelOps& ambientComponent(float r, float g, float b) {
+    PixelOps& ambientComponent(Color ambient_color) {
       // add ambient component
-      this->r += ka_r * r;
-      this->g += ka_g * g;
-      this->b += ka_b * b;
+      this->c += ka * ambient_color;
 
       return *this;
     }
@@ -149,7 +134,7 @@ class PixelOps {
      *
      * x, y, z is the direction of the light
      */
-    PixelOps& diffuseComponent(Vector light_direction, float r, float g, float b) {
+    PixelOps& diffuseComponent(Vector light_direction, Color light_color) {
       // light vector
       light_direction = light_direction.norm();
 
@@ -160,9 +145,7 @@ class PixelOps {
       float m = max(0.0f, light_direction.dot(normal));
       
       // add diffuse component
-      this->r += m * kd_r * r;
-      this->g += m * kd_g * g;
-      this->b += m * kd_b * b;
+      this->c += m * kd * light_color;
       
       return *this;
     }
@@ -170,7 +153,7 @@ class PixelOps {
     /*
      * Specular Component
      */
-    PixelOps& specularComponent(Vector light_direction, float r, float g, float b) {
+    PixelOps& specularComponent(Vector light_direction, Color light_color) {
       // light vector
       light_direction = light_direction.norm();
 
@@ -188,9 +171,7 @@ class PixelOps {
       float m = max(0.0f, reflected_direction.dot(viewer_direction));
 
       // add specular component
-      this->r += pow(m, sp_v) * ks_r * r;
-      this->g += pow(m, sp_v) * ks_g * g;
-      this->b += pow(m, sp_v) * ks_b * b;
+      this->c += pow(m, sp_v) * ks * light_color;
 
       return *this;
     }
@@ -204,9 +185,7 @@ class PixelOps {
      * op.opacity(0.4f).opacity(0.2f)
      */
     PixelOps& opacity(float o) {
-      r = r * o;
-      g = g * o;
-      b = b * o;
+      this->c = o * this->c;
 
       return *this;
     }
@@ -214,18 +193,18 @@ class PixelOps {
     /*
      * Calculate everything
      */
-    void renderDirectionalLight(Vector light_direction, float r, float g, float b) {
-      ambientComponent(r, g, b);
-      diffuseComponent(-light_direction, r, g, b);
-      specularComponent(-light_direction, r, g, b);
+    void renderDirectionalLight(Vector light_direction, Color light_color) {
+      ambientComponent(light_color);
+      diffuseComponent(-light_direction, light_color);
+      specularComponent(-light_direction, light_color);
     }
 
-    void renderPointLight(Vector light_location, float r, float g, float b) {
-      ambientComponent(r, g, b);
+    void renderPointLight(Vector light_location, Color light_color) {
+      ambientComponent(light_color);
 
       // make light shine to point
-      diffuseComponent(light_location - this->v, r, g, b);
-      specularComponent(light_location - this->v, r, g, b);
+      diffuseComponent(light_location - this->v, light_color);
+      specularComponent(light_location - this->v, light_color);
     }
 };
 
@@ -298,8 +277,6 @@ void circle(float centerX, float centerY, float radius) {
   int minJ = max(0,(int)floor(centerY-radius));
   int maxJ = min(viewport.h-1,(int)ceil(centerY+radius));
 
-
-
   for (i=0;i<viewport.w;i++) {
     for (j=0;j<viewport.h;j++) {
 
@@ -318,22 +295,20 @@ void circle(float centerX, float centerY, float radius) {
         PixelOps po(Vector(x / radius, y / radius, z / radius));
 
         // iterate through each point light
-        for(int a = 0; a < pl.size(); a++) {
-          po.renderPointLight(pl[a], pl_r[a], pl_g[a], pl_b[a]);
+        for(int a = 0; a < pl_vector.size(); a++) {
+          po.renderPointLight(pl_vector[a], pl_color[a]);
         }
 
         // iterate through each directional light
-        for(int a = 0; a < dl.size(); a++) {
-          po.renderDirectionalLight(dl[a], dl_r[a], dl_g[a], dl_b[a]);
+        for(int a = 0; a < dl_vector.size(); a++) {
+          po.renderDirectionalLight(dl_vector[a], dl_color[a]);
         }
 
-        setPixel(i, j, po.r, po.g, po.b);
+        setPixel(i, j, po.c.r, po.c.g, po.c.b);
 
         // This is amusing, but it assumes negative color values are treated reasonably.
         // setPixel(i,j, x/radius, y/radius, z/radius );
       }
-
-
     }
   }
 
@@ -345,17 +320,16 @@ void circle(float centerX, float centerY, float radius) {
 //***************************************************
 void myDisplay() {
 
-  glClear(GL_COLOR_BUFFER_BIT);				// clear the color buffer
+  glClear(GL_COLOR_BUFFER_BIT);	  // clear the color buffer
 
-  glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
+  glMatrixMode(GL_MODELVIEW);			// indicate we are specifying camera transformations
   glLoadIdentity();				        // make sure transformation is "zero'd"
-
 
   // Start drawing
   circle(viewport.w / 2.0 , viewport.h / 2.0 , min(viewport.w, viewport.h) / 3.0);
 
   glFlush();
-  glutSwapBuffers();					// swap buffers (we earlier set double buffer)
+  glutSwapBuffers();					    // swap buffers (we earlier set double buffer)
 }
 
 
@@ -376,38 +350,38 @@ void parseArgs(int argc, char *argv[]) {
     char *option = argv[i];
 
     if (strcmp(option, "-ka") == 0) {
-      ka_r = atof(argv[i + 1]);
-      ka_g = atof(argv[i + 2]);
-      ka_b = atof(argv[i + 3]);
+      ka = Color(atof(argv[i + 1]), 
+                 atof(argv[i + 2]), 
+                 atof(argv[i + 3]));
       i += 4;
     } else if (strcmp(option, "-kd") == 0) {
-      kd_r = atof(argv[i + 1]);
-      kd_g = atof(argv[i + 2]);
-      kd_b = atof(argv[i + 3]);
+      kd = Color(atof(argv[i + 1]), 
+                 atof(argv[i + 2]), 
+                 atof(argv[i + 3]));
       i += 4;
     } else if (strcmp(option, "-ks") == 0) {
-      ks_r = atof(argv[i + 1]);
-      ks_g = atof(argv[i + 2]);
-      ks_b = atof(argv[i + 3]);
+      ks = Color(atof(argv[i + 1]), 
+                 atof(argv[i + 2]), 
+                 atof(argv[i + 3]));
       i += 4;
     } else if (strcmp(option, "-sp") == 0) {
       sp_v = atof(argv[i + 1]);
       i += 2;
     } else if (strcmp(option, "-pl") == 0) {
-      pl.push_back(Vector(atof(argv[i + 1]), 
-                        atof(argv[i + 2]), 
-                        atof(argv[i + 3])));
-      pl_r.push_back(atof(argv[i + 4]));
-      pl_g.push_back(atof(argv[i + 5]));
-      pl_b.push_back(atof(argv[i + 6]));
+      pl_vector.push_back(Vector(atof(argv[i + 1]), 
+                                 atof(argv[i + 2]), 
+                                 atof(argv[i + 3])));
+      pl_color.push_back(Color(atof(argv[i + 4]), 
+                               atof(argv[i + 5]), 
+                               atof(argv[i + 6])));
       i += 7;
     } else if (strcmp(option, "-dl") == 0) {
-      dl.push_back(Vector(atof(argv[i + 1]), 
-                        atof(argv[i + 2]), 
-                        atof(argv[i + 3])));
-      dl_r.push_back(atof(argv[i + 4]));
-      dl_g.push_back(atof(argv[i + 5]));
-      dl_b.push_back(atof(argv[i + 6]));
+      dl_vector.push_back(Vector(atof(argv[i + 1]), 
+                                 atof(argv[i + 2]), 
+                                 atof(argv[i + 3])));
+      dl_color.push_back(Color(atof(argv[i + 4]), 
+                               atof(argv[i + 5]), 
+                               atof(argv[i + 6])));
       i += 7;
     } else {
       cerr << "Invalid argument: " << option << endl;
@@ -417,33 +391,33 @@ void parseArgs(int argc, char *argv[]) {
 
   if (DEBUG_ARGS) {
     cout << "---[ ARGS PARSED ] -------------------" << endl;
-    cout << "ka_r" << ": " << ka_r << endl;
-    cout << "ka_g" << ": " << ka_g << endl;
-    cout << "ka_b" << ": " << ka_b << endl;
-    cout << "kd_r" << ": " << kd_r << endl;
-    cout << "kd_g" << ": " << kd_g << endl;
-    cout << "kd_b" << ": " << kd_b << endl;
-    cout << "ks_r" << ": " << ks_r << endl;
-    cout << "ks_g" << ": " << ks_g << endl;
-    cout << "ks_b" << ": " << ks_b << endl;
+    cout << "ka_r" << ": " << ka.r << endl;
+    cout << "ka_g" << ": " << ka.g << endl;
+    cout << "ka_b" << ": " << ka.b << endl;
+    cout << "kd_r" << ": " << kd.r << endl;
+    cout << "kd_g" << ": " << kd.g << endl;
+    cout << "kd_b" << ": " << kd.b << endl;
+    cout << "ks_r" << ": " << ks.r << endl;
+    cout << "ks_g" << ": " << ks.g << endl;
+    cout << "ks_b" << ": " << ks.b << endl;
     cout << "sp_v" << ": " << sp_v << endl;
 
-    for(int i = 0; i < pl.size(); i++) {
-      cout << "pl_x[" << i << "]" << ": " << pl[i].x << endl;
-      cout << "pl_y[" << i << "]" << ": " << pl[i].y << endl;
-      cout << "pl_z[" << i << "]" << ": " << pl[i].z << endl;
-      cout << "pl_r[" << i << "]" << ": " << pl_r[i] << endl;
-      cout << "pl_g[" << i << "]" << ": " << pl_g[i] << endl;
-      cout << "pl_b[" << i << "]" << ": " << pl_b[i] << endl;
+    for(int i = 0; i < pl_vector.size(); i++) {
+      cout << "pl_x[" << i << "]" << ": " << pl_vector[i].x << endl;
+      cout << "pl_y[" << i << "]" << ": " << pl_vector[i].y << endl;
+      cout << "pl_z[" << i << "]" << ": " << pl_vector[i].z << endl;
+      cout << "pl_r[" << i << "]" << ": " << pl_color[i].r << endl;
+      cout << "pl_g[" << i << "]" << ": " << pl_color[i].g << endl;
+      cout << "pl_b[" << i << "]" << ": " << pl_color[i].b << endl;
     }
 
-    for(int i = 0; i < dl.size(); i++) {
-      cout << "dl_x[" << i << "]" << ": " << dl[i].x << endl;
-      cout << "dl_y[" << i << "]" << ": " << dl[i].y << endl;
-      cout << "dl_z[" << i << "]" << ": " << dl[i].z << endl;
-      cout << "dl_r[" << i << "]" << ": " << dl_r[i] << endl;
-      cout << "dl_g[" << i << "]" << ": " << dl_g[i] << endl;
-      cout << "dl_b[" << i << "]" << ": " << dl_b[i] << endl;
+    for(int i = 0; i < dl_vector.size(); i++) {
+      cout << "dl_x[" << i << "]" << ": " << dl_vector[i].x << endl;
+      cout << "dl_y[" << i << "]" << ": " << dl_vector[i].y << endl;
+      cout << "dl_z[" << i << "]" << ": " << dl_vector[i].z << endl;
+      cout << "dl_r[" << i << "]" << ": " << dl_color[i].r << endl;
+      cout << "dl_g[" << i << "]" << ": " << dl_color[i].g << endl;
+      cout << "dl_b[" << i << "]" << ": " << dl_color[i].b << endl;
     }
   }
 }
@@ -491,7 +465,6 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
-
 
 #endif
 

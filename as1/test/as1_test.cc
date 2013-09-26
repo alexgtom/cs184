@@ -35,12 +35,12 @@ class FooTest : public ::testing::Test {
 };
 
 // Tests that the Foo::Bar() method does Abc.
-TEST(FooTest, MethodBarDoesAbc) {
+TEST_F(FooTest, MethodBarDoesAbc) {
   EXPECT_EQ(0, 0);
 }
 
 // Tests that Foo does Xyz.
-TEST(FooTest, DoesXyz) {
+TEST_F(FooTest, DoesXyz) {
   // Exercises the Xyz feature of Foo.
 }
 
@@ -51,140 +51,108 @@ TEST(FooTest, DoesXyz) {
 class ParseArgsTest : public ::testing::Test {
   protected:
     virtual void SetUp() {
-      pl.clear();
-      pl_r.clear();
-      pl_g.clear();
-      pl_b.clear();
+      pl_vector.clear();
+      pl_color.clear();
 
-      dl.clear();
-      dl_r.clear();
-      dl_g.clear();
-      dl_b.clear();
+      dl_vector.clear();
+      dl_color.clear();
     }
 
 };
 
-TEST(ParseArgsTest, kaTest) {
+TEST_F(ParseArgsTest, kaTest) {
   const char *args[5] = {"./as0", "-ka", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
-  EXPECT_EQ(0.0f, ka_r);
-  EXPECT_EQ(0.5f, ka_g);
-  EXPECT_EQ(1.0f, ka_b);
+  EXPECT_EQ(Color(0.0f, 0.5f, 1.0f), ka);
 }
 
-TEST(ParseArgsTest, kdTest) {
+TEST_F(ParseArgsTest, kdTest) {
   const char *args[5] = {"./as0", "-kd", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
-  EXPECT_EQ(0.0f, kd_r);
-  EXPECT_EQ(0.5f, kd_g);
-  EXPECT_EQ(1.0f, kd_b);
+  EXPECT_EQ(Color(0.0f, 0.5f, 1.0f), kd);
 }
 
-TEST(ParseArgsTest, ksTest) {
+TEST_F(ParseArgsTest, ksTest) {
   const char *args[5] = {"./as0", "-ks", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
-  EXPECT_EQ(0.0f, ks_r);
-  EXPECT_EQ(0.5f, ks_g);
-  EXPECT_EQ(1.0f, ks_b);
+  EXPECT_EQ(Color(0.0f, 0.5f, 1.0f), ks);
 }
 
-TEST(ParseArgsTest, spTest) {
+TEST_F(ParseArgsTest, spTest) {
   const char *args[3] = {"./as0", "-sp", "1.0"};
   parseArgs(3, const_cast<char **>(args));
   EXPECT_EQ(1.0f, sp_v);
 }
 
-TEST(ParseArgsTest, plTest) {
+TEST_F(ParseArgsTest, plTest) {
   const char *args[8] = {"./as0", "-pl", "0.0", "0.5", "1.0", "100", "200", "255"};
   parseArgs(8, const_cast<char **>(args));
-  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl.at(0));
-  EXPECT_EQ(100.0f, pl_r.at(0));
-  EXPECT_EQ(200.0f, pl_g.at(0));
-  EXPECT_EQ(255.0f, pl_b.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl_vector.at(0));
+  EXPECT_EQ(Color(100.0f, 200.0f, 255.0f), pl_color.at(0));
 }
 
-TEST(ParseArgsTest, plMultipleTest) {
+TEST_F(ParseArgsTest, plMultipleTest) {
   const char *args[15] = {"./as0", 
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255"
   };
   parseArgs(15, const_cast<char **>(args));
-  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl.at(0));
-  EXPECT_EQ(100.0f, pl_r.at(0));
-  EXPECT_EQ(200.0f, pl_g.at(0));
-  EXPECT_EQ(255.0f, pl_b.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl_vector.at(0));
+  EXPECT_EQ(Color(100.0f, 200.0f, 255.0f), pl_color.at(0));
 
-  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl.at(1));
-  EXPECT_EQ(100.0f, pl_r.at(1));
-  EXPECT_EQ(200.0f, pl_g.at(1));
-  EXPECT_EQ(255.0f, pl_b.at(1));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl_vector.at(1));
+  EXPECT_EQ(Color(100.0f, 200.0f, 255.0f), pl_color.at(1));
 }
 
-TEST(ParseArgsTest, dlTest) {
+TEST_F(ParseArgsTest, dlTest) {
   const char *args[8] = {"./as0", "-dl", "0.0", "0.5", "1.0", "100", "200", "255"};
   parseArgs(8, const_cast<char **>(args));
-  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl.at(0));
-  EXPECT_EQ(100.0f, dl_r.at(0));
-  EXPECT_EQ(200.0f, dl_g.at(0));
-  EXPECT_EQ(255.0f, dl_b.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl_vector.at(0));
+  EXPECT_EQ(Color(100.0f, 200.0f, 255.0f), dl_color.at(0));
 }
 
-TEST(ParseArgsTest, dlMultipleTest) {
+TEST_F(ParseArgsTest, dlMultipleTest) {
   const char *args[15] = {"./as0", 
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255"
   };
   parseArgs(15, const_cast<char **>(args));
-  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl.at(0));
-  EXPECT_EQ(100.0f, dl_r.at(0));
-  EXPECT_EQ(200.0f, dl_g.at(0));
-  EXPECT_EQ(255.0f, dl_b.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl_vector.at(0));
+  EXPECT_EQ(Color(100.0f, 200.0f, 255.0f), dl_color.at(0));
 
-  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl.at(1));
-  EXPECT_EQ(100.0f, dl_r.at(1));
-  EXPECT_EQ(200.0f, dl_g.at(1));
-  EXPECT_EQ(255.0f, dl_b.at(1));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl_vector.at(1));
+  EXPECT_EQ(Color(100.0f, 200.0f, 255.0f), dl_color.at(1));
 }
 
-TEST(ParseArgsTest, MultiArgTest) {
+TEST_F(ParseArgsTest, MultiArgTest) {
   const char *args[17] = {"./as0", 
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-sp", "1.0"
   };
   parseArgs(17, const_cast<char **>(args));
-  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl.at(0));
-  EXPECT_EQ(100.0f, dl_r.at(0));
-  EXPECT_EQ(200.0f, dl_g.at(0));
-  EXPECT_EQ(255.0f, dl_b.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), dl_vector.at(0));
+  EXPECT_EQ(Color(100.0f, 200.0f, 255.0f), dl_color.at(0));
 
-  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl.at(0));
-  EXPECT_EQ(100.0f, pl_r.at(0));
-  EXPECT_EQ(200.0f, pl_g.at(0));
-  EXPECT_EQ(255.0f, pl_b.at(0));
+  EXPECT_EQ(Vector(0.0f, 0.5f, 1.0f), pl_vector.at(0));
+  EXPECT_EQ(Color(100.0f, 200.0f, 255.0f), pl_color.at(0));
 
   EXPECT_EQ(1.0f, sp_v);
 }
 
-TEST(ParseArgsTest, MultiArgTest2) {
+TEST_F(ParseArgsTest, MultiArgTest2) {
   const char *args[16] = {"./as1",
     "-ka", "0.9", "0.9", "1.0", 
     "-kd", "0.2", "0.2", "0.2", 
     "-pl", "1.0", "1.0", "1.0", "255.0", "255.0", "255.0"
   };
   parseArgs(16, const_cast<char **>(args));
-  EXPECT_EQ(0.9f, ka_r);
-  EXPECT_EQ(0.9f, ka_g);
-  EXPECT_EQ(1.0f, ka_b);
+  EXPECT_EQ(Color(0.9f, 0.9f, 1.0f), ka);
 
-  EXPECT_EQ(0.2f, kd_r);
-  EXPECT_EQ(0.2f, kd_g);
-  EXPECT_EQ(0.2f, kd_b);
+  EXPECT_EQ(Color(0.2f, 0.2f, 0.2f), kd);
 
-  EXPECT_EQ(Vector(1.0f, 1.0f, 1.0f), pl.at(0));
-  EXPECT_EQ(255.0f, pl_r.at(0));
-  EXPECT_EQ(255.0f, pl_g.at(0));
-  EXPECT_EQ(255.0f, pl_b.at(0));
+  EXPECT_EQ(Vector(1.0f, 1.0f, 1.0f), pl_vector.at(0));
+  EXPECT_EQ(Color(255.0f, 255.0f, 255.0f), pl_color.at(0));
 }
 
 // ------------------------------------------------------------
@@ -194,12 +162,12 @@ TEST(ParseArgsTest, MultiArgTest2) {
 class VectorTest : public ::testing::Test {
 };
 
-TEST(VectorTest, Subtraction) {
+TEST_F(VectorTest, Subtraction) {
   Vector v(1, 2, 3);
   EXPECT_EQ(v-v, Vector());
 }
 
-TEST(VectorTest, DotProduct) {
+TEST_F(VectorTest, DotProduct) {
   Vector v(1, 2, 3);
   EXPECT_FLOAT_EQ(v.dot(v), 14);
 }
@@ -211,7 +179,7 @@ TEST(VectorTest, DotProduct) {
 class MathOpsTest : public ::testing::Test {
 };
 
-TEST(MathOpsTest, NormalizeVectorTest) {
+TEST_F(MathOpsTest, NormalizeVectorTest) {
   float x = 1.0f;
   float y = 2.0f;
   float z = 3.0f;
@@ -221,7 +189,7 @@ TEST(MathOpsTest, NormalizeVectorTest) {
   EXPECT_FLOAT_EQ(0.80178368f, z);
 }
 
-TEST(MathOpsTest, MaxNumFromVector) {
+TEST_F(MathOpsTest, MaxNumFromVector) {
   vector<float> v;
   v.push_back(1.0f);
   v.push_back(2.0f);
@@ -236,29 +204,23 @@ TEST(MathOpsTest, MaxNumFromVector) {
 class PixelOpsTest : public ::testing::Test {
 };
 
-TEST(PixelOpsTest, DiffuseTestDefault) {
-  kd_r = kd_g = kd_b = 0.0f;
+TEST_F(PixelOpsTest, DiffuseTestDefault) {
+  Color kd;
   PixelOps po(Vector(0.0f, 1.0f, 0.0f));
-  po.diffuseComponent(Vector(0.0f, 1.0f, 0.0f), 1.0, 0.0, 0.0);
+  po.diffuseComponent(Vector(0.0f, 1.0f, 0.0f), Color(1.0, 0.0, 0.0));
 
   // assert all zero arguments work
-  EXPECT_FLOAT_EQ(po.r, 0.0f);
-  EXPECT_FLOAT_EQ(po.g, 0.0f);
-  EXPECT_FLOAT_EQ(po.b, 0.0f);
+  EXPECT_EQ(po.c, Color(0.0f, 0.0f, 0.0f));
 }
 
-TEST(PixelOpsTest, DiffuseTest) {
+TEST_F(PixelOpsTest, DiffuseTest) {
   // real values
-  kd_r = 1.0f;
-  kd_g = 0.0f;
-  kd_b = 0.0f;
+  kd = Color(1.0f, 0.0f, 0.0f);
 
   PixelOps po(Vector(-2.0f, 0.0f, 0.0f));
-  po.diffuseComponent(Vector(-2.0f, 0.0f, 0.0f), 1.0, 0.0, 0.0);
+  po.diffuseComponent(Vector(-2.0f, 0.0f, 0.0f), Color(1.0, 0.0, 0.0));
 
-  EXPECT_FLOAT_EQ(1.0f, po.r);
-  EXPECT_FLOAT_EQ(0.0f, po.g);
-  EXPECT_FLOAT_EQ(0.0f, po.b);
+  EXPECT_EQ(po.c, Color(1.0f, 0.0f, 0.0f));
 }
 
 //TODO: Add tests for specular component
