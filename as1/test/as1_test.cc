@@ -1,5 +1,4 @@
 #include "gtest/gtest.h"
-#include "as1/Vec3.h"
 
 // override the main function in the included file below
 #define _MAIN  
@@ -52,16 +51,12 @@ TEST(FooTest, DoesXyz) {
 class ParseArgsTest : public ::testing::Test {
   protected:
     virtual void SetUp() {
-      pl_x.clear();
-      pl_y.clear();
-      pl_z.clear();
+      pl.clear();
       pl_r.clear();
       pl_g.clear();
       pl_b.clear();
 
-      dl_x.clear();
-      dl_y.clear();
-      dl_z.clear();
+      dl.clear();
       dl_r.clear();
       dl_g.clear();
       dl_b.clear();
@@ -102,9 +97,7 @@ TEST(ParseArgsTest, spTest) {
 TEST(ParseArgsTest, plTest) {
   const char *args[8] = {"./as0", "-pl", "0.0", "0.5", "1.0", "100", "200", "255"};
   parseArgs(8, const_cast<char **>(args));
-  EXPECT_EQ(0.0f, pl_x.at(0));
-  EXPECT_EQ(0.5f, pl_y.at(0));
-  EXPECT_EQ(1.0f, pl_z.at(0));
+  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), pl.at(0));
   EXPECT_EQ(100.0f, pl_r.at(0));
   EXPECT_EQ(200.0f, pl_g.at(0));
   EXPECT_EQ(255.0f, pl_b.at(0));
@@ -116,16 +109,12 @@ TEST(ParseArgsTest, plMultipleTest) {
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255"
   };
   parseArgs(15, const_cast<char **>(args));
-  EXPECT_EQ(0.0f, pl_x.at(0));
-  EXPECT_EQ(0.5f, pl_y.at(0));
-  EXPECT_EQ(1.0f, pl_z.at(0));
+  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), pl.at(0));
   EXPECT_EQ(100.0f, pl_r.at(0));
   EXPECT_EQ(200.0f, pl_g.at(0));
   EXPECT_EQ(255.0f, pl_b.at(0));
 
-  EXPECT_EQ(0.0f, pl_x.at(1));
-  EXPECT_EQ(0.5f, pl_y.at(1));
-  EXPECT_EQ(1.0f, pl_z.at(1));
+  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), pl.at(1));
   EXPECT_EQ(100.0f, pl_r.at(1));
   EXPECT_EQ(200.0f, pl_g.at(1));
   EXPECT_EQ(255.0f, pl_b.at(1));
@@ -134,9 +123,7 @@ TEST(ParseArgsTest, plMultipleTest) {
 TEST(ParseArgsTest, dlTest) {
   const char *args[8] = {"./as0", "-dl", "0.0", "0.5", "1.0", "100", "200", "255"};
   parseArgs(8, const_cast<char **>(args));
-  EXPECT_EQ(0.0f, dl_x.at(0));
-  EXPECT_EQ(0.5f, dl_y.at(0));
-  EXPECT_EQ(1.0f, dl_z.at(0));
+  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), dl.at(0));
   EXPECT_EQ(100.0f, dl_r.at(0));
   EXPECT_EQ(200.0f, dl_g.at(0));
   EXPECT_EQ(255.0f, dl_b.at(0));
@@ -148,16 +135,12 @@ TEST(ParseArgsTest, dlMultipleTest) {
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255"
   };
   parseArgs(15, const_cast<char **>(args));
-  EXPECT_EQ(0.0f, dl_x.at(0));
-  EXPECT_EQ(0.5f, dl_y.at(0));
-  EXPECT_EQ(1.0f, dl_z.at(0));
+  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), dl.at(0));
   EXPECT_EQ(100.0f, dl_r.at(0));
   EXPECT_EQ(200.0f, dl_g.at(0));
   EXPECT_EQ(255.0f, dl_b.at(0));
 
-  EXPECT_EQ(0.0f, dl_x.at(1));
-  EXPECT_EQ(0.5f, dl_y.at(1));
-  EXPECT_EQ(1.0f, dl_z.at(1));
+  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), dl.at(1));
   EXPECT_EQ(100.0f, dl_r.at(1));
   EXPECT_EQ(200.0f, dl_g.at(1));
   EXPECT_EQ(255.0f, dl_b.at(1));
@@ -170,16 +153,12 @@ TEST(ParseArgsTest, MultiArgTest) {
     "-sp", "1.0"
   };
   parseArgs(17, const_cast<char **>(args));
-  EXPECT_EQ(0.0f, dl_x.at(0));
-  EXPECT_EQ(0.5f, dl_y.at(0));
-  EXPECT_EQ(1.0f, dl_z.at(0));
+  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), dl.at(0));
   EXPECT_EQ(100.0f, dl_r.at(0));
   EXPECT_EQ(200.0f, dl_g.at(0));
   EXPECT_EQ(255.0f, dl_b.at(0));
 
-  EXPECT_EQ(0.0f, pl_x.at(0));
-  EXPECT_EQ(0.5f, pl_y.at(0));
-  EXPECT_EQ(1.0f, pl_z.at(0));
+  EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), pl.at(0));
   EXPECT_EQ(100.0f, pl_r.at(0));
   EXPECT_EQ(200.0f, pl_g.at(0));
   EXPECT_EQ(255.0f, pl_b.at(0));
@@ -202,9 +181,7 @@ TEST(ParseArgsTest, MultiArgTest2) {
   EXPECT_EQ(0.2f, kd_g);
   EXPECT_EQ(0.2f, kd_b);
 
-  EXPECT_EQ(1.0f, pl_x.at(0));
-  EXPECT_EQ(1.0f, pl_y.at(0));
-  EXPECT_EQ(1.0f, pl_z.at(0));
+  EXPECT_EQ(Vec3(1.0f, 1.0f, 1.0f), pl.at(0));
   EXPECT_EQ(255.0f, pl_r.at(0));
   EXPECT_EQ(255.0f, pl_g.at(0));
   EXPECT_EQ(255.0f, pl_b.at(0));
@@ -261,8 +238,8 @@ class PixelOpsTest : public ::testing::Test {
 
 TEST(PixelOpsTest, DiffuseTestDefault) {
   kd_r = kd_g = kd_b = 0.0f;
-  PixelOps po(1.0f, 0.0f, 0.0f);
-  po.diffuseComponent(0.0f, 1.0f, 0.0f, 1.0, 0.0, 0.0);
+  PixelOps po(Vec3(0.0f, 1.0f, 0.0f));
+  po.diffuseComponent(Vec3(0.0f, 1.0f, 0.0f), 1.0, 0.0, 0.0);
 
   // assert all zero arguments work
   EXPECT_FLOAT_EQ(po.r, 0.0f);
@@ -276,8 +253,8 @@ TEST(PixelOpsTest, DiffuseTest) {
   kd_g = 0.0f;
   kd_b = 0.0f;
 
-  PixelOps po(1.0f, 0.0f, 0.0f);
-  po.diffuseComponent(-2.0f, 0.0f, 0.0f, 1.0, 0.0, 0.0);
+  PixelOps po(Vec3(-2.0f, 0.0f, 0.0f));
+  po.diffuseComponent(Vec3(-2.0f, 0.0f, 0.0f), 1.0, 0.0, 0.0);
 
   EXPECT_FLOAT_EQ(1.0f, po.r);
   EXPECT_FLOAT_EQ(0.0f, po.g);
