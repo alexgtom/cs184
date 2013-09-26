@@ -62,9 +62,10 @@ class ParseArgsTest : public ::testing::Test {
       dl_b.clear();
     }
 
+
 };
 
-TEST(ParseArgsTest, kaTest) {
+TEST_F(ParseArgsTest, kaTest) {
   const char *args[5] = {"./as0", "-ka", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
   EXPECT_EQ(0.0f, ka_r);
@@ -72,7 +73,7 @@ TEST(ParseArgsTest, kaTest) {
   EXPECT_EQ(1.0f, ka_b);
 }
 
-TEST(ParseArgsTest, kdTest) {
+TEST_F(ParseArgsTest, kdTest) {
   const char *args[5] = {"./as0", "-kd", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
   EXPECT_EQ(0.0f, kd_r);
@@ -80,7 +81,7 @@ TEST(ParseArgsTest, kdTest) {
   EXPECT_EQ(1.0f, kd_b);
 }
 
-TEST(ParseArgsTest, ksTest) {
+TEST_F(ParseArgsTest, ksTest) {
   const char *args[5] = {"./as0", "-ks", "0.0", "0.5", "1.0"};
   parseArgs(5, const_cast<char **>(args));
   EXPECT_EQ(0.0f, ks_r);
@@ -88,13 +89,13 @@ TEST(ParseArgsTest, ksTest) {
   EXPECT_EQ(1.0f, ks_b);
 }
 
-TEST(ParseArgsTest, spTest) {
+TEST_F(ParseArgsTest, spTest) {
   const char *args[3] = {"./as0", "-sp", "1.0"};
   parseArgs(3, const_cast<char **>(args));
   EXPECT_EQ(1.0f, sp_v);
 }
 
-TEST(ParseArgsTest, plTest) {
+TEST_F(ParseArgsTest, plTest) {
   const char *args[8] = {"./as0", "-pl", "0.0", "0.5", "1.0", "100", "200", "255"};
   parseArgs(8, const_cast<char **>(args));
   EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), pl.at(0));
@@ -103,7 +104,7 @@ TEST(ParseArgsTest, plTest) {
   EXPECT_EQ(255.0f, pl_b.at(0));
 }
 
-TEST(ParseArgsTest, plMultipleTest) {
+TEST_F(ParseArgsTest, plMultipleTest) {
   const char *args[15] = {"./as0", 
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255"
@@ -120,7 +121,7 @@ TEST(ParseArgsTest, plMultipleTest) {
   EXPECT_EQ(255.0f, pl_b.at(1));
 }
 
-TEST(ParseArgsTest, dlTest) {
+TEST_F(ParseArgsTest, dlTest) {
   const char *args[8] = {"./as0", "-dl", "0.0", "0.5", "1.0", "100", "200", "255"};
   parseArgs(8, const_cast<char **>(args));
   EXPECT_EQ(Vec3(0.0f, 0.5f, 1.0f), dl.at(0));
@@ -129,7 +130,7 @@ TEST(ParseArgsTest, dlTest) {
   EXPECT_EQ(255.0f, dl_b.at(0));
 }
 
-TEST(ParseArgsTest, dlMultipleTest) {
+TEST_F(ParseArgsTest, dlMultipleTest) {
   const char *args[15] = {"./as0", 
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255"
@@ -146,7 +147,10 @@ TEST(ParseArgsTest, dlMultipleTest) {
   EXPECT_EQ(255.0f, dl_b.at(1));
 }
 
-TEST(ParseArgsTest, MultiArgTest) {
+TEST_F(ParseArgsTest, MultiArgTest) {
+  ASSERT_TRUE(pl_r.size() == 0);
+  ASSERT_TRUE(pl_g.size() == 0);
+  ASSERT_TRUE(pl_b.size() == 0);
   const char *args[17] = {"./as0", 
     "-dl", "0.0", "0.5", "1.0", "100", "200", "255",
     "-pl", "0.0", "0.5", "1.0", "100", "200", "255",
@@ -166,7 +170,10 @@ TEST(ParseArgsTest, MultiArgTest) {
   EXPECT_EQ(1.0f, sp_v);
 }
 
-TEST(ParseArgsTest, MultiArgTest2) {
+TEST_F(ParseArgsTest, MultiArgTest2) {
+  ASSERT_TRUE(pl_r.size() == 0);
+  ASSERT_TRUE(pl_g.size() == 0);
+  ASSERT_TRUE(pl_b.size() == 0);
   const char *args[16] = {"./as1",
     "-ka", "0.9", "0.9", "1.0", 
     "-kd", "0.2", "0.2", "0.2", 
@@ -181,10 +188,10 @@ TEST(ParseArgsTest, MultiArgTest2) {
   EXPECT_EQ(0.2f, kd_g);
   EXPECT_EQ(0.2f, kd_b);
 
-  EXPECT_EQ(Vec3(1.0f, 1.0f, 1.0f), pl.at(0));
   EXPECT_EQ(255.0f, pl_r.at(0));
   EXPECT_EQ(255.0f, pl_g.at(0));
   EXPECT_EQ(255.0f, pl_b.at(0));
+  EXPECT_EQ(Vec3(1.0f, 1.0f, 1.0f), pl.at(0));
 }
 
 // ------------------------------------------------------------
