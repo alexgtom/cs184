@@ -205,7 +205,7 @@ class PixelOpsTest : public ::testing::Test {
 };
 
 TEST_F(PixelOpsTest, DiffuseTestDefault) {
-  Color kd;
+  kd = Color(0.0f, 0.0f, 0.0f);
   PixelOps po(Vector(0.0f, 1.0f, 0.0f));
   po.diffuseComponent(Vector(0.0f, 1.0f, 0.0f), Color(1.0, 0.0, 0.0));
 
