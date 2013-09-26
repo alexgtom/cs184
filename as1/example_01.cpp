@@ -144,9 +144,9 @@ class PixelOps {
      */
     PixelOps& diffuseComponent(float x, float y, float z, float r, float g, float b) {
       // light vector
-      float l_x = -x;
-      float l_y = -y;
-      float l_z = -z;
+      float l_x = x;
+      float l_y = y;
+      float l_z = z;
       normalize_vector(l_x, l_y, l_z);
 
       // normal vector
@@ -171,9 +171,9 @@ class PixelOps {
      */
     PixelOps& specularComponent(float x, float y, float z, float r, float g, float b) {
       // light vector
-      float l_x = -x;
-      float l_y = -y;
-      float l_z = -z;
+      float l_x = x;
+      float l_y = y;
+      float l_z = z;
       normalize_vector(l_x, l_y, l_z);
       
       // normal vector
@@ -228,16 +228,16 @@ class PixelOps {
      */
     void renderDirectionalLight(float x, float y, float z, float r, float g, float b) {
       ambientComponent(r, g, b);
-      diffuseComponent(x, y, z, r, g, b);
-      specularComponent(x, y, z, r, g, b);
+      diffuseComponent(-x, -y, -z, r, g, b);
+      specularComponent(-x, -y, -z, r, g, b);
     }
 
     void renderPointLight(float x, float y, float z, float r, float g, float b) {
       ambientComponent(r, g, b);
 
       // make light shine to point
-      diffuseComponent(this->x - x, this->y - y, this->z - z, r, g, b);
-      specularComponent(this->x - x, this->y - y, this->z - z, r, g, b);
+      diffuseComponent(x - this->x, y - this->y, z - this->z, r, g, b);
+      specularComponent(x - this->x, y - this->y, z - this->z, r, g, b);
     }
 };
 
