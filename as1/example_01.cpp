@@ -103,6 +103,14 @@ float magnitude(float x, float y, float z) {
   return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
 }
 
+float vector_magnitude(vector<float>& v) {
+  float total = 0.0f;
+  for(int i = 0; i < v.size(); i++) {
+    total += pow(v[i], 2);
+  }
+  return sqrt(total);
+}
+
 void normalize_vector(float& x, float& y, float& z) {
   float m = magnitude(x, y, z);
   x = x / m;
@@ -309,32 +317,14 @@ void circle(float centerX, float centerY, float radius) {
         // normalize x, y, and z into coordinate system
         PixelOps po(Vec3(x / radius, y / radius, z / radius));
 
-        // finds the maximum color value out of all the lights
-        float max_color_value = max(max3(max_num_from_vector(pl_r),
-                                         max_num_from_vector(pl_g),
-                                         max_num_from_vector(pl_b)),
-                                    max3(max_num_from_vector(dl_r),
-                                         max_num_from_vector(dl_g),
-                                         max_num_from_vector(dl_b)));
-
         // iterate through each point light
         for(int a = 0; a < pl.size(); a++) {
-          // normalize each light intensity to between [0.0, 1.0]
-          float r = pl_r[a] / max_color_value;
-          float g = pl_g[a] / max_color_value;
-          float b = pl_b[a] / max_color_value;
-
-          po.renderPointLight(pl[a], r, g, b);
+          po.renderPointLight(pl[a], pl_r[a], pl_g[a], pl_b[a]);
         }
 
         // iterate through each directional light
         for(int a = 0; a < dl.size(); a++) {
-          // normalize each light intensity to between [0.0, 1.0]
-          float r = dl_r[a] / max_color_value;
-          float g = dl_g[a] / max_color_value;
-          float b = dl_b[a] / max_color_value;
-
-          po.renderDirectionalLight(dl[a], r, g, b);
+          po.renderDirectionalLight(dl[a], dl_r[a], dl_g[a], dl_b[a]);
         }
 
         setPixel(i, j, po.r, po.g, po.b);
