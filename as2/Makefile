@@ -8,13 +8,17 @@ else
 	CFLAGS = -g -DGL_GLEXT_PROTOTYPES -Iglut-3.7.6-bin
 	LDFLAGS = -lglut -lGLU
 endif
+
+.PHONY: test
 	
 RM = /bin/rm -f 
 all: main 
 main: main.o 
-	$(CC) $(CFLAGS) -o as2 main.o $(LDFLAGS) 
+	$(CC) $(CFLAGS) -o main main.o $(LDFLAGS) 
 main.o: main.cpp
 	$(CC) $(CFLAGS) -c main.cpp -o main.o
 clean: 
-	$(RM) *.o as2
- 
+	$(RM) *.o main
+
+test:
+	cd test; make 
