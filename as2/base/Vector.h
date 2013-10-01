@@ -1,3 +1,6 @@
+#ifndef VECTOR_H_
+#define VECTOR_H_
+
 #include <cmath>
 
 class Vector {
@@ -57,3 +60,5 @@ public:
 	Vector operator*(float a, const Vector& v) {
 		return Vector(a * v.x, a * v.y, a * v.z);
 	}
+
+#endif

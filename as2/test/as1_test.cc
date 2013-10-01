@@ -2,7 +2,7 @@
 
 // override the main function in the included file below
 #define _MAIN  
-#include "as1/example_01.cpp"
+#include "as1/main.cpp"
 
 // The fixture for testing class Foo.
 class FooTest : public ::testing::Test {

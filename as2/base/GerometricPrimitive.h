@@ -1,0 +1,4 @@
+#ifndef GEOMETRIC_PRIMITIVE_H_
+#define GEOMETRIC_PRIMITIVE_H_
+
+#endif

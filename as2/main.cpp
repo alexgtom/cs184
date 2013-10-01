@@ -24,8 +24,8 @@
 #include <time.h>
 #include <math.h>
 
-#include "Vector.h"
-#include "Color.h"
+#include "base/Vector.h"
+#include "base/Color.h"
 
 
 #define PI 3.14159265  // Should be used from mathlib

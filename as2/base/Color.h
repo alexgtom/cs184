@@ -1,3 +1,6 @@
+#ifndef COLOR_H_
+#define COLOR_H_
+
 #include <cmath>
 
 class Color {
@@ -54,3 +57,4 @@ public:
 Color operator*(float a, const Color& c) {
 	return Color(a * c.r, a * c.g, a * c.b);
 }
+#endif
