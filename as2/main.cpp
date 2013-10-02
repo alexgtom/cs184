@@ -25,6 +25,7 @@
 
 #include "base/Vector.h"
 #include "base/Color.h"
+#include "base/Args.h"
 
 using namespace std;
 
@@ -94,6 +95,8 @@ void spacebarQuit(unsigned char key, int x, int y) {
 }
 
 int main(int argc, char *argv[]) {
+  // Parse Arguments
+  parseArgs(argc, argv);
 
   //This initializes glut
   glutInit(&argc, argv);
