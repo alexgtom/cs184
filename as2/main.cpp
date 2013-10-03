@@ -26,6 +26,8 @@
 #include "base/Vector.h"
 #include "base/Color.h"
 #include "base/Args.h"
+#include "base/Point.h"
+#include "base/Ray.h"
 
 using namespace std;
 
