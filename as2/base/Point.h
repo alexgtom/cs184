@@ -5,6 +5,7 @@
 class Point {
 public:
 	Vector v;
+    Point() {}
 	Point(float x, float y, float z) : v(x, y, z) {}
 	Point(const Vector& v) : v(v) {}
 	Point(const Point& p) : v(p.v) {}
