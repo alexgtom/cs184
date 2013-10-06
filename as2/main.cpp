@@ -28,6 +28,7 @@
 #include "base/Args.h"
 #include "base/Point.h"
 #include "base/Ray.h"
+#include "base/Scene.h"
 
 using namespace std;
 
@@ -82,7 +83,8 @@ void myDisplay() {
   glLoadIdentity();				        // make sure transformation is "zero'd"
 
   // Start drawing
-  /* draw stuff here */
+  Scene scene(viewport.w, viewport.h);
+  scene.render();
 
   glFlush();
   glutSwapBuffers();					    // swap buffers (we earlier set double buffer)
