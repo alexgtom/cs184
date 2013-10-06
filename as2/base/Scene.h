@@ -19,7 +19,7 @@ class Scene {
     void render() {
       Sampler sampler(width, height);
       Sample sample;
-      Film film;
+      Film film(width, height);
       Color color;
       Camera camera;
       Ray ray;
