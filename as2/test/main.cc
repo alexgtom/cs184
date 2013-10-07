@@ -8,6 +8,7 @@
 #include "FooTest.h"
 #include "VectorTest.h"
 #include "SamplerTest.h"
+#include "NormalTest.h"
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
