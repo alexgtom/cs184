@@ -1,7 +1,7 @@
 #ifndef FILM_H_
 #define FILM_H_
 
-#include <FreeImage.h>
+#include <FreeImage/FreeImage.h>
 
 #include <iostream>
 
