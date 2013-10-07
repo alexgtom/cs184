@@ -9,6 +9,7 @@
 #include "VectorTest.h"
 #include "SamplerTest.h"
 #include "NormalTest.h"
+#include "TransformationTest.h"
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
