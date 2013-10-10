@@ -8,6 +8,7 @@ public:
 
 	Vector(float x=0, float y=0, float z=0) : x(x), y(y), z(z) {}
 	Vector(const Vector& v) : x(v.x), y(v.y), z(v.z) {}
+    Vector(const Point& p) : x(p.x), y(p.y), z(p.z) {}
 	Vector& operator=(const Vector& v) {
 		x = v.x;
 		y = v.y;
