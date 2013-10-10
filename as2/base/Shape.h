@@ -86,7 +86,7 @@ class Sphere : public Shape {
 };
 
 
-class Triange: public Shape {
+class Triangle: public Shape {
   public:
     bool intersect(Ray& ray, float* thit, LocalGeo* local) {
     }
