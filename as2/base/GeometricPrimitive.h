@@ -5,6 +5,7 @@
 #include "Transformation.h"
 #include "Material.h"
 #include "Shape.h"
+#include "Intersection.h"
 
 class GeometricPrimitive : public Primitive {
   public:
@@ -12,25 +13,33 @@ class GeometricPrimitive : public Primitive {
     Shape* shape;
     Material* mat;
 
-  bool intersect(Ray& ray, float* thit, Intersection* in)  {
-    Ray oray = worldToObj.transform(ray);
-    LocalGeo olocal;
-    if (!shape->intersect(oray, thit, &olocal))
-      return false;
+    GeometricPrimitive(Shape* shape, Transformation objToWorld, 
+        Transformation worldToObj, Material* mat) {
+      this->shape = shape;
+      this->objToWorld = objToWorld;
+      this->worldToObj = worldToObj;
+      this->mat = mat;
+    }
 
-    in->primitive = this;
-    in->local = objToWorld * olocal;
-    return true;
-  }
+    bool intersect(Ray& ray, float* thit, Intersection* in)  {
+      Ray oray = worldToObj.transform(ray);
+      LocalGeo olocal;
+      if (!shape->intersect(oray, thit, &olocal))
+        return false;
 
-  bool intersectP(Ray& ray) {
-    Ray oray = worldToObj.transform(ray);
-    return shape->intersectP(oray);
-  }
+      in->primitive = this;
+      in->local = objToWorld.transform(olocal);
+      return true;
+    }
 
-  void getBRDF(LocalGeo& local, BRDF* brdf) {
-    material->getBRDF(local, brdf);
-  }
+    bool intersectP(Ray& ray) {
+      Ray oray = worldToObj.transform(ray);
+      return shape->intersectP(oray);
+    }
+
+    void getBRDF(LocalGeo& local, BRDF* brdf) {
+      mat->getBRDF(local, brdf);
+    }
 };
 
 

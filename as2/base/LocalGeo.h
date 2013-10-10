@@ -2,6 +2,7 @@
 #define LOCALGEO_H_
 
 #include "Point.h"
+#include "Normal.h"
 
 class LocalGeo {
   public:

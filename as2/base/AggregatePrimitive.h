@@ -5,7 +5,8 @@
 
 class AggregatePrimitive : public Primitive {
  public:
-   AggregatePrimitive(vector<Primitive*> list);
+   AggregatePrimitive(vector<Primitive*> list) {
+   }
    bool intersect(Ray& ray, float* thit, Intersection* in) {
    }
 
