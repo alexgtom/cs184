@@ -1,5 +1,5 @@
 #ifndef LOCALGEO_H_
-#define LOCALGEO
+#define LOCALGEO_H_
 
 #include "Point.h"
 
