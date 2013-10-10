@@ -1,15 +1,15 @@
 #ifndef SHAPE_H_
-#define
+#define SHAPE_H_
 
 class Shape {
   public:
     // Test if ray intersects with the shape or not (in object space), if so,
     // return intersection point and normal
-    bool intersect(Ray& ray, float* thit, LocalGeo* local) = 0;
+    virtual bool intersect(Ray& ray, float* thit, LocalGeo* local) = 0;
 
     // Same as intersect, but just return whether there is any intersection or
     // not
-    bool intersectP(Ray& ray) = 0;
+    virtual bool intersectP(Ray& ray) = 0;
 };
 
 
@@ -23,11 +23,12 @@ class Sphere : public Shape {
 
 
 class Triange: public Shape {
-  bool intersect(Ray& ray, float* thit, LocalGeo* local) {
-  }
+  public:
+    bool intersect(Ray& ray, float* thit, LocalGeo* local) {
+    }
 
-  bool intersectP(Ray& ray) {
-  }
+    bool intersectP(Ray& ray) {
+    }
 };
 
 #endif
