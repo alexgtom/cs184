@@ -88,11 +88,51 @@ class Sphere : public Shape {
 
 
 class Triangle: public Shape {
+  // Origin is at p0 with p0 on the x-axis and with p1 = ([0, +inf], [0, +inf])
   public:
+    Point p0, p1, p2;
+    Triangle() {}
+
+    Triangle(Point p0, Point p1, Point p2) {
+      this->p0 = p0;
+      this->p1 = p1;
+      this->p2 = p2;
+    }
+
     bool intersect(Ray& ray, float* thit, LocalGeo* local) {
+      // implements eq 3.5 from PBR on page 141
+      Vector e1 = Vector(p0) - Vector(p0);
+      Vector e2 = Vector(p1) - Vector(p0);
+      Vector s = Vector() - Vector(p0);
+
+      Vector s1 = ray.dir.cross(e2);
+      Vector s2 = s.cross(e1);
+
+      float frac_term = 1.0f / s1.dot(e1);
+
+      float t = frac_term * s2.dot(e2);
+      float b1 = frac_term * s1.dot(s);
+      float b2 = frac_term * s2.dot(ray.dir);
+
+      if (b1 < 0.0f || b2 < 0.0f || b1 + b2 > 1.0f)
+        return false;
+        
+
+      *thit = t;
+
+      local->pos.x = ray.pos.x + t * ray.dir.x;
+      local->pos.y = ray.pos.y + t * ray.dir.y;
+      local->pos.z = ray.pos.z + t * ray.dir.z;
+      local->normal = Normal(0, 0, 1);
+      
+      return true;
     }
 
     bool intersectP(Ray& ray) {
+      float thit;
+      LocalGeo local;
+
+      return intersect(ray, &thit, &local);
     }
 };
 
