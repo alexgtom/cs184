@@ -30,19 +30,8 @@ class Film {
       image = FreeImage_Allocate(width, height, 24);
     }
 
-    void setPixel(int x, int y, GLfloat r, GLfloat g, GLfloat b) {
-      glColor3f(r, g, b);
-      glVertex2f(x + 0.5, y + 0.5);   // The 0.5 is to target pixel
-      // centers 
-      // Note: Need to check for gap
-      // bug on inst machines.
-    }
-
     // Write the color to (sample.x, sample.y) on the image
-    void commit(Sample& sample, Color& color) {
-      // set pixel on screen
-      setPixel(sample.x, sample.y, color.r, color.g, color.b);
-
+    void commit(Sample& sample, Color& color) { 
       // set pixel on image file
       
       RGBQUAD image_pixel_color;
@@ -60,6 +49,25 @@ class Film {
       } else {
         cerr << "ERROR: Scene could not be saved to '" << output_file << "'" << endl;
       }
+
+      FreeImage_Unload(image);
+    }
+    
+    // Generate and image and output to file for testing
+    void test() {
+      Sampler sampler(width, height);
+      Sample sample;
+
+      while(sampler.generateSample(&sample)) {
+        Color color(
+          (float) sample.x / width, 
+          (float) sample.y / height, 
+          (float) ((sample.x + sample.y) % height) / height
+        );
+        commit(sample, color);
+      }
+
+      writeImage();
     }
 };
 
