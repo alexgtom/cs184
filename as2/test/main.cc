@@ -10,6 +10,7 @@
 #include "SamplerTest.h"
 #include "NormalTest.h"
 #include "TransformationTest.h"
+#include "PointTest.h"
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
