@@ -24,6 +24,7 @@ public:
 		dir = r.dir;
 		t_min = r.t_min;
 		t_max = r.t_max;
+        return *this;
 	}
 	~Ray() {}
 
