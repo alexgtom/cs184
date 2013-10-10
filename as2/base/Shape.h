@@ -20,6 +20,7 @@ class Shape {
 
 
 class Sphere : public Shape {
+  // Origin is at the center of the sphere
   public:
     float radius;
     Sphere() {}
