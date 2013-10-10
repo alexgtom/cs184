@@ -51,6 +51,11 @@ public:
 		return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
 	}
 
+    Vector cross(const Vector& v) {
+        // compute cross product using Sarrus' rule
+        return Vector(Vector(y*v.z, z*v.x, x*v.y) - Vector(z*v.y, x*v.z, y*v.x));
+    }
+
 	Vector norm() {
 		return *this / this->mag();
 	}
