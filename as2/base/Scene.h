@@ -12,23 +12,29 @@
 #include "Camera.h"
 #include "Ray.h"
 #include "RayTracer.h"
+#include "GeometricPrimitive.h"
+#include "Shape.h"
 
 using namespace std;
 
 class Scene {
   public:
+    // dimensions of output image
     int width, height;
-    string filename;
 
-    Scene(string filename) {
-      this->filename = filename;
-    }
+    // max depth of ray tracer 
+    int maxdepth;
+
+    // Output filename
+    string output_file;
+
+    // Keep track of GeometricPrimitives
+    vector<GeometricPrimitive*> geo_prim_list;
+    vector<Point*> vertex_list;
 
     void loadScene(string file) {
-
-      //store variables and set stuff at the end
-      int width, height;
-      string fname = "output.bmp";
+      // default output file if none specified
+      output_file = "output.png"; 
 
       ifstream inpfile(file.c_str());
       if(!inpfile.is_open()) {
@@ -67,12 +73,12 @@ class Scene {
           //maxdepth depth
           //  max # of bounces for ray (default 5)
           else if(!splitline[0].compare("maxdepth")) {
-            // maxdepth: atoi(splitline[1].c_str())
+             maxdepth = atoi(splitline[1].c_str());
           }
           //output filename
           //  output file to write image to 
           else if(!splitline[0].compare("output")) {
-            fname = splitline[1];
+            output_file = splitline[1];
           }
 
           //camera lookfromx lookfromy lookfromz lookatx lookaty lookatz upx upy upz fov
@@ -96,14 +102,25 @@ class Scene {
           //sphere x y z radius
           //  Defines a sphere with a given position and radius.
           else if(!splitline[0].compare("sphere")) {
-            // x: atof(splitline[1].c_str())
-            // y: atof(splitline[1].c_str())
-            // z: atof(splitline[1].c_str())
-            // r: atof(splitline[4].c_str())
             // Create new sphere:
             //   Store 4 numbers
             //   Store current property values
             //   Store current top of matrix stack
+            float x = atof(splitline[1].c_str());
+            float y = atof(splitline[2].c_str());
+            float z = atof(splitline[3].c_str());
+            float r = atof(splitline[4].c_str());
+            Transformation objToWorld;
+            Transformation worldToObj;
+            
+            geo_prim_list.push_back(
+              new GeometricPrimitive(
+                new Sphere(r),
+                objToWorld,
+                worldToObj,
+                NULL // TODO: put a real material here
+              )
+            );
           }
           //maxverts number
           //  Defines a maximum number of vertices for later triangle specifications. 
@@ -112,21 +129,27 @@ class Scene {
             // Care if you want
             // Here, either declare array size
             // Or you can just use a STL vector, in which case you can ignore this
+            
+            // NOTE: we don't need this since we are using a STL vector, so
+            // we throw away this token
           }
           //maxvertnorms number
           //  Defines a maximum number of vertices with normals for later specifications.
           //  It must be set before vertices with normals are deï¬ned.
           else if(!splitline[0].compare("maxvertnorms")) {
-            // Care if you want
+            // NOTE: we don't need this since we are using a STL vector, so
+            // we throw away this token
           }
           //vertex x y z
           //  Defines a vertex at the given location.
           //  The vertex is put into a pile, starting to be numbered at 0.
           else if(!splitline[0].compare("vertex")) {
-            // x: atof(splitline[1].c_str()),
-            // y: atof(splitline[2].c_str()),
-            // z: atof(splitline[3].c_str()));
             // Create a new vertex with these 3 values, store in some array
+            float x = atof(splitline[1].c_str());
+            float y = atof(splitline[2].c_str());
+            float z = atof(splitline[3].c_str());
+            
+            vertex_list.push_back(new Point(x, y, z));
           }
           //vertexnormal x y z nx ny nz
           //  Similar to the above, but define a surface normal with each vertex.
@@ -154,6 +177,21 @@ class Scene {
             //   Store 3 integers to index into array
             //   Store current property values
             //   Store current top of matrix stack
+            
+            Transformation objToWorld;
+            Transformation worldToObj;
+            Point* p0 = vertex_list[atoi(splitline[1].c_str())];
+            Point* p1 = vertex_list[atoi(splitline[2].c_str())];
+            Point* p2 = vertex_list[atoi(splitline[3].c_str())];
+
+            geo_prim_list.push_back(
+              new GeometricPrimitive(
+                new Triangle(*p0, *p1, *p2),
+                objToWorld,
+                worldToObj,
+                NULL // TODO: put a real material here
+              )
+            );
           }
           //trinormal v1 v2 v3
           //  Same as above but for vertices specified with normals.
@@ -284,17 +322,16 @@ class Scene {
           } else {
             cerr << "Unknown command: " << splitline[0] << endl;
           }
-        }
 
+        } // end while loop
         inpfile.close();
       }
-
     }
 
     void render() {
       Sampler sampler(width, height);
       Sample sample;
-      Film film(width, height);
+      Film film(width, height, output_file);
       Color color;
       Camera camera;
       Ray ray;
