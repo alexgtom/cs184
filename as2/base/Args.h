@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-using namespace std;
+#include "Scene.h"
 
-char* filename;
+using namespace std;
 
 //
 // Parses the arguments from the command line
@@ -17,8 +17,13 @@ void parseArgs(int argc, char *argv[]) {
     // Load scene from file
     // -f filename
     if (strcmp(option, "-f") == 0) {
-      filename = argv[i + 1];
+      char* filename = argv[i + 1];
       i += 2;
+      
+      // create scene and render it
+      Scene scene;
+      scene.loadScene(filename);
+      scene.render();
     } else {
       cerr << "Invalid argument: " << option << endl;
       exit(1);

@@ -30,16 +30,8 @@
 #include "base/Ray.h"
 #include "base/Scene.h"
 
-using namespace std;
-
-extern char* filename;
-
 int main(int argc, char *argv[]) {
   // Parse Arguments
   parseArgs(argc, argv);
-
-  Scene scene(filename);
-  scene.render();
-
   return 0;
 }
