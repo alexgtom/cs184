@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "Parser.h"
-
 using namespace std;
+
+char* filename;
 
 //
 // Parses the arguments from the command line
@@ -17,7 +17,7 @@ void parseArgs(int argc, char *argv[]) {
     // Load scene from file
     // -f filename
     if (strcmp(option, "-f") == 0) {
-      loadScene(argv[i + 1]);
+      filename = argv[i + 1];
       i += 2;
     } else {
       cerr << "Invalid argument: " << option << endl;
