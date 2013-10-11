@@ -12,6 +12,7 @@
 #include "TransformationTest.h"
 #include "SphereTest.h"
 #include "PointTest.h"
+#include "AggregatePrimitiveTest.h"
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
