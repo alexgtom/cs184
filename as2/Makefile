@@ -1,4 +1,4 @@
-CC = clang++
+CC = g++
 CFLAGS = -g -DGL_GLEXT_PROTOTYPES -I./include/ -I/usr/X11/include -I./lib -DOSX
 LDFLAGS = -framework GLUT -framework OpenGL \
 	-L"/System/Library/Frameworks/OpenGL.framework/Libraries" \
