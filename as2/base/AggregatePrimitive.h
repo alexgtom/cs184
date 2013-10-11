@@ -16,7 +16,8 @@ class HelperPrimitive {
       this->primitive = primitive;
       Intersection intersection;
       primitive->intersect(ray, &thit, &intersection);
-      dist = Vector(ray.pos - intersection.local.pos).mag();
+      Point p = ray.pos - intersection.local.pos;
+      dist = Vector(p.x, p.y, p.z).mag();
     }
 
 	bool operator <(const HelperPrimitive& hp) const {

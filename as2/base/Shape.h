@@ -101,9 +101,13 @@ class Triangle: public Shape {
 
     bool intersect(Ray& ray, float* thit, LocalGeo* local) {
       // implements eq 3.5 from PBR on page 141
-      Vector e1 = Vector(p0) - Vector(p0);
-      Vector e2 = Vector(p1) - Vector(p0);
-      Vector s = Vector() - Vector(p0);
+      Vector v_p0(p0.x, p0.y, p0.z);
+      Vector v_p1(p1.x, p1.y, p1.z);
+      Vector v_p2(p2.x, p2.y, p2.z);
+
+      Vector e1 = v_p1 - v_p0;
+      Vector e2 = v_p2 - v_p0;
+      Vector s = Vector() - v_p0;
 
       Vector s1 = ray.dir.cross(e2);
       Vector s2 = s.cross(e1);
