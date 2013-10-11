@@ -13,6 +13,7 @@
 #include "Ray.h"
 #include "RayTracer.h"
 #include "GeometricPrimitive.h"
+#include "AggregatePrimitive.h"
 #include "Shape.h"
 
 using namespace std;
@@ -29,7 +30,7 @@ class Scene {
     string output_file;
 
     // Keep track of GeometricPrimitives
-    vector<GeometricPrimitive*> geo_prim_list;
+    vector<Primitive*> geo_prim_list;
     vector<Point*> vertex_list;
 
     void loadScene(string file) {
@@ -334,8 +335,9 @@ class Scene {
       Film film(width, height, output_file);
       Color color;
       Camera camera;
+      AggregatePrimitive aggregate_primitive(geo_prim_list);
       Ray ray;
-      RayTracer raytracer;
+      RayTracer raytracer(&aggregate_primitive);
 
       while(sampler.generateSample(&sample)) {
         camera.generateRay(sample, &ray);
