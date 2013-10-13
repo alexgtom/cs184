@@ -340,7 +340,7 @@ class Scene {
       RayTracer raytracer(&aggregate_primitive);
 
       while(sampler.generateSample(&sample)) {
-        camera.generateRay(sample, &ray);
+        Ray ray = camera.generateRay(sampler, sample);
         raytracer.trace(ray, &color);
         film.commit(sample, color);
       }
