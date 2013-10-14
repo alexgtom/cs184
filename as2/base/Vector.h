@@ -4,20 +4,23 @@
 
 class Vector {
 public:
-	float x, y, z;
+	float x, y, z, w;
 
-	Vector(float x=0, float y=0, float z=0) : x(x), y(y), z(z) {}
-	Vector(const Vector& v) : x(v.x), y(v.y), z(v.z) {}
+	Vector(float x=0, float y=0, float z=0) : x(x), y(y), z(z) {
+		w = 0;
+	}
+	Vector(const Vector& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
 	Vector& operator=(const Vector& v) {
 		x = v.x;
 		y = v.y;
 		z = v.z;
+		w = 0;
         return *this;
 	}
 	~Vector() {}
 
 	bool operator==(const Vector& v) const {
-		return x==v.x && y==v.y && z==v.z;
+		return x==v.x && y==v.y && z==v.z && w==v.w;
 	}
 
 	Vector operator*(const Vector& v) {
@@ -52,10 +55,10 @@ public:
 		return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
 	}
 
-    Vector cross(const Vector& v) {
-        // compute cross product using Sarrus' rule
-        return Vector(Vector(y*v.z, z*v.x, x*v.y) - Vector(z*v.y, x*v.z, y*v.x));
-    }
+  Vector cross(const Vector& v) {
+      // compute cross product using Sarrus' rule
+      return Vector(Vector(y*v.z, z*v.x, x*v.y) - Vector(z*v.y, x*v.z, y*v.x));
+  }
 
 	Vector norm() {
 		return *this / this->mag();

@@ -1,5 +1,5 @@
-#ifndef NORMAL_H_
-#define NORMAL_H_
+#pragma once
+
 #include "Vector.h"
 
 // All Normal vectors are unit vectors
@@ -16,5 +16,3 @@ class Normal : public Vector {
     Normal(const Normal& v) : Vector(v) {}
     ~Normal() {}
 };
-
-#endif
