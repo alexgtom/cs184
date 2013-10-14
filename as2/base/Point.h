@@ -51,7 +51,7 @@ class Point {
       return Point(x - w.x, y - w.y, z - w.z);
     }
 
-    Point operator-(const Point& w) {
-      return Point(x - w.x, y - w.y, z - w.z);
+    Vector operator-(const Point& w) {
+      return Vector(x - w.x, y - w.y, z - w.z);
     }
 };

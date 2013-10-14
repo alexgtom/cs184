@@ -8,35 +8,47 @@
 
 class Camera {
   public:
-    Point pos;
+    Point cam_pos;
+    Point obj_pos;
     Vector dir;
     Vector up;
     Vector right;
+    float fov;
     Camera() {}
-    Camera(Point pos,
-           Vector dir,
-           Vector up)
-    : pos(pos)
-    , dir(dir.norm())
-    , up(up.norm())
+    Camera(Point cam_pos,
+           Point obj_pos,
+           Vector up,
+           float fov)
+    : cam_pos(cam_pos)
+    , obj_pos(obj_pos)
+    , dir((obj_pos - cam_pos).norm())
     , right(dir.cross(up).norm())
-    {}
-    Camera(const Camera& c) : pos(c.pos), dir(c.dir), up(c.up), right(c.right) {}
+    , up(right.cross(dir).norm())
+    , fov(fov)
+    {
+     // cout << "rachel " << dir.x << dir.y << dir.z << endl;
+    }
+    Camera(const Camera& c) : cam_pos(c.cam_pos), obj_pos(c.obj_pos), dir(c.dir), up(c.up), right(c.right), fov(c.fov) {}
     Camera& operator=(const Camera& c) {
-      pos = c.pos;
+      cam_pos = c.cam_pos;
+      obj_pos = c.obj_pos;
       dir = c.dir;
       up  = c.up;
       right = c.right;
+      fov = c.fov;
       return *this;
     }
     ~Camera() {}
 
     Ray generateRay(const Sampler& sampler, const Sample& sample) {
+      float fov_radians   = fov * 180.0f / 3.1415926f;
+      float vertical_size = 2.0f * tan(fov_radians/2.0f);
+      float horiz_size    = vertical_size * sampler.width / sampler.height;
+
       // these coordinates are in camera space
-      // camera "window" is twice unit size centered on zero
-      float x_coord = -1 + 2 * sample.x / sampler.width;
-      float y_coord =  1 - 2 * sample.y / sampler.height;
-      float z_coord =  1;
+      float x_coord = -0.5f *    horiz_size + horiz_size    * sample.x / sampler.width;
+      float y_coord = -0.5f * vertical_size + vertical_size * sample.y / sampler.height;
+      float z_coord = -1.0f;
 
       // these are camera basis vectors in world space
       Vector x_hat = this->right;
@@ -44,8 +56,10 @@ class Camera {
       Vector z_hat = this->dir;
 
       // here we output a ray in world space
-      return Ray(this->pos,
-                 x_coord * this->right + y_coord * this->up + z_coord * this->dir,
-                 1, 99999);
+      return Ray(this->cam_pos,
+                 x_coord * this->right + 
+                 y_coord * this->up + 
+                 z_coord * this->dir,
+                 1.0f, 99999.9f);
     }
 };

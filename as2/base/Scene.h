@@ -29,6 +29,9 @@ class Scene {
     // Output filename
     string output_file;
 
+    // Initialize camera
+    Camera camera;
+
     // Keep track of GeometricPrimitives
     vector<Primitive*> geo_prim_list;
     vector<Point*> vertex_list;
@@ -86,18 +89,25 @@ class Scene {
           //  specifies the camera in the standard way, as in homework 2.
           else if(!splitline[0].compare("camera")) {
             // lookfrom:
-            //    atof(splitline[1].c_str())
-            //    atof(splitline[2].c_str())
-            //    atof(splitline[3].c_str())
-            // lookat:
-            //    atof(splitline[4].c_str())
-            //    atof(splitline[5].c_str())
-            //    atof(splitline[6].c_str())
-            // up:
-            //    atof(splitline[7].c_str())
-            //    atof(splitline[8].c_str())
-            //    atof(splitline[9].c_str())
-            // fov: atof(splitline[10].c_str());
+            Point camera_origin(
+               atof(splitline[1].c_str()),
+               atof(splitline[2].c_str()),
+               atof(splitline[3].c_str()));
+            //lookat:
+            Point camera_obj_pos(
+               atof(splitline[4].c_str()),
+               atof(splitline[5].c_str()),
+               atof(splitline[6].c_str()));
+            //up:
+            Vector camera_up(
+               atof(splitline[7].c_str()),
+               atof(splitline[8].c_str()),
+               atof(splitline[9].c_str()));
+            //fov: 
+            float camera_fov = 
+               atof(splitline[10].c_str());
+
+            camera = Camera(camera_origin, camera_obj_pos, camera_up, camera_fov);
           }
 
           //sphere x y z radius
@@ -334,14 +344,13 @@ class Scene {
       Sample sample;
       Film film(width, height, output_file);
       Color color;
-      Camera camera;
       AggregatePrimitive aggregate_primitive(geo_prim_list);
       Ray ray;
       RayTracer raytracer(&aggregate_primitive);
 
       while(sampler.generateSample(&sample)) {
         Ray ray = camera.generateRay(sampler, sample);
-        raytracer.trace(ray, &color);
+        Color color = raytracer.trace(ray);
         film.commit(sample, color);
       }
       film.writeImage();

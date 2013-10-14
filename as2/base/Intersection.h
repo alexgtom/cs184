@@ -1,5 +1,8 @@
-#ifndef INTERSECTION_H_
-#define INTERSECTION_H_
+#pragma once
+
+#include "Primitive.h"
+#include "LocalGeo.h"
+
 class Primitive;
 
 class Intersection {
@@ -7,5 +10,3 @@ class Intersection {
     LocalGeo local;
     Primitive* primitive;
 };
-
-#endif
