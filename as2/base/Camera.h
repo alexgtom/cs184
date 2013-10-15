@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iomanip>
+
 #include "Point.h"
 #include "Sample.h"
 #include "Sampler.h"
@@ -22,11 +24,14 @@ class Camera {
     : cam_pos(cam_pos)
     , obj_pos(obj_pos)
     , dir((obj_pos - cam_pos).norm())
-    , right(dir.cross(up).norm())
-    , up(right.cross(dir).norm())
+    , right((dir.cross(up)).norm())
+    , up((right.cross(dir)).norm())
     , fov(fov)
     {
-     // cout << "rachel " << dir.x << dir.y << dir.z << endl;
+      //cout << "rachel " << cam_pos.x << " " << cam_pos.y << " " << cam_pos.z << endl;
+      //cout << "rachel " << obj_pos.x << " " << obj_pos.y << " " << obj_pos.z << endl;
+      cout << "rachel " << setprecision(2) << right.x << " " << right.y << " " << right.z << endl;
+      cout << "rachel " << up.x << " " << up.y << " " << up.z << endl;
     }
     Camera(const Camera& c) : cam_pos(c.cam_pos), obj_pos(c.obj_pos), dir(c.dir), up(c.up), right(c.right), fov(c.fov) {}
     Camera& operator=(const Camera& c) {
@@ -41,14 +46,14 @@ class Camera {
     ~Camera() {}
 
     Ray generateRay(const Sampler& sampler, const Sample& sample) {
-      float fov_radians   = fov * 180.0f / 3.1415926f;
+      float fov_radians   = fov * 3.1415926f / 180.0f;
       float vertical_size = 2.0f * tan(fov_radians/2.0f);
       float horiz_size    = vertical_size * sampler.width / sampler.height;
 
       // these coordinates are in camera space
       float x_coord = -0.5f *    horiz_size + horiz_size    * sample.x / sampler.width;
       float y_coord = -0.5f * vertical_size + vertical_size * sample.y / sampler.height;
-      float z_coord = -1.0f;
+      float z_coord = 1.0f;
 
       // these are camera basis vectors in world space
       Vector x_hat = this->right;

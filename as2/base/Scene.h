@@ -18,6 +18,8 @@
 
 using namespace std;
 
+using namespace Eigen;
+
 class Scene {
   public:
     // dimensions of output image
