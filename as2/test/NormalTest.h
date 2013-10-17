@@ -15,12 +15,5 @@ TEST_F(NormalTest, Subtraction) {
 
 TEST_F(NormalTest, DotProduct) {
   Normal v(3, 0, 0);
-  EXPECT_FLOAT_EQ(v.dot(v), 1);
+  EXPECT_FLOAT_EQ(v.dot(v), 9);
 }
-
-TEST_F(NormalTest, UnitVector) {
-  // normals should be unit vectors
-  Normal v(3, 0, 0);
-  EXPECT_EQ(v, Normal(1, 0, 0));
-}
-
