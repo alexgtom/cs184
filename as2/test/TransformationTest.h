@@ -10,6 +10,6 @@ TEST_F(TransformationTest, OverloadTest) {
   Transformation t;
   Vector v(1, 2, 3);
   Point p(1, 2, 3);
-  t.transform(v);
-  t.transform(p);
+  t * v;
+  t * p;
 }

@@ -23,23 +23,23 @@ class Transformation {
       this->m = m;
     }
 
-    Point transform(const Point& p) {
+    Point operator*(const Point& p) {
       return p;
     }
 
-    Vector transform(const Vector& v) {
+    Vector operator*(const Vector& v) {
       return v;
     }
 
-    Normal transform(const Normal& n) {
+    Normal operator*(const Normal& n) {
       return n;
     }
 
-    Ray transform(const Ray& r) {
+    Ray operator*(const Ray& r) {
       return r;
     }
 
-    LocalGeo transform(const LocalGeo& l) {
+    LocalGeo operator*(const LocalGeo& l) {
       return l;
     }
 };

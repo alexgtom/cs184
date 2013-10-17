@@ -22,18 +22,18 @@ class GeometricPrimitive : public Primitive {
     }
 
     bool intersect(Ray& ray, float* thit, Intersection* in)  {
-      Ray oray = worldToObj.transform(ray);
+      Ray oray = worldToObj * ray;
       LocalGeo olocal;
       if (!shape->intersect(oray, thit, &olocal))
         return false;
 
       in->primitive = this;
-      in->local = objToWorld.transform(olocal);
+      in->local = objToWorld * olocal;
       return true;
     }
 
     bool intersectP(Ray& ray) {
-      Ray oray = worldToObj.transform(ray);
+      Ray oray = worldToObj * ray;
       return shape->intersectP(oray);
     }
 
