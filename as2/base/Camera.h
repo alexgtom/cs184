@@ -28,10 +28,6 @@ class Camera {
     , up((right.cross(dir)).norm())
     , fov(fov)
     {
-      //cout << "rachel " << cam_pos.x << " " << cam_pos.y << " " << cam_pos.z << endl;
-      //cout << "rachel " << obj_pos.x << " " << obj_pos.y << " " << obj_pos.z << endl;
-      cout << "rachel " << setprecision(2) << right.x << " " << right.y << " " << right.z << endl;
-      cout << "rachel " << up.x << " " << up.y << " " << up.z << endl;
     }
     Camera(const Camera& c) : cam_pos(c.cam_pos), obj_pos(c.obj_pos), dir(c.dir), up(c.up), right(c.right), fov(c.fov) {}
     Camera& operator=(const Camera& c) {

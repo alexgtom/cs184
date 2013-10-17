@@ -51,11 +51,6 @@ class AggregatePrimitive : public Primitive {
       // sort list in ascending order
       sort(hp_list.begin(), hp_list.end());
       
-      cout << "Sort: " << endl;
-      for(int i = 0; i < hp_list.size(); i++) {
-        cout << hp_list[i].dist << endl;
-      }
-
       // set thit and in
       // 0 is index of the closest shape
       return hp_list[0].primitive->intersect(ray, thit, in);
