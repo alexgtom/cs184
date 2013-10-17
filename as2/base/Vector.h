@@ -66,6 +66,7 @@ public:
 
     friend std::ostream& operator<< (std::ostream& stream, const Vector& v) {
       stream << "Vector(" << v.x << ", " << v.y << ", " << v.z << ")";
+      return stream;
     }
 };
 

@@ -70,5 +70,6 @@ class Point {
 
     friend std::ostream& operator<< (std::ostream& stream, const Point& p) {
       stream << "Point(" << p.x << ", " << p.y << ", " << p.z << ")";
+      return stream;
     }
 };

@@ -12,5 +12,6 @@ class Normal : public Vector {
 
     friend std::ostream& operator<< (std::ostream& stream, const Normal& n) {
       stream << "Normal(" << n.x << ", " << n.y << ", " << n.z << ")";
+      return stream;
     }
 };

@@ -25,4 +25,10 @@ class Ray {
     bool operator==(const Ray& r) const {
       return pos==r.pos && dir==r.dir && t_min==r.t_min && t_max==r.t_max;
     }
+
+    friend std::ostream& operator<< (std::ostream& stream, const Ray& r) {
+      stream << "Ray( pos:" << r.pos << "  dir: " << r.dir;
+      stream << "  trange: [" << r.t_min << ", " << r.t_max << "])";
+      return stream;
+    }
 };
