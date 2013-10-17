@@ -11,6 +11,7 @@
 #include "NormalTest.h"
 #include "TransformationTest.h"
 #include "SphereTest.h"
+#include "TriangleTest.h"
 #include "PointTest.h"
 #include "AggregatePrimitiveTest.h"
 

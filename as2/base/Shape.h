@@ -62,7 +62,7 @@ class Sphere : public Shape {
       local->pos.y = ray.pos.y + *thit * ray.dir.y;
       local->pos.z = ray.pos.z + *thit * ray.dir.z;
       
-      // change tmax from [0.0, 1.0] to [ray.t_min, ray.t_max]
+      // change thit from [0.0, 1.0] to [ray.t_min, ray.t_max]
       *thit = ray.t_min + *thit * (ray.t_max - ray.t_min);
 
       local->normal = Normal(local->pos.x, local->pos.y, local->pos.z);
@@ -111,25 +111,36 @@ class Triangle: public Shape {
       Vector v_p0(p0.x, p0.y, p0.z);
       Vector v_p1(p1.x, p1.y, p1.z);
       Vector v_p2(p2.x, p2.y, p2.z);
+      Vector v_ray_pos(ray.pos.x, ray.pos.y, ray.pos.z);
 
       Vector e1 = v_p1 - v_p0;
       Vector e2 = v_p2 - v_p0;
-      Vector s = Vector() - v_p0;
+      Vector s = v_ray_pos - v_p0;
 
       Vector s1 = ray.dir.cross(e2);
       Vector s2 = s.cross(e1);
+      
+      float divisor = s1.dot(e1);
+      float frac_term = 1.0f / divisor;
 
-      float frac_term = 1.0f / s1.dot(e1);
+      if (divisor == 0.0f)
+        return false;
 
       float t = frac_term * s2.dot(e2);
       float b1 = frac_term * s1.dot(s);
-      float b2 = frac_term * s2.dot(ray.dir);
-
-      if (b1 < 0.0f || b2 < 0.0f || b1 + b2 > 1.0f)
+      if (b1 < 0.0f || b1 > 1.0f)
         return false;
-        
+
+      float b2 = frac_term * s2.dot(ray.dir);
+      if (b2 < 0.0f || b1 + b2 > 1.0f)
+        return false;
+      
+      if (t < 0.0f || t > 1.0f)
+        return false;
 
       *thit = t;
+      // change thit from [0.0, 1.0] to [ray.t_min, ray.t_max]
+      *thit = ray.t_min + *thit * (ray.t_max - ray.t_min);
 
       local->pos.x = ray.pos.x + t * ray.dir.x;
       local->pos.y = ray.pos.y + t * ray.dir.y;
