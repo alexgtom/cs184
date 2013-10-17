@@ -17,6 +17,14 @@ class Point {
       this->z = z;
       this->w = 1;
     }
+
+    Point(float x, float y, float z, float w) {
+      this->x = x;
+      this->y = y;
+      this->z = z;
+      this->w = w;
+    }
+
     Point(const Vector& v) { 
       x = v.x;
       y = v.y;
