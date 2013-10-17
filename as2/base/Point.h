@@ -59,4 +59,8 @@ class Point {
     Vector operator-(const Point& w) {
       return Vector(x - w.x, y - w.y, z - w.z);
     }
+
+    friend std::ostream& operator<< (std::ostream& stream, const Point& p) {
+      stream << "Point(" << p.x << ", " << p.y << ", " << p.z << ")";
+    }
 };

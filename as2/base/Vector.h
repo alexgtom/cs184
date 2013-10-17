@@ -63,6 +63,10 @@ public:
 	Vector norm() {
 		return *this / this->mag();
 	}
+
+    friend std::ostream& operator<< (std::ostream& stream, const Vector& v) {
+      stream << "Vector(" << v.x << ", " << v.y << ", " << v.z << ")";
+    }
 };
 
 	Vector operator*(float a, const Vector& v) {
