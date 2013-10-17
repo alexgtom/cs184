@@ -52,6 +52,10 @@ class Point {
       return Point(x - w.x, y - w.y, z - w.z);
     }
 
+    Point operator/(float c) {
+      return Point(x/c, y/c, z/c);
+    }
+
     Vector operator-(const Point& w) {
       return Vector(x - w.x, y - w.y, z - w.z);
     }

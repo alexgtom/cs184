@@ -17,6 +17,12 @@ TEST_F(PointTest, Addition) {
   EXPECT_EQ(p+v, Point(1, 1, 1));
 }
 
+TEST_F(PointTest, Division) {
+  Point p(2, 2, 2);
+
+  EXPECT_EQ(p/2.0f, Point(1, 1, 1));
+}
+
 TEST_F(PointTest, Assignment) {
   Point p(0, 0, 0);
   p = Point(1, 1, 1);
