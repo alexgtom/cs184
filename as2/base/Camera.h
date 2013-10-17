@@ -17,18 +17,13 @@ class Camera {
     Vector right;
     float fov;
     Camera() {}
-    Camera(Point cam_pos,
-           Point obj_pos,
-           Vector up,
-           float fov)
-    : cam_pos(cam_pos)
-    , obj_pos(obj_pos)
-    , dir((obj_pos - cam_pos).norm())
-    , right((dir.cross(up)).norm())
-    , up((right.cross(dir)).norm())
-    , fov(fov)
-    {
-    }
+    Camera(Point cam_pos, Point obj_pos, Vector up, float fov): 
+      cam_pos(cam_pos), 
+      obj_pos(obj_pos), 
+      dir((obj_pos - cam_pos).norm()), 
+      right((dir.cross(up)).norm()), 
+      up((right.cross(dir)).norm()), 
+      fov(fov) {}
     Camera(const Camera& c) : cam_pos(c.cam_pos), obj_pos(c.obj_pos), dir(c.dir), up(c.up), right(c.right), fov(c.fov) {}
     Camera& operator=(const Camera& c) {
       cam_pos = c.cam_pos;
@@ -58,9 +53,9 @@ class Camera {
 
       // here we output a ray in world space
       return Ray(this->cam_pos,
-                 x_coord * this->right + 
-                 y_coord * this->up + 
-                 z_coord * this->dir,
-                 1.0f, 99999.9f);
+          x_coord * this->right + 
+          y_coord * this->up + 
+          z_coord * this->dir,
+          1.0f, 99999.9f);
     }
 };
