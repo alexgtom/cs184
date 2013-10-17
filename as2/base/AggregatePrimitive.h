@@ -8,15 +8,14 @@
 // Helper class for sorting primitives
 class HelperPrimitive {
   public:
-    Primitive* primitive;
     float dist;
+    float thit;
+    bool intersect_result;
+    Intersection in;
 
     HelperPrimitive(Ray ray, Primitive* primitive) {
-      float thit;
-      this->primitive = primitive;
-      Intersection intersection;
-      primitive->intersect(ray, &thit, &intersection);
-      Point p = ray.pos - intersection.local.pos;
+      intersect_result = primitive->intersect(ray, &thit, &in);
+      Point p = ray.pos - in.local.pos;
       dist = Vector(p.x, p.y, p.z).mag();
     }
 
@@ -44,16 +43,14 @@ class AggregatePrimitive : public Primitive {
         hp_list.push_back(HelperPrimitive(ray, list[i]));
       }
       
-      // needed for sorting
-      this->ray = ray;
-
-      
       // sort list in ascending order
       sort(hp_list.begin(), hp_list.end());
       
       // set thit and in
       // 0 is index of the closest shape
-      return hp_list[0].primitive->intersect(ray, thit, in);
+      *thit = hp_list[0].thit;
+      *in = hp_list[0].in;
+      return hp_list[0].intersect_result;
     }
 
     bool intersectP(Ray& ray) {
@@ -67,8 +64,6 @@ class AggregatePrimitive : public Primitive {
       // This should never get called, because in->primitive will
       // never be an aggregate primitive
     }
-  private:
-    Ray ray;
 };
 
 #endif 
