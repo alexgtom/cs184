@@ -31,6 +31,10 @@ public:
 		return Vector(x/d, y/d, z/d);
 	}
 
+	Vector operator*(float d) {
+		return Vector(x*d, y*d, z*d);
+	}
+
 	Vector operator+(const Vector& v) {
 		return Vector(x + v.x, y + v.y, z + v.z);
 	}
