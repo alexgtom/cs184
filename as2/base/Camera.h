@@ -44,7 +44,7 @@ class Camera {
       float fov_y_radians   = fov * 3.1415926f / 180.0f;
       float vertical_size = 2.0f * cam_to_obj_dist * tan(fov_y_radians/2.0f);
       float horiz_size    = vertical_size * sampler.width / (float) sampler.height;
-      float fov_x_radians   = atan(horiz_size / 2.0f / cam_to_obj_dist);
+      float fov_x_radians   = 2.0f * atan(horiz_size / 2.0f / cam_to_obj_dist);
 
       // http://graphics.ucsd.edu/courses/cse168_s06/ucsd/CSE168_raytrace.pdf
       Vector e(cam_pos.x, cam_pos.y, cam_pos.z);
@@ -54,14 +54,14 @@ class Camera {
       int width = sampler.width;
       int height = sampler.height;
 
-      Vector c_x = v.cross(u) / pow((v.cross(u)).mag(), 2);
+      Vector c_x = v.cross(u) / (v.cross(u).mag() * v.cross(u).mag());
       Vector c_y = c_x.cross(v);
-      float c_w = 2 * tan(fov_x/2);
+      float c_w = 2.0f * tan(fov_x/2.0f);
       float c_h = c_w / ((float) width / height);
 
       Point o = cam_pos;
       Vector d = v + c_x * ((sample.x/(float) width - 0.5f) * c_w) + c_y * ((sample.y/ (float) height - 0.5f) * c_h);
 
-      return Ray(o, d, 0, INFINITY);
+      return Ray(o, d, 0.0f, INFINITY);
     }
 };
