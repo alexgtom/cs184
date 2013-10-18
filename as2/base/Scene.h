@@ -38,6 +38,11 @@ class Scene {
     // Ambient
     Color ambient;
 
+    // Attenuation
+    float constant;
+    float linear;
+    float quadratic;
+
     // Keep track of GeometricPrimitives
     vector<Primitive*> geo_prim_list;
     vector<Point*> vertex_list;
@@ -54,6 +59,9 @@ class Scene {
       output_file = "output.png"; 
       maxdepth = 5;
       ambient = Color(0.2, 0.2, 0.2);
+      constant = 1;
+      linear = 0;
+      quadratic = 0;
 
       /*
        * BEGIN PARSING
@@ -308,9 +316,9 @@ class Scene {
           //  Sets the constant, linear and quadratic attenuations 
           //  (default 1,0,0) as in OpenGL.
           else if(!splitline[0].compare("attenuation")) {
-            float constant = atof(splitline[1].c_str());
-            float linear = atof(splitline[2].c_str());
-            float quadratic = atof(splitline[3].c_str());
+            constant = atof(splitline[1].c_str());
+            linear = atof(splitline[2].c_str());
+            quadratic = atof(splitline[3].c_str());
           }
           //ambient r g b
           //  The global ambient color to be added for each object 
@@ -370,7 +378,8 @@ class Scene {
       Film film(width, height, output_file);
       AggregatePrimitive aggregate_primitive(geo_prim_list);
       Ray ray;
-      RayTracer raytracer(&aggregate_primitive, light_list, ambient);
+      RayTracer raytracer(&aggregate_primitive, light_list, ambient, constant, 
+          linear, quadratic, camera);
 
       while(sampler.generateSample(&sample)) {
         Color color;
