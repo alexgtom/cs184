@@ -8,6 +8,10 @@
 #include "LocalGeo.h"
 #include "Ray.h"
 
+// start the light at a offset to avoid having the start point
+// accidentally intersecting with the surface
+#define LIGHT_OFFSET 0.1f
+
 class Light {
   public:
     // This is an abstract class that will generate a ray starting from
@@ -27,7 +31,7 @@ class PointLight : public Light {
     }
     
     void generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
-      *lray = Ray(local.pos, loc - local.pos);
+      *lray = Ray(local.pos, loc - local.pos, LIGHT_OFFSET, (loc - local.pos).mag());
       *lcolor = color;
     }
 };
@@ -43,7 +47,7 @@ class DirectionalLight : public Light {
     }
 
     void generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
-      *lray = Ray(local.pos, -direction, 0.0f, INFINITY);
+      *lray = Ray(local.pos, -direction, LIGHT_OFFSET, INFINITY);
       *lcolor = color;
     }
 };
