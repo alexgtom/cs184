@@ -14,6 +14,7 @@
 #include "TriangleTest.h"
 #include "PointTest.h"
 #include "AggregatePrimitiveTest.h"
+#include "LightTest.h"
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
