@@ -46,9 +46,9 @@ TEST_F(TransformationTest, Normal) {
 
 TEST_F(TransformationTest, Ray) {
   Transformation t(scale(2, 2, 2));
-  Ray r = t * Ray(Point(1, 2, 3), Vector(1, 2, 3), 0.0f, 1.0f);
+  Ray r = t * Ray(Point(1, 2, 3), Vector(1, 1, 1), 0.0f, 1.0f);
 
-  EXPECT_EQ(Vector(2, 4, 6), r.dir);
+  EXPECT_EQ(Vector(1, 1, 1).norm(), r.dir);
   EXPECT_EQ(Point(3, 5, 7), r.pos);
 }
 

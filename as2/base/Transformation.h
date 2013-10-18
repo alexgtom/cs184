@@ -44,7 +44,7 @@ class Transformation {
     Ray operator*(const Ray& r) {
       Ray ray(r);
       ray.pos = (*this) * r.pos;
-      ray.dir = (*this) * r.dir;
+      ray.dir = ((*this) * r.dir).norm();
       return ray;
     }
 

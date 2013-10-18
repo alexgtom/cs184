@@ -27,14 +27,12 @@ TEST_F(SphereTest, ThitTest1) {
   Sphere s(1.0f);
 
   // shoot a ray down the z-coordinate
-  Ray r(Point(0, 0, 10), Vector(0, 0, -10), 0, 10);
+  Ray r(Point(0, 0, 10), Vector(0, 0, -10), 0, 3);
   float thit;
   LocalGeo local;
-  EXPECT_TRUE(s.intersect(r, &thit, &local));
-  EXPECT_FLOAT_EQ(9.0f, thit);
-  EXPECT_EQ(Point(0, 0, 1), local.pos);
-  EXPECT_EQ(Normal(0, 0, 1), local.normal);
-  EXPECT_TRUE(s.intersectP(r));
+  // fails because vector is too short
+  EXPECT_FALSE(s.intersect(r, &thit, &local));
+  EXPECT_FALSE(s.intersectP(r));
 }
 
 TEST_F(SphereTest, ThitTest2) {
@@ -42,11 +40,11 @@ TEST_F(SphereTest, ThitTest2) {
   Sphere s(1.0f);
 
   // shoot a ray down the z-coordinate
-  Ray r(Point(0, 0, 2), Vector(0, 0, -2), -1, 1);
+  Ray r(Point(0, 0, 2), Vector(0, 0, -2), 0, 1);
   float thit;
   LocalGeo local;
   EXPECT_TRUE(s.intersect(r, &thit, &local));
-  EXPECT_FLOAT_EQ(0.0f, thit);
+  EXPECT_FLOAT_EQ(1.0f, thit);
   EXPECT_EQ(Point(0, 0, 1), local.pos);
   EXPECT_EQ(Normal(0, 0, 1), local.normal);
   EXPECT_TRUE(s.intersectP(r));

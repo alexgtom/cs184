@@ -45,15 +45,12 @@ class Sphere : public Shape {
 
       quadraticSolver(A, B, C, &t0, &t1);
 
-      float normalized_t_max = 1.0f;
-      float normalized_t_min = 0.0f;
-
-      if (t0 > normalized_t_max || t1 < normalized_t_min)
+      if (t0 > ray.t_max || t1 < ray.t_min)
         return false;
       *thit = t0;
-      if (t0 < normalized_t_min) {
+      if (t0 < ray.t_min) {
         *thit = t1;
-        if (*thit > normalized_t_max)
+        if (*thit > ray.t_max)
           return false;
       }
       
@@ -62,9 +59,6 @@ class Sphere : public Shape {
       local->pos.y = ray.pos.y + *thit * ray.dir.y;
       local->pos.z = ray.pos.z + *thit * ray.dir.z;
       
-      // change thit from [0.0, 1.0] to [ray.t_min, ray.t_max]
-      *thit = ray.t_min + *thit * (ray.t_max - ray.t_min);
-
       local->normal = Normal(local->pos.x, local->pos.y, local->pos.z);
 
       return true;
@@ -135,12 +129,10 @@ class Triangle: public Shape {
       if (b2 < 0.0f || b1 + b2 > 1.0f)
         return false;
       
-      if (t < 0.0f || t > 1.0f)
+      if (t < ray.t_min || t > ray.t_max)
         return false;
 
       *thit = t;
-      // change thit from [0.0, 1.0] to [ray.t_min, ray.t_max]
-      *thit = ray.t_min + *thit * (ray.t_max - ray.t_min);
 
       local->pos.x = ray.pos.x + t * ray.dir.x;
       local->pos.y = ray.pos.y + t * ray.dir.y;
