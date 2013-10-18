@@ -351,7 +351,7 @@ class Scene {
       Color color;
       AggregatePrimitive aggregate_primitive(geo_prim_list);
       Ray ray;
-      RayTracer raytracer(&aggregate_primitive);
+      RayTracer raytracer(&aggregate_primitive, light_list);
 
       while(sampler.generateSample(&sample)) {
         Ray ray = camera.generateRay(sampler, sample);

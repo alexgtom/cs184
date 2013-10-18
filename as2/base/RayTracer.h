@@ -1,51 +1,80 @@
 #pragma once
 
+#include <vector>
+
 #include "Ray.h"
 #include "Primitive.h"
+#include "Intersection.h"
+#include "Brdf.h"
+#include "Light.h"
+#include "Color.h"
+
+#define RAYTRACER_MAX_DEPTH 5
 
 class RayTracer {
   public:
     Primitive *aggregate_primitive;
-    RayTracer(Primitive *aggregate_primitive) {
+    vector <Light*> lights;
+
+    RayTracer(Primitive *aggregate_primitive, vector<Light*> lights) {
       this->aggregate_primitive = aggregate_primitive;
+      this->lights = lights;
     }
 
-    Color trace(Ray& ray, int depth=0) {
-      if (depth >= 1) {
-        return Color(0, 0, 0);
-      }
-
+    Color trace(Ray& ray) { 
+      Color color(0, 0, 0);
+      this->trace(ray, 0, &color);
+      return color;
+    }
+  
+    void trace(Ray& ray, int depth, Color* color) {
       Intersection in;
       float thit;
+      BRDF brdf;
+
+      if (depth > RAYTRACER_MAX_DEPTH) {
+        // Make the color black and return
+        *color = Color(0, 0, 0);
+        return;
+      }
 
       if (!aggregate_primitive->intersect(ray, &thit, &in)) {
-         // No intersection
-         return Color(0, 0, 0);
-       }
+        // No intersection
+        *color = Color(0, 0, 0);
+        return;
+      }
 
-       return Color(1.0f, 0, 0);
-      
-      //// Obtain the brdf at intersection point
-      //in.primitive->getBRDF(in.local, &brdf);
-      //
-      //// There is an intersection, loop through all light source
-      //for (i = 0; i < #lights; i++) {
-      //lights[i].generateLightRay(in.local, &lray, &lcolor);
-      //
-      //// Check if the light is blocked or not
-      //if (!primitive->intersectP(lray))
-      //// If not, do shading calculation for this
-      //// light source
-      //*color += shading(in.local, brdf, lray, lcolor);
-      //}
-      //
-      //// Handle mirror reflection
-      //if (brdf.kr > 0) {
-      //reflectRay = createReflectRay(in.local, ray);
-      //
-      //// Make a recursive call to trace the reflected ray
-      //trace(reflectRay, depth+1, &tempColor);
-      //*color += brdf.kr * tempColor;
-      ////}
+      // Obtain the brdf at intersection point
+      in.primitive->getBRDF(in.local, &brdf);
+
+      // There is an intersection, loop through all light source
+      for (int i = 0; i < lights.size(); i++) {
+        Ray lray;
+        Color lcolor;
+        lights[i]->generateLightRay(in.local, &lray, &lcolor);
+
+        // Check if the light is blocked or not
+        if (!aggregate_primitive->intersectP(lray)) {
+          // If not, do shading calculation for this
+          // light source
+          *color += shading(in.local, brdf, lray, lcolor);
+        }
+      }
+
+      // Handle mirror reflection
+      if (brdf.kr > 0) {
+        Color tempColor;
+        Ray reflectRay = createReflectRay(in.local, ray);
+
+        // Make a recursive call to trace the reflected ray
+        trace(reflectRay, depth+1, &tempColor);
+        *color += brdf.kr * tempColor;
+      }
+    }
+
+    Color shading(LocalGeo local, BRDF brdf, Ray lray, Color lcolor) {
+    }
+
+    Ray createReflectRay(LocalGeo local, Ray ray) {
     }
 };
