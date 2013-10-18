@@ -15,6 +15,7 @@
 #include "GeometricPrimitive.h"
 #include "AggregatePrimitive.h"
 #include "Shape.h"
+#include "Light.h"
 
 using namespace std;
 
@@ -37,6 +38,7 @@ class Scene {
     // Keep track of GeometricPrimitives
     vector<Primitive*> geo_prim_list;
     vector<Point*> vertex_list;
+    vector<Light*> light_list;
 
     void loadScene(string file) {
       // default output file if none specified
@@ -267,32 +269,33 @@ class Scene {
           //directional x y z r g b
           //  The direction to the light source, and the color, as in OpenGL.
           else if(!splitline[0].compare("directional")) {
-            // x: atof(splitline[1].c_str()),
-            // y: atof(splitline[2].c_str()),
-            // z: atof(splitline[3].c_str()));
-            // r: atof(splitline[4].c_str()),
-            // g: atof(splitline[5].c_str()),
-            // b: atof(splitline[6].c_str()));
-            // add light to scene...
+            float x = atof(splitline[1].c_str());
+            float y = atof(splitline[2].c_str());
+            float z = atof(splitline[3].c_str());
+            float r = atof(splitline[4].c_str());
+            float g = atof(splitline[5].c_str());
+            float b = atof(splitline[6].c_str());
+
+            light_list.push_back(new DirectionalLight(x, y, z, r, g, b));
           }
           //point x y z r g b
           //  The location of a point source and the color, as in OpenGL.
           else if(!splitline[0].compare("point")) {
-            // x: atof(splitline[1].c_str()),
-            // y: atof(splitline[2].c_str()),
-            // z: atof(splitline[3].c_str()));
-            // r: atof(splitline[4].c_str()),
-            // g: atof(splitline[5].c_str()),
-            // b: atof(splitline[6].c_str()));
-            // add light to scene...
+            float x = atof(splitline[1].c_str());
+            float y = atof(splitline[2].c_str());
+            float z = atof(splitline[3].c_str());
+            float r = atof(splitline[4].c_str());
+            float g = atof(splitline[5].c_str());
+            float b = atof(splitline[6].c_str());
+            light_list.push_back(new PointLight(x, y, z, r, g, b));
           }
           //attenuation const linear quadratic
           //  Sets the constant, linear and quadratic attenuations 
           //  (default 1,0,0) as in OpenGL.
           else if(!splitline[0].compare("attenuation")) {
-            // const: atof(splitline[1].c_str())
-            // linear: atof(splitline[2].c_str())
-            // quadratic: atof(splitline[3].c_str())
+            float constant = atof(splitline[1].c_str());
+            float linear = atof(splitline[2].c_str());
+            float quadratic = atof(splitline[3].c_str());
           }
           //ambient r g b
           //  The global ambient color to be added for each object 
