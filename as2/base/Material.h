@@ -8,6 +8,10 @@ class Material {
   public:
     BRDF constantBRDF;
 
+    Material(BRDF brdf) {
+      constantBRDF = brdf;
+    }
+
     void getBRDF(LocalGeo& local, BRDF* brdf) {
       *brdf = constantBRDF;
     }
