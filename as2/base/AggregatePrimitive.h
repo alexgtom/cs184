@@ -10,13 +10,12 @@ class HelperPrimitive {
   public:
     float dist;
     float thit;
-    bool intersect_result;
+    bool has_intersection;
     Intersection in;
 
     HelperPrimitive(Ray ray, Primitive* primitive) {
-      intersect_result = primitive->intersect(ray, &thit, &in);
-      Point p = ray.pos - in.local.pos;
-      dist = Vector(p.x, p.y, p.z).mag();
+      has_intersection = primitive->intersect(ray, &thit, &in);
+      dist = (ray.pos - in.local.pos).mag();
     }
 
 	bool operator <(const HelperPrimitive& hp) const {
@@ -34,14 +33,20 @@ class AggregatePrimitive : public Primitive {
 
     // thit is the thit to the closest shape that the ray hits
     bool intersect(Ray& ray, float* thit, Intersection* in) {
+      // if theres no shapes, return false
       if(list.size() == 0)
         return false;
 
       vector<HelperPrimitive> hp_list;
 
       for(int i = 0; i < list.size(); i++) {
-        hp_list.push_back(HelperPrimitive(ray, list[i]));
+        if (list[i]->intersectP(ray))
+          hp_list.push_back(HelperPrimitive(ray, list[i]));
       }
+
+      // if theres no intersections, return false
+      if (hp_list.size() == 0)
+        return false;
       
       // sort list in ascending order
       sort(hp_list.begin(), hp_list.end());
@@ -50,7 +55,7 @@ class AggregatePrimitive : public Primitive {
       // 0 is index of the closest shape
       *thit = hp_list[0].thit;
       *in = hp_list[0].in;
-      return hp_list[0].intersect_result;
+      return hp_list[0].has_intersection;
     }
 
     bool intersectP(Ray& ray) {
@@ -63,6 +68,15 @@ class AggregatePrimitive : public Primitive {
       exit(1);
       // This should never get called, because in->primitive will
       // never be an aggregate primitive
+    }
+
+    friend std::ostream& operator<< (std::ostream& stream, const AggregatePrimitive& v) {
+      stream << "AggregatePrimitive[";
+      for(int i = 0; i < v.list.size(); i++) {
+        stream << "  [" << i << "]: " << v.list[i];
+      }
+      stream << "]";
+      return stream;
     }
 };
 
