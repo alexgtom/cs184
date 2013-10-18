@@ -18,7 +18,9 @@ class Transformation {
   public:
     Matrix4f m;
 
-    Transformation() {}
+    Transformation() {
+      m = MatrixXf::Identity(4, 4);
+    }
     Transformation(Matrix4f m) {
       this->m = m;
     }
