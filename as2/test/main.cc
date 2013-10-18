@@ -15,6 +15,7 @@
 #include "PointTest.h"
 #include "AggregatePrimitiveTest.h"
 #include "LightTest.h"
+#include "CameraTest.h"
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
