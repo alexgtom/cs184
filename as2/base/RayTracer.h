@@ -13,8 +13,9 @@ class RayTracer {
   public:
     Primitive *aggregate_primitive;
     vector <Light*> lights;
+    Color ambient;
 
-    RayTracer(Primitive *aggregate_primitive, vector<Light*> lights) {
+    RayTracer(Primitive *aggregate_primitive, vector<Light*> lights, Color ambient) {
       this->aggregate_primitive = aggregate_primitive;
       this->lights = lights;
     }

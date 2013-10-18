@@ -35,6 +35,9 @@ class Scene {
     // Initialize camera
     Camera camera;
 
+    // Ambient
+    Color ambient;
+
     // Keep track of GeometricPrimitives
     vector<Primitive*> geo_prim_list;
     vector<Point*> vertex_list;
@@ -49,6 +52,8 @@ class Scene {
        */
       // default output file if none specified
       output_file = "output.png"; 
+      maxdepth = 5;
+      ambient = Color(0.2, 0.2, 0.2);
 
       /*
        * BEGIN PARSING
@@ -311,9 +316,10 @@ class Scene {
           //  The global ambient color to be added for each object 
           //  (default is .2,.2,.2)
           else if(!splitline[0].compare("ambient")) {
-            // r: atof(splitline[1].c_str())
-            // g: atof(splitline[2].c_str())
-            // b: atof(splitline[3].c_str())
+            float r = atof(splitline[1].c_str());
+            float g = atof(splitline[2].c_str());
+            float b = atof(splitline[3].c_str());
+            ambient = Color(r, g, b);
           }
 
           //diffuse r g b
@@ -364,7 +370,7 @@ class Scene {
       Film film(width, height, output_file);
       AggregatePrimitive aggregate_primitive(geo_prim_list);
       Ray ray;
-      RayTracer raytracer(&aggregate_primitive, light_list);
+      RayTracer raytracer(&aggregate_primitive, light_list, ambient);
 
       while(sampler.generateSample(&sample)) {
         Color color;
