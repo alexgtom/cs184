@@ -71,11 +71,22 @@ TEST_F(TriangleTest, IntersectTest2) {
   EXPECT_TRUE(s.intersectP(r));
 }
 
-TEST_F(TriangleTest, InvalidIntersectTest) {
+TEST_F(TriangleTest, InvalidIntersectTest1) {
   Triangle s(Point(0, 0, 0), Point(1, 0, 0), Point(0, 1, 0));
 
   // shoot a ray that does not intersect the sphere
   Ray r(Point(0, 0, 2), Vector(0, 1, 0), 0, 2);
+  float thit;
+  LocalGeo local;
+  EXPECT_FALSE(s.intersect(r, &thit, &local));
+  EXPECT_FALSE(s.intersectP(r));
+}
+
+TEST_F(TriangleTest, InvalidIntersectTest2) {
+  Triangle s(Point(0, 0, 0), Point(1, 0, 0), Point(0, 1, 0));
+
+  // shoot a ray that does not intersect the sphere
+  Ray r(Point(0, 0, 0), Vector(0, 0, 2), 1, 2);
   float thit;
   LocalGeo local;
   EXPECT_FALSE(s.intersect(r, &thit, &local));
