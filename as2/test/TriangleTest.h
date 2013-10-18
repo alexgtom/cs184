@@ -34,6 +34,43 @@ TEST_F(TriangleTest, ThitTest1) {
   EXPECT_FALSE(s.intersectP(r));
 }
 
+TEST_F(TriangleTest, ThitTest2) {
+  Triangle s(Point(0, 0, 0), Point(1, 0, 0), Point(0, 1, 0));
+
+  // shoot a ray down the z-coordinate
+  // ray is too small
+  Ray r(Point(0, 0, 2), Vector(0, 2, 0), 0, 4);
+  float thit;
+  LocalGeo local;
+  EXPECT_FALSE(s.intersect(r, &thit, &local));
+  EXPECT_FALSE(s.intersectP(r));
+}
+
+
+TEST_F(TriangleTest, IntersectTest1) {
+  Triangle s(Point(0, 0, 0), Point(1, 0, 0), Point(0, 1, 0));
+
+  // shoot a ray down the z-coordinate
+  // ray is too small
+  Ray r(Point(0.25f, 0.25f, 2), Vector(0, 0, -2), 0, 2);
+  float thit;
+  LocalGeo local;
+  EXPECT_TRUE(s.intersect(r, &thit, &local));
+  EXPECT_TRUE(s.intersectP(r));
+}
+
+TEST_F(TriangleTest, IntersectTest2) {
+  Triangle s(Point(0, 0, 0), Point(1, 0, 0), Point(0, 1, 0));
+
+  // shoot a ray down the z-coordinate
+  // ray is too small
+  Ray r(Point(0.5f, 0.5f, 2), Vector(0, 0, -2), 0, 2);
+  float thit;
+  LocalGeo local;
+  EXPECT_TRUE(s.intersect(r, &thit, &local));
+  EXPECT_TRUE(s.intersectP(r));
+}
+
 TEST_F(TriangleTest, InvalidIntersectTest) {
   Triangle s(Point(0, 0, 0), Point(1, 0, 0), Point(0, 1, 0));
 
