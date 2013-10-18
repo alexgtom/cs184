@@ -362,14 +362,14 @@ class Scene {
       Sampler sampler(width, height);
       Sample sample;
       Film film(width, height, output_file);
-      Color color;
       AggregatePrimitive aggregate_primitive(geo_prim_list);
       Ray ray;
       RayTracer raytracer(&aggregate_primitive, light_list);
 
       while(sampler.generateSample(&sample)) {
+        Color color;
         Ray ray = camera.generateRay(sampler, sample);
-        Color color = raytracer.trace(ray);
+        raytracer.trace(ray, maxdepth, &color);
         film.commit(sample, color);
       }
       film.writeImage();

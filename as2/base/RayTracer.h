@@ -9,8 +9,6 @@
 #include "Light.h"
 #include "Color.h"
 
-#define RAYTRACER_MAX_DEPTH 5
-
 class RayTracer {
   public:
     Primitive *aggregate_primitive;
@@ -21,18 +19,12 @@ class RayTracer {
       this->lights = lights;
     }
 
-    Color trace(Ray& ray) { 
-      Color color(0, 0, 0);
-      this->trace(ray, 0, &color);
-      return color;
-    }
-  
     void trace(Ray& ray, int depth, Color* color) {
       Intersection in;
       float thit;
       BRDF brdf;
 
-      if (depth > RAYTRACER_MAX_DEPTH) {
+      if (depth == 0) {
         // Make the color black and return
         *color = Color(0, 0, 0);
         return;
@@ -67,7 +59,7 @@ class RayTracer {
         Ray reflectRay = createReflectRay(in.local, ray);
 
         // Make a recursive call to trace the reflected ray
-        trace(reflectRay, depth+1, &tempColor);
+        trace(reflectRay, depth-1, &tempColor);
         *color += brdf.kr * tempColor;
       }
     }
