@@ -85,6 +85,11 @@ class Sphere : public Shape {
 
       return true;
     }
+
+    friend std::ostream& operator<< (std::ostream& stream, const Sphere& v) {
+      stream << "Sphere(radius: " << v.radius << ")";
+      return stream;
+    }
 };
 
 
@@ -147,6 +152,11 @@ class Triangle: public Shape {
       LocalGeo local;
 
       return intersect(ray, &thit, &local);
+    }
+
+    friend std::ostream& operator<< (std::ostream& stream, const Triangle& v) {
+      stream << "Triangle(p0: " << v.p0 << ", p1: " << v.p1 << ", p2: " << v.p2 << ")";
+      return stream;
     }
 };
 

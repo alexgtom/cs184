@@ -40,6 +40,11 @@ class GeometricPrimitive : public Primitive {
     void getBRDF(LocalGeo& local, BRDF* brdf) {
       mat->getBRDF(local, brdf);
     }
+
+    friend std::ostream& operator<< (std::ostream& stream, const GeometricPrimitive& v) {
+      stream << "GeometricPrimitive(" << v.shape << ")";
+      return stream;
+    }
 };
 
 
