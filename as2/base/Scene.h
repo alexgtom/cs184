@@ -39,10 +39,20 @@ class Scene {
     vector<Primitive*> geo_prim_list;
     vector<Point*> vertex_list;
     vector<Light*> light_list;
+    
+    // BRDF
+    BRDF brdf;
 
     void loadScene(string file) {
+      /* 
+       * DEFAULTS
+       */
       // default output file if none specified
       output_file = "output.png"; 
+
+      /*
+       * BEGIN PARSING
+       */
 
       ifstream inpfile(file.c_str());
       if(!inpfile.is_open()) {
@@ -133,7 +143,7 @@ class Scene {
                 new Sphere(r),
                 objToWorld,
                 worldToObj,
-                NULL // TODO: put a real material here
+                new Material(brdf)
               )
             );
           }
@@ -204,7 +214,7 @@ class Scene {
                 new Triangle(*p0, *p1, *p2),
                 objToWorld,
                 worldToObj,
-                NULL // TODO: put a real material here
+                new Material(brdf)
               )
             );
           }
@@ -309,32 +319,36 @@ class Scene {
           //diffuse r g b
           //  specifies the diï¬€use color of the surface.
           else if(!splitline[0].compare("diffuse")) {
-            // r: atof(splitline[1].c_str())
-            // g: atof(splitline[2].c_str())
-            // b: atof(splitline[3].c_str())
             // Update current properties
+            float r = atof(splitline[1].c_str());
+            float g = atof(splitline[2].c_str());
+            float b = atof(splitline[3].c_str());
+            brdf.kd = Color(r, g, b);
           }
           //specular r g b 
           //  specifies the specular color of the surface.
           else if(!splitline[0].compare("specular")) {
-            // r: atof(splitline[1].c_str())
-            // g: atof(splitline[2].c_str())
-            // b: atof(splitline[3].c_str())
             // Update current properties
+            float r = atof(splitline[1].c_str());
+            float g = atof(splitline[2].c_str());
+            float b = atof(splitline[3].c_str());
+            brdf.ks = Color(r, g, b);
           }
           //shininess s
           //  specifies the shininess of the surface.
           else if(!splitline[0].compare("shininess")) {
-            // shininess: atof(splitline[1].c_str())
             // Update current properties
+            float shininess = atof(splitline[1].c_str());
+            brdf.kr = shininess;
           }
           //emission r g b
           //  gives the emissive color of the surface.
           else if(!splitline[0].compare("emission")) {
-            // r: atof(splitline[1].c_str())
-            // g: atof(splitline[2].c_str())
-            // b: atof(splitline[3].c_str())
             // Update current properties
+            float r = atof(splitline[1].c_str());
+            float g = atof(splitline[2].c_str());
+            float b = atof(splitline[3].c_str());
+            brdf.ka = Color(r, g, b);
           } else {
             cerr << "Unknown command: " << splitline[0] << endl;
           }
