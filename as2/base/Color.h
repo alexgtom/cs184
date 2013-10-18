@@ -52,7 +52,11 @@ public:
 	float sum() {
 		return r + g + b;
 	}
-	
+
+    friend std::ostream& operator<< (std::ostream& stream, const Color& v) {
+      stream << "Color(" << v.r << ", " << v.g << ", " << v.b << ")";
+      return stream;
+    }
 };
 
 Color operator*(float a, const Color& c) {
