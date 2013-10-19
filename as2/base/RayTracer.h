@@ -63,6 +63,7 @@ class RayTracer {
       
       // Add ambient color to objects
       *color += brdf.ka;
+      *color += brdf.ke;
 
       // There is an intersection, loop through all light source
       for (int i = 0; i < lights.size(); i++) {
@@ -74,7 +75,7 @@ class RayTracer {
         if (!aggregate_primitive->intersectP(lray)) {
           // If not, do shading calculation for this
           // light source
-          //*color += shading(in.local, brdf, lray, lcolor);
+          *color += shading(in.local, brdf, lray, lcolor);
           //*color = Color(1, 0, 0);
         } else {
           //*color = Color(0, 1, 0);
@@ -95,36 +96,26 @@ class RayTracer {
 
     Color shading(LocalGeo local, BRDF brdf, Ray lray, Color lcolor) {
       Color intensity(0, 0, 0);
-      float r = (lray.pos - local.pos).mag();
       Vector h = (camera.dir + lray.dir) / (camera.dir + lray.dir).mag();
 
       // add emission term
-      intensity += brdf.ke;
-
+      float r = (lray.pos - local.pos).mag();
       // R
-      for(int i = 0; i < lights.size(); i++) {
-        // TODO: shadows V_i
-        intensity.r += lcolor.r / (constant + linear * r + quadratic * r * r) * \
-               (brdf.kd.r * max(local.normal.dot(lray.dir), 0.0f) + \
-                brdf.ks.r * pow(max(local.normal.dot(h), 0.0f), brdf.kr));
-      }
-      
+      // TODO: shadows V_i
+      intensity.r += lcolor.r / (constant + linear * r + quadratic * r * r) * \
+             (brdf.kd.r * max(local.normal.norm().dot(lray.dir), 0.0f) + \
+              brdf.ks.r * pow(max(local.normal.norm().dot(h), 0.0f), brdf.kr));
+    
       // G
-      for(int i = 0; i < lights.size(); i++) {
-        // TODO: shadows V_i
-        intensity.g += lcolor.g / (constant + linear * r + quadratic * r * r) * \
-               (brdf.kd.g * max(local.normal.dot(lray.dir), 0.0f) + \
-                brdf.ks.g * pow(max(local.normal.dot(h), 0.0f), brdf.kr));
-      }
-      
-
+      // TODO: shadows V_i
+      intensity.g += lcolor.g / (constant + linear * r + quadratic * r * r) * \
+             (brdf.kd.g * max(local.normal.norm().dot(lray.dir), 0.0f) + \
+              brdf.ks.g * pow(max(local.normal.norm().dot(h), 0.0f), brdf.kr));
       // B
-      for(int i = 0; i < lights.size(); i++) {
-        // TODO: shadows V_i
-        intensity.b += lcolor.b / (constant + linear * r + quadratic * r * r) * \
-               (brdf.kd.b * max(local.normal.dot(lray.dir), 0.0f) + \
-                brdf.ks.b * pow(max(local.normal.dot(h), 0.0f), brdf.kr));
-      }
+      // TODO: shadows V_i
+      intensity.b += lcolor.b / (constant + linear * r + quadratic * r * r) * \
+             (brdf.kd.b * max(local.normal.norm().dot(lray.dir), 0.0f) + \
+              brdf.ks.b * pow(max(local.normal.norm().dot(h), 0.0f), brdf.kr));
 
       return intensity;
     }
