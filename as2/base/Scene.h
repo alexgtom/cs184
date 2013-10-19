@@ -35,9 +35,6 @@ class Scene {
     // Initialize camera
     Camera camera;
 
-    // Ambient
-    Color ambient;
-
     // Attenuation
     float constant;
     float linear;
@@ -58,10 +55,10 @@ class Scene {
       // default output file if none specified
       output_file = "output.png"; 
       maxdepth = 5;
-      ambient = Color(0.2, 0.2, 0.2);
       constant = 1;
       linear = 0;
       quadratic = 0;
+      brdf.ka = Color(0.2, 0.2, 0.2);
 
       /*
        * BEGIN PARSING
@@ -327,7 +324,7 @@ class Scene {
             float r = atof(splitline[1].c_str());
             float g = atof(splitline[2].c_str());
             float b = atof(splitline[3].c_str());
-            ambient = Color(r, g, b);
+            brdf.ka = Color(r, g, b);
           }
 
           //diffuse r g b
@@ -362,7 +359,7 @@ class Scene {
             float r = atof(splitline[1].c_str());
             float g = atof(splitline[2].c_str());
             float b = atof(splitline[3].c_str());
-            brdf.ka = Color(r, g, b);
+            brdf.ke = Color(r, g, b);
           } else {
             cerr << "Unknown command: " << splitline[0] << endl;
           }
@@ -378,7 +375,7 @@ class Scene {
       Film film(width, height, output_file);
       AggregatePrimitive aggregate_primitive(geo_prim_list);
       Ray ray;
-      RayTracer raytracer(&aggregate_primitive, light_list, ambient, constant, 
+      RayTracer raytracer(&aggregate_primitive, light_list, constant, 
           linear, quadratic, camera);
 
       while(sampler.generateSample(&sample)) {

@@ -20,7 +20,6 @@ class RayTracer {
   public:
     AggregatePrimitive *aggregate_primitive;
     vector <Light*> lights;
-    Color ambient;
     float constant;
     float linear;
     float quadratic;
@@ -29,7 +28,6 @@ class RayTracer {
     RayTracer(
         AggregatePrimitive *aggregate_primitive, 
         vector<Light*> lights, 
-        Color ambient,
         float constant, 
         float linear,
         float quadratic,
@@ -41,7 +39,6 @@ class RayTracer {
       this->linear = linear;
       this->quadratic = quadratic;
       this->camera = camera;
-      this->ambient = ambient;
     }
 
     void trace(Ray& ray, int depth, Color* color) {
@@ -65,7 +62,7 @@ class RayTracer {
       in.primitive->getBRDF(in.local, &brdf);
       
       // Add ambient color to objects
-      *color += ambient;
+      *color += brdf.ka;
 
       // There is an intersection, loop through all light source
       for (int i = 0; i < lights.size(); i++) {
@@ -77,7 +74,7 @@ class RayTracer {
         if (!aggregate_primitive->intersectP(lray)) {
           // If not, do shading calculation for this
           // light source
-          *color += shading(in.local, brdf, lray, lcolor);
+          //*color += shading(in.local, brdf, lray, lcolor);
           //*color = Color(1, 0, 0);
         } else {
           //*color = Color(0, 1, 0);
@@ -102,7 +99,7 @@ class RayTracer {
       Vector h = (camera.dir + lray.dir) / (camera.dir + lray.dir).mag();
 
       // add emission term
-      intensity += brdf.ka;
+      intensity += brdf.ke;
 
       // R
       for(int i = 0; i < lights.size(); i++) {

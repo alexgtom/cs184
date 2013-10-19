@@ -5,14 +5,14 @@
 
 class BRDF {
   public:
-    Color kd, ks, ka;
+    Color kd, ks, ke, ka;
     float kr;
 
     BRDF() {}
-    BRDF(Color kd, Color ks, Color ka, float kr) {
+    BRDF(Color kd, Color ks, Color ke, Color ka, float kr) {
       this->kd = kd;
       this->ks = ks;
-      this->ka = ka;
+      this->ke = ke;
       this->kr = kr;
     }
 };
