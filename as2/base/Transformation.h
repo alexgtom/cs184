@@ -21,8 +21,22 @@ class Transformation {
     Transformation() {
       m = MatrixXf::Identity(4, 4);
     }
+
     Transformation(Matrix4f m) {
       this->m = m;
+    }
+
+    Transformation translate(float x, float y, float z) {
+      Matrix4f t = MatrixXf::Identity(4, 4);
+      t(0, 3) = x;
+      t(1, 3) = y;
+      t(2, 3) = z;
+      m *= t;
+      return *this;
+    }
+
+    Transformation inverse() {
+      return Transformation(m.inverse());
     }
 
     Point operator*(const Point& p) {
