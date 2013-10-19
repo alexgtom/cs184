@@ -17,13 +17,8 @@ GeometricPrimitive sphere_factory(float x, float y, float z) {
   mObjtoWorld(1, 3) = y;
   mObjtoWorld(2, 3) = z;
 
-  Matrix4f mWorldToObj = MatrixXf::Identity(4, 4);
-  mWorldToObj(0, 3) = -x;
-  mWorldToObj(1, 3) = -y;
-  mWorldToObj(2, 3) = -z;
-
   Transformation objToWorld(mObjtoWorld);
-  Transformation worldToObj(mWorldToObj);
+  Transformation worldToObj(mObjtoWorld.inverse());
   return GeometricPrimitive(new Sphere(1.0f), objToWorld, worldToObj, NULL);
 }
 
