@@ -48,6 +48,14 @@ class Scene {
     // BRDF
     BRDF brdf;
 
+    int pixel_count;
+    int last_percent;
+
+    Scene() {
+      pixel_count = 0;
+      last_percent = -1;
+    }
+
     void loadScene(string file) {
       /* 
        * DEFAULTS
@@ -378,13 +386,28 @@ class Scene {
       RayTracer raytracer(&aggregate_primitive, light_list, constant, 
           linear, quadratic, camera);
 
+      cerr << "Rendering ... " << endl;
+      cerr << "     ";
       while(sampler.generateSample(&sample)) {
+        progress(sampler, sample);
         Color color;
         Ray ray = camera.generateRay(sampler, sample);
         raytracer.trace(ray, maxdepth, &color);
         film.commit(sample, color);
       }
+      cerr << "100 -- DONE!" << endl;
       film.writeImage();
+    }
+
+    void progress(Sampler sampler, Sample sample) {
+      int total_pixels = sampler.width * sampler.height;
+
+      int percentage = (int) 100.0f * (float) pixel_count / total_pixels;
+      if (percentage % 10 == 0 && last_percent != percentage) {
+        cerr << percentage << ".....";
+        last_percent = percentage;
+      };
+      pixel_count++;
     }
 };
 
