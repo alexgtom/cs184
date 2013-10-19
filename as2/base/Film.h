@@ -33,11 +33,19 @@ class Film {
     // Write the color to (sample.x, sample.y) on the image
     void commit(Sample& sample, Color& color) { 
       // set pixel on image file
+      if (color.r > 1.0f)
+        color.r = 1.0f;
+
+      if (color.g > 1.0f)
+        color.g = 1.0f;
+
+      if (color.b > 1.0f)
+        color.b = 1.0f;
       
       RGBQUAD image_pixel_color;
-      image_pixel_color.rgbRed = (int) (color.r * 255);
-      image_pixel_color.rgbGreen = (int) (color.g * 255);
-      image_pixel_color.rgbBlue = (int) (color.b * 255);
+      image_pixel_color.rgbRed = color.r * 255.0f;
+      image_pixel_color.rgbGreen = color.g * 255.0f;
+      image_pixel_color.rgbBlue = color.b * 255.0f;
 
       FreeImage_SetPixelColor(image, sample.x, sample.y, &image_pixel_color);
     }

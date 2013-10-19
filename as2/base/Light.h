@@ -8,6 +8,9 @@
 #include "LocalGeo.h"
 #include "Ray.h"
 
+#define LIGHT_TYPE_POINT 1
+#define LIGHT_TYPE_DIRECTIONAL 2
+
 // start the light at a offset to avoid having the start point
 // accidentally intersecting with the surface
 #define LIGHT_OFFSET 0.1f
@@ -18,6 +21,7 @@ class Light {
     // the position stored in local to the position of the
     // light source.
     virtual void generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) = 0;
+    virtual int getLightType() = 0;
 };
 
 class PointLight : public Light {
@@ -34,6 +38,10 @@ class PointLight : public Light {
       *lray = Ray(local.pos, loc - local.pos, LIGHT_OFFSET, (loc - local.pos).mag());
       *lcolor = color;
     }
+
+    int getLightType() {
+      return LIGHT_TYPE_POINT;
+    }
 };
 
 class DirectionalLight : public Light {
@@ -49,6 +57,10 @@ class DirectionalLight : public Light {
     void generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
       *lray = Ray(local.pos, -direction, LIGHT_OFFSET, INFINITY);
       *lcolor = color;
+    }
+
+    int getLightType() {
+      return LIGHT_TYPE_DIRECTIONAL;
     }
 };
 
