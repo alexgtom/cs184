@@ -16,6 +16,7 @@
 #include "AggregatePrimitive.h"
 #include "Shape.h"
 #include "Light.h"
+#include "TransformationStack.h"
 
 using namespace std;
 
@@ -77,7 +78,8 @@ class Scene {
         cout << "Unable to open file" << endl;
       } else {
         string line;
-        //MatrixStack mst;
+        TransformationStack tstack;
+        Transformation currentTransformation;
 
         while(inpfile.good()) {
           vector<string> splitline;
@@ -154,7 +156,8 @@ class Scene {
             float z = atof(splitline[3].c_str());
             float r = atof(splitline[4].c_str());
             Transformation objToWorld;
-            objToWorld.translate(x, y, z);
+            //objToWorld = objToWorld.translate(x, y, z) * currentTransformation;
+            objToWorld = currentTransformation;
             
             geo_prim_list.push_back(
               new GeometricPrimitive(
@@ -222,7 +225,8 @@ class Scene {
             //   Store current top of matrix stack
             
             Transformation objToWorld;
-            Transformation worldToObj;
+            objToWorld = currentTransformation;
+
             Point* p0 = vertex_list[atoi(splitline[1].c_str())];
             Point* p1 = vertex_list[atoi(splitline[2].c_str())];
             Point* p2 = vertex_list[atoi(splitline[3].c_str())];
@@ -231,7 +235,7 @@ class Scene {
               new GeometricPrimitive(
                 new Triangle(*p0, *p1, *p2),
                 objToWorld,
-                worldToObj,
+                objToWorld.inverse(),
                 new Material(brdf)
               )
             );
@@ -255,34 +259,37 @@ class Scene {
           //translate x y z
           //  A translation 3-vector
           else if(!splitline[0].compare("translate")) {
-            // x: atof(splitline[1].c_str())
-            // y: atof(splitline[2].c_str())
-            // z: atof(splitline[3].c_str())
             // Update top of matrix stack
+            float x = atof(splitline[1].c_str());
+            float y = atof(splitline[2].c_str());
+            float z = atof(splitline[3].c_str());
+            currentTransformation = currentTransformation.translate(x, y, z);
           }
           //rotate x y z angle
           //  Rotate by angle (in degrees) about the given axis as in OpenGL.
           else if(!splitline[0].compare("rotate")) {
-            // x: atof(splitline[1].c_str())
-            // y: atof(splitline[2].c_str())
-            // z: atof(splitline[3].c_str())
-            // angle: atof(splitline[4].c_str())
             // Update top of matrix stack
+            float x = atof(splitline[1].c_str());
+            float y = atof(splitline[2].c_str());
+            float z = atof(splitline[3].c_str());
+            float angle = atof(splitline[4].c_str());
+            currentTransformation = currentTransformation.rotate(x, y, z, angle);
           }
           //scale x y z
           //  Scale by the corresponding amount in each axis (a non-uniform scaling).
           else if(!splitline[0].compare("scale")) {
-            // x: atof(splitline[1].c_str())
-            // y: atof(splitline[2].c_str())
-            // z: atof(splitline[3].c_str())
             // Update top of matrix stack
+            float x = atof(splitline[1].c_str());
+            float y = atof(splitline[2].c_str());
+            float z = atof(splitline[3].c_str());
+            currentTransformation = currentTransformation.scale(x, y, z);
           }
           //pushTransform
           //  Push the current modeling transform on the stack as in OpenGL. 
           //  You might want to do pushTransform immediately after setting 
           //   the camera to preserve the â€œidentityâ€ transformation.
           else if(!splitline[0].compare("pushTransform")) {
-            //mst.push();
+            tstack.push(currentTransformation);
           }
           //popTransform
           //  Pop the current transform from the stack as in OpenGL. 
@@ -291,7 +298,7 @@ class Scene {
           //  (assuming the initial camera transformation is on the stack as 
           //  discussed above).
           else if(!splitline[0].compare("popTransform")) {
-            //mst.pop();
+            currentTransformation = tstack.pop();
           }
 
           //directional x y z r g b

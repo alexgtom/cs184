@@ -32,8 +32,7 @@ class Transformation {
       t(0, 3) = x;
       t(1, 3) = y;
       t(2, 3) = z;
-      m *= t;
-      return *this;
+      return Transformation(m * t);
     }
 
     Transformation rotate(float x, float y, float z, float angle) {
@@ -59,8 +58,7 @@ class Transformation {
       t(3, 2) = 0.0f;
       t(3, 3) = 1.0f;
 
-      m *= t;
-      return *this;
+      return Transformation(m * t);
     }
 
     Transformation scale(float x, float y, float z) {
@@ -69,8 +67,7 @@ class Transformation {
       t(1, 1) = y;
       t(2, 2) = z;
 
-      m *= t;
-      return *this;
+      return Transformation(m * t);
     }
 
     Transformation inverse() {
@@ -115,6 +112,10 @@ class Transformation {
 
     Transformation operator*(const Transformation& t) {
       return Transformation(t.m * m);
+    }
+
+    Transformation operator*=(const Transformation& t) {
+      return (*this) * t;
     }
 };
 
