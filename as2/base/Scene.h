@@ -146,13 +146,13 @@ class Scene {
             float z = atof(splitline[3].c_str());
             float r = atof(splitline[4].c_str());
             Transformation objToWorld;
-            Transformation worldToObj;
+            objToWorld.translate(x, y, z);
             
             geo_prim_list.push_back(
               new GeometricPrimitive(
                 new Sphere(r),
                 objToWorld,
-                worldToObj,
+                objToWorld.inverse(),
                 new Material(brdf)
               )
             );

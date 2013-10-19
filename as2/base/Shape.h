@@ -43,7 +43,8 @@ class Sphere : public Shape {
       float t0;
       float t1;
 
-      quadraticSolver(A, B, C, &t0, &t1);
+      if (!quadraticSolver(A, B, C, &t0, &t1))
+        return false;
 
       if (t0 > ray.t_max || t1 < ray.t_min)
         return false;
