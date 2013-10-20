@@ -48,6 +48,15 @@ public:
 	Color operator-(const Color& c) {
 		return Color(r - c.r, g - c.g, b - c.b);
 	}
+    float getR(){
+        return r;
+    }
+    float getG() {
+        return g;
+    }
+    float getB() {
+        return b;
+    }
 
 	float sum() {
 		return r + g + b;

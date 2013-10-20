@@ -24,6 +24,7 @@ class Camera {
       this->fov = fov;
 
       this->dir = (obj_pos - cam_pos).norm();
+      //  this->dir = (cam_pos - obj_pos).norm();
       this->right = dir.cross(up).norm();
       this->up = up.norm();
     }

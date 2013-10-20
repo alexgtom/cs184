@@ -38,6 +38,7 @@ class PointLight : public Light {
     void generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
       *lray = Ray(local.pos, loc - local.pos , LIGHT_OFFSET, (loc - local.pos).mag()); //loc-local.pos
       *lcolor = color;
+       // cout << "/n lcolor:" << color;
     }
 
     int getLightType() {
@@ -61,6 +62,9 @@ class DirectionalLight : public Light {
     void generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
       *lray = Ray(local.pos, direction, LIGHT_OFFSET, INFINITY); //changed it -direction
       *lcolor = color;
+        
+    //    cout << "/n lcolor:" << color;
+    
     }
 
     int getLightType() {
