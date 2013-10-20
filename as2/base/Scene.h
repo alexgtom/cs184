@@ -393,7 +393,7 @@ class Scene {
       AggregatePrimitive aggregate_primitive(geo_prim_list);
       Ray ray;
       RayTracer raytracer(&aggregate_primitive, light_list, constant, 
-          linear, quadratic, camera);
+          linear, quadratic, camera, maxdepth);
 
       cerr << "Rendering ... " << endl;
       cerr << "     ";
