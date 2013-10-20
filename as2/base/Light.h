@@ -22,6 +22,7 @@ class Light {
     // light source.
     virtual void generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) = 0;
     virtual int getLightType() = 0;
+    virtual Point getLoc() = 0;
 };
 
 class PointLight : public Light {
@@ -35,12 +36,15 @@ class PointLight : public Light {
     }
     
     void generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
-      *lray = Ray(local.pos, loc - local.pos, LIGHT_OFFSET, (loc - local.pos).mag());
+      *lray = Ray(local.pos, loc - local.pos , LIGHT_OFFSET, (loc - local.pos).mag()); //loc-local.pos
       *lcolor = color;
     }
 
     int getLightType() {
       return LIGHT_TYPE_POINT;
+    }
+    Point getLoc() {
+        return loc;
     }
 };
 
@@ -55,12 +59,15 @@ class DirectionalLight : public Light {
     }
 
     void generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
-      *lray = Ray(local.pos, -direction, LIGHT_OFFSET, INFINITY);
+      *lray = Ray(local.pos, direction, LIGHT_OFFSET, INFINITY); //changed it -direction
       *lcolor = color;
     }
 
     int getLightType() {
       return LIGHT_TYPE_DIRECTIONAL;
+    }
+    Point getLoc() {
+        return Point();
     }
 };
 

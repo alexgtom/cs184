@@ -156,12 +156,13 @@ class Scene {
             float z = atof(splitline[3].c_str());
             float r = atof(splitline[4].c_str());
             Transformation objToWorld;
+              Point center = Point(x, y, z);
             //objToWorld = objToWorld.translate(x, y, z) * currentTransformation;
             objToWorld = currentTransformation;
             
             geo_prim_list.push_back(
               new GeometricPrimitive(
-                new Sphere(r),
+                new Sphere(r, center),
                 objToWorld,
                 objToWorld.inverse(),
                 new Material(brdf)
@@ -335,6 +336,7 @@ class Scene {
           //ambient r g b
           //  The global ambient color to be added for each object 
           //  (default is .2,.2,.2)
+            
           else if(!splitline[0].compare("ambient")) {
             float r = atof(splitline[1].c_str());
             float g = atof(splitline[2].c_str());

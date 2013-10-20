@@ -7,6 +7,7 @@
 #include "Ray.h"
 #include "Normal.h"
 
+
 class Shape {
   public:
     // Test if ray intersects with the shape or not (in object space), if so,
@@ -23,23 +24,27 @@ class Sphere : public Shape {
   // Origin is at the center of the sphere
   public:
     float radius;
+    Point center;
     Sphere() {}
-    Sphere(float radius) {
+    Sphere(float radius, Point center) {
       this->radius = radius;
+        this->center = center;
     }
-
+    
+     
     bool intersect(Ray& ray, float* thit, LocalGeo* local) {
       // Implemented sphere intersection equations from PBD pg. 117
-      float A = ray.dir.x * ray.dir.x + 
+        //calculate A, B, C following Shirley
+      float A = ray.dir.x * ray.dir.x +
                 ray.dir.y * ray.dir.y + 
                 ray.dir.z * ray.dir.z;
       float B = 2.0f * (
-                  ray.dir.x * ray.pos.x +
-                  ray.dir.y * ray.pos.y +
-                  ray.dir.z * ray.pos.z);
-      float C = ray.pos.x * ray.pos.x + 
-                ray.pos.y * ray.pos.y + 
-                ray.pos.z * ray.pos.z - radius * radius;
+                  ray.dir.x * (ray.pos.x - center.x) +
+                  ray.dir.y * (ray.pos.y - center.y) +
+                  ray.dir.z * (ray.pos.z - center.z));
+      float C = (ray.pos.x - center.x) * (ray.pos.x - center.x) +
+                (ray.pos.y - center.y) * (ray.pos.y - center.y) +
+                (ray.pos.z - center.z) * (ray.pos.z - center.z) - radius * radius;
       float t0;
       float t1;
 

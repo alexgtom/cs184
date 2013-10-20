@@ -14,6 +14,7 @@ class BRDF {
       this->ks = ks;
       this->ke = ke;
       this->kr = kr;
+    this->ka = ka;
     }
 };
 
