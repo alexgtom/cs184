@@ -1,2 +1,8 @@
 Shows that objects a placed correctly in the right position and can render triangles
 and spheres without any problem
+
+Command:
+./main -f input-02
+
+Time:
+25.266s

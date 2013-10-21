@@ -1,1 +1,7 @@
 Demonstrates that transformations work correctly.
+
+Command:
+./main -f input-03
+
+Time:
+49.014s

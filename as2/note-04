@@ -1,1 +1,7 @@
 Shows the emission component is shown without any lights on the scene.
+
+Command:
+./main -f input-04
+
+Time:
+1m6.751s

@@ -1,1 +1,7 @@
 Shows that the camera works properly taking into account all aspect ratios.
+
+Command:
+./main -f input-01
+
+Time:
+2.354s
