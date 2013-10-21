@@ -99,8 +99,8 @@ public:
 
         // Handle mirror reflection
         if (brdf.ks.r > 0 || brdf.ks.g > 0 || brdf.ks.b > 0) {
-       // if (brdf.kr > 0) {
-        Color tempColor;
+        // if (brdf.kr > 0) {
+          Color tempColor;
             Ray reflectRay = createReflectRay(in.local, ray);
             
             // Make a recursive call to trace the reflected ray
@@ -129,8 +129,8 @@ public:
         //SET REFLECTION
         Vector d = lray.dir.norm();
         Vector n = local.normal.norm();
-        Vector reflection = (n * 2 * (d.dot(n))) - d;
-        reflection = -reflection.norm();
+        Vector reflection = d - (n * 2 * (d.dot(n)));
+        reflection = reflection.norm();
         
         //SET VIEWER
         Vector viewer = (camera.obj_pos - camera.cam_pos).norm();
@@ -162,7 +162,7 @@ public:
         Vector reflection = d - (2.0 * (d.dot(n)) * n);
         reflection = reflection.norm();
         //Point start = local.pos + reflection;
-        return Ray(local.pos, reflection, 0.1f, INFINITY);
+        return Ray(local.pos, reflection, 0.001f, INFINITY);
     }
 };
 

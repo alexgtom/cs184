@@ -71,6 +71,17 @@ TEST_F(TriangleTest, IntersectTest2) {
   EXPECT_TRUE(s.intersectP(r));
 }
 
+TEST_F(TriangleTest, IntersectTest3) {
+  Triangle s(Point(0, 0, 0), Point(1, 0, 0), Point(0, 1, 0));
+
+  // shoot a ray to the triangle in an arbitray direction
+  Ray r(Point(1, 1, 1), Vector(-1, -1, -1), 0, 2);
+  float thit;
+  LocalGeo local;
+  EXPECT_TRUE(s.intersect(r, &thit, &local));
+  EXPECT_TRUE(s.intersectP(r));
+}
+
 TEST_F(TriangleTest, InvalidIntersectTest1) {
   Triangle s(Point(0, 0, 0), Point(1, 0, 0), Point(0, 1, 0));
 

@@ -13,7 +13,7 @@
 
 // start the light at a offset to avoid having the start point
 // accidentally intersecting with the surface
-#define LIGHT_OFFSET 0.1f
+#define LIGHT_OFFSET 0.001f
 
 class Light {
   public:

@@ -26,6 +26,10 @@ class Sphere : public Shape {
     float radius;
     Point center;
     Sphere() {}
+    Sphere(float radius) {
+      this->radius = radius;
+    }
+
     Sphere(float radius, Point center) {
       this->radius = radius;
         this->center = center;
@@ -148,7 +152,17 @@ class Triangle: public Shape {
       local->pos.x = ray.pos.x + t * ray.dir.x;
       local->pos.y = ray.pos.y + t * ray.dir.y;
       local->pos.z = ray.pos.z + t * ray.dir.z;
-      local->normal = Normal(0, 0, 1);
+
+      // calculate normal
+      Vector v = v_p1 - v_p0;
+      Vector w = v_p2 - v_p1;
+
+      Vector n = Vector(
+          v.y * w.z - v.z * w.y,
+          v.z * w.x - v.x * w.z,
+          v.x * w.y - w.y * w.x
+      ).norm();
+      local->normal = Normal(n.x, n.y, n.z);
       
       return true;
     }
