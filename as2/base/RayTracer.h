@@ -25,10 +25,9 @@ public:
     float linear;
     float quadratic;
     Camera camera;
-    bool first_iter;
-    bool vis_light;
     int maxdepth;
-    int depth;
+    bool first_iter;
+   // int depth;
     
     RayTracer(
               AggregatePrimitive *aggregate_primitive,
@@ -45,10 +44,8 @@ public:
         this->linear = linear;
         this->quadratic = quadratic;
         this->camera = camera;
-        first_iter = true;
-        vis_light = false;
         this->maxdepth = maxdepth;
-        depth = 0;
+        first_iter = true;
     }
     
     void trace(Ray& ray, int depth, Color* color) {
@@ -72,6 +69,13 @@ public:
         in.primitive->getBRDF(in.local, &brdf);
        
         
+        //if (first_iter) {
+            *color += brdf.ka;
+          //  first_iter = false;
+       // }
+        
+        *color += brdf.ke;
+        
         // There is an intersection, loop through all light source
         //cout << "num lights: " << lights.size() << endl;
         for (int i = 0; i < lights.size(); i++) {
@@ -79,6 +83,8 @@ public:
             Color lcolor;
             
             lights[i]->generateLightRay(in.local, &lray, &lcolor);
+            
+            
             
            
             // Check if the light is blocked or not
@@ -90,35 +96,22 @@ public:
             }
          
         }
-         *color += brdf.ka;
-        *color += brdf.ke;
-        
-        //*color += brdf.ka;
-       // *color += brdf.ke;
-        //if (lights.size() == 0 || !vis_light){
-          //  *color += brdf.ke;
-        //}
-       // *color += brdf.ka;
-        
+
         // Handle mirror reflection
-        if (brdf.kr > 0) {
-            Color tempColor;
+        if (brdf.ks.r > 0 || brdf.ks.g > 0 || brdf.ks.b > 0) {
+       // if (brdf.kr > 0) {
+        Color tempColor;
             Ray reflectRay = createReflectRay(in.local, ray);
             
             // Make a recursive call to trace the reflected ray
             trace(reflectRay, depth+1, &tempColor);
-            *color += brdf.kr * tempColor;
+            *color += brdf.ks * tempColor;
         }
     }
     
     
     Color shading(LocalGeo local, BRDF brdf, Ray lray, Color lcolor, int light_type, Point light_loc) {
         Color intensity(0, 0, 0);
-        //Vector h = (camera.dir.norm() - lray.dir.norm()) / (camera.dir.norm() - lray.dir.norm()).mag();
-        
-       // cout <<   "first:" <<(camera.dir.norm() + lray.dir.norm());
-        //cout << " second: " << (camera.dir.norm() + lray.dir.norm()).mag();
-        
         
         float c,l,q,r;
         if (light_type = LIGHT_TYPE_DIRECTIONAL){   //no attenuation
@@ -164,9 +157,12 @@ public:
     }
     
     Ray createReflectRay(LocalGeo local, Ray ray) {
-        Vector d = ray.dir;
-        Vector n = local.normal;
-        return Ray(local.pos, d - n * (2.0f * d.dot(n)), 0.1f, INFINITY);
+        Vector d = ray.dir.norm();
+        Vector n = local.normal.norm();
+        Vector reflection = d - (2.0 * (d.dot(n)) * n);
+        reflection = reflection.norm();
+        //Point start = local.pos + reflection;
+        return Ray(local.pos, reflection, 0.1f, INFINITY);
     }
 };
 

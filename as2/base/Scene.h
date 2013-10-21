@@ -401,7 +401,7 @@ class Scene {
         progress(sampler, sample);
         Color color;
         Ray ray = camera.generateRay(sampler, sample);
-        raytracer.trace(ray, maxdepth, &color);
+        raytracer.trace(ray, 0, &color);
         film.commit(sample, color);
       }
       cerr << "100 -- DONE!" << endl;
