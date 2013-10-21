@@ -114,7 +114,7 @@ public:
         Color intensity(0, 0, 0);
         
         float c,l,q,r;
-        if (light_type = LIGHT_TYPE_DIRECTIONAL){   //no attenuation
+        if (light_type == LIGHT_TYPE_DIRECTIONAL){   //no attenuation
             c = 1;
             l = 0;
             q = 0;
