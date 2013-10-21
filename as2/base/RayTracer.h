@@ -162,7 +162,7 @@ public:
         Vector reflection = d - (2.0 * (d.dot(n)) * n);
         reflection = reflection.norm();
         //Point start = local.pos + reflection;
-        return Ray(local.pos, reflection, 0.001f, INFINITY);
+        return Ray(local.pos, reflection, LIGHT_OFFSET, INFINITY);
     }
 };
 

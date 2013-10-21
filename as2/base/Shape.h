@@ -157,12 +157,9 @@ class Triangle: public Shape {
       Vector v = v_p1 - v_p0;
       Vector w = v_p2 - v_p1;
 
-      Vector n = Vector(
-          v.y * w.z - v.z * w.y,
-          v.z * w.x - v.x * w.z,
-          v.x * w.y - w.y * w.x
-      ).norm();
+      Vector n = v.cross(w);
       local->normal = Normal(n.x, n.y, n.z);
+      //local->normal = Normal(0, 0, 1);
       
       return true;
     }

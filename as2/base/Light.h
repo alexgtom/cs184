@@ -59,7 +59,7 @@ class DirectionalLight : public Light {
     }
 
     void generateLightRay(LocalGeo& local, Ray* lray, Color* lcolor) {
-      *lray = Ray(local.pos, direction, LIGHT_OFFSET, INFINITY); 
+      *lray = Ray(local.pos, -direction, LIGHT_OFFSET, INFINITY); 
       *lcolor = color;
     
     }
