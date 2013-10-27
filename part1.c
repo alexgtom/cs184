@@ -60,30 +60,46 @@ int conv2D(float* in, float* out, int data_size_X, int data_size_Y,
 	
 	float total [4];
 	__m128 sum;
-	for(int y = 0; y < data_size_Y; y++){ // the x coordinate of the output location we're focusing on
-		for(int x = 0; x < data_size_X; x++){ // the y coordinate of theoutput location we're focusing on
-				    //ORIGINAL CODE
-				    // only do the operation if not out of bounds
-				    //if(x+i>-1 && x+i<data_size_X && y+j>-1 && y+j<data_size_Y){
-						//Note that the kernel is flipped
-				    // 	out[x+y*data_size_X] += 
-				    //				kernel[(kern_cent_X-i)+(kern_cent_Y-j)*KERNX] * in[(x+i) + (y+j)*data_size_X];
-				    //	}
-				    //
-				    //OUT WITH PADDING / NO IF STATEMENT
+	__m128 rows [12];
+	int unroll = 4;
+	for(int y= 0; y < data_size_Y; y++){ // the x coordinate of the output location we're focusing on
+		for(int x = 0; x < data_size_X; x+=unroll){ // the y coordinate of theoutput location we're focusing on
+			
+			rows[0] =  _mm_loadu_ps(in_padding + x + y * in_width);
+			rows[1] = _mm_loadu_ps(in_padding + x+1 + y * in_width);
+			rows[2] =  _mm_loadu_ps(in_padding + x+2 + y * in_width);
+			rows[3] =  _mm_loadu_ps(in_padding + x+3 + y * in_width);
+			
+			rows[4] =  _mm_loadu_ps(in_padding + x + (y+1) * in_width);
+			rows[5] =  _mm_loadu_ps(in_padding + x+1 + (y+1) * in_width);
+			rows[6] =  _mm_loadu_ps(in_padding + x+2 + (y+1) * in_width);
+			rows[7] =  _mm_loadu_ps(in_padding + x+3 + (y+1) * in_width);
+		
+			rows[8] =  _mm_loadu_ps(in_padding + x + (y+2) * in_width);
+			rows[9] =  _mm_loadu_ps(in_padding + x+1 + (y+2) * in_width);
+			rows[10] =  _mm_loadu_ps(in_padding + x+2 + (y+2) * in_width);
+			rows[11] =  _mm_loadu_ps(in_padding + x+3 + (y+2) * in_width);
 
-					sum = _mm_add_ps(_mm_mul_ps(_mm_loadu_ps(in_padding + x + y * in_width), kern1), _mm_mul_ps ( _mm_loadu_ps(in_padding + x + (y+1) * in_width), kern2) );
-					sum  = _mm_add_ps (sum, _mm_mul_ps(_mm_loadu_ps(in_padding + x + (y+2) * in_width), kern3));
-				      	
-					_mm_storeu_ps(total, sum);
-					
-					out[x +y*data_size_X] = total[0] + total[1] + total[2];
-						
-				//float kern[12] 
-				   
+			sum = _mm_add_ps(_mm_mul_ps(rows[0], kern1), _mm_mul_ps (rows[4] , kern2) );
+			sum  = _mm_add_ps (sum, _mm_mul_ps(rows[8], kern3));
+			_mm_storeu_ps(total, sum);		
+			out[x +y*data_size_X] = total[0] + total[1] + total[2];
 
-
-				
+		
+			sum = _mm_add_ps(_mm_mul_ps(rows[1], kern1), _mm_mul_ps (rows[5] , kern2) );
+			sum  = _mm_add_ps (sum, _mm_mul_ps(rows[9], kern3));
+			_mm_storeu_ps(total, sum);		
+			out[x+1 +y*data_size_X] = total[0] + total[1] + total[2];
+		
+			sum = _mm_add_ps(_mm_mul_ps(rows[2], kern1), _mm_mul_ps (rows[6] , kern2) );
+			sum  = _mm_add_ps (sum, _mm_mul_ps(rows[10], kern3));
+			_mm_storeu_ps(total, sum);		
+			out[x+2 +y*data_size_X] = total[0] + total[1] + total[2];
+		
+			sum = _mm_add_ps(_mm_mul_ps(rows[3], kern1), _mm_mul_ps (rows[7] , kern2) );
+			sum  = _mm_add_ps (sum, _mm_mul_ps(rows[11], kern3));
+			_mm_storeu_ps(total, sum);		
+			out[x+3 +y*data_size_X] = total[0] + total[1] + total[2];
 		}
 	}
 
