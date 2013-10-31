@@ -25,6 +25,7 @@
 #include <math.h>
 
 #include "base/Scene.h"
+#include "base/Parser.h"
 
 using namespace std;
 
@@ -41,12 +42,18 @@ void myDisplay() {
   glLoadIdentity();				        // make sure transformation is "zero'd"
 
   // Start drawing stuff here
+  scene.render();
 
   glFlush();
   glutSwapBuffers();					    // swap buffers (we earlier set double buffer)
 }
 
 int main(int argc, char *argv[]) {
+  // setup the scene
+  scene.create(argc, argv);
+
+  // ------------------------------------------------------------------------
+
   //This initializes glut
   glutInit(&argc, argv);
 
