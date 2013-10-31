@@ -1,19 +1,20 @@
 #ifndef BEZIER_PATCH_H_
 #define BEZIER_PATCH_H_
 
-#include <Eigen/Dense>
+#include <glm/glm.hpp>
 
 #include "BezierPatch.h"
 
-using namespace Eigen;
+using namespace glm;
+using namespace std;
 
 class BezierPatch {
   public:
-    // a 4 x 12 matrix containing the points making up the surface
-    MatrixXf m; 
+    // the 16 points that make up the surface
+    vector<vec3> points; 
 
-    BezierPatch(MatrixXf m) {
-      this->m = m;
+    BezierPatch(vector<vec3> points) {
+      this->points = points;
     }
 };
 

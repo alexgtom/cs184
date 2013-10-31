@@ -6,12 +6,13 @@
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
-#include <Eigen/Dense>
+
+#include <glm/glm.hpp>
 
 #include "BezierPatch.h"
 
+using namespace glm;
 using namespace std;
-using namespace Eigen;
 
 class Parser {
   public:
@@ -28,7 +29,7 @@ class Parser {
 
       string line;
       int row = 0;
-      MatrixXf m(4, 12);
+      vector<vec3> points;
 
       while (inpfile.good()) {
         vector<string> splitline;
@@ -52,8 +53,11 @@ class Parser {
         }
 
         if (splitline.size() == 12) {
-          for (int col = 0; col < 12; col++) {
-            m(row, col) = atof(splitline[col].c_str());
+          for (int col = 0; col < 12; col += 3) {
+            float x = atof(splitline[col + 0].c_str());
+            float y = atof(splitline[col + 1].c_str());
+            float z = atof(splitline[col + 2].c_str());
+            points.push_back(vec3(x, y, z));
           }
         }
 
@@ -61,8 +65,8 @@ class Parser {
 
         if (row % 4 == 0) {
           row = row % 4;
-          patch_list.push_back(BezierPatch(m));
-          m = MatrixXf(4, 12);
+          patch_list.push_back(BezierPatch(points));
+          points = vector<vec3>();
         }
 
       }
