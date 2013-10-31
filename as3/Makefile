@@ -10,10 +10,10 @@ else
 endif
 	
 RM = /bin/rm -f 
-all: main 
+all: clean main 
 main: main.o 
 	$(CC) $(CFLAGS) -o main main.o $(LDFLAGS) 
 main.o: main.cpp
 	$(CC) $(CFLAGS) -c main.cpp -o main.o
 clean: 
-	$(RM) *.o as1
+	$(RM) *.o main
