@@ -1,0 +1,8 @@
+Demonstrates phong shading and reflections however the colors are off and I can't
+figure out why
+
+Command:
+./main -f input-05
+
+Time:
+1m38.985s
