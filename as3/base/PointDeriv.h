@@ -20,4 +20,6 @@ class PointDeriv {
   PointDeriv(vec3 p) {
     point = p;
   }
-}
+};
+
+#endif

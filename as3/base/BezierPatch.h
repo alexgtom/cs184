@@ -2,9 +2,11 @@
 #define BEZIER_PATCH_H_
 
 #include <glm/glm.hpp>
+#include <vector>
 
 #include "BezierPatch.h"
 #include "PointDeriv.h"
+#include "PointNormal.h"
 
 using namespace glm;
 using namespace std;
@@ -21,7 +23,7 @@ class BezierPatch {
     }
     
     //given control points and param, find curve point and derivative
-    PointDeriv bezcurveinterp(vec3[] curve, float u) {
+    PointDeriv bezcurveinterp(vec3 curve[], float u) {
 
       vec3 P0 = curve[0];
       vec3 P1 = curve[1];
@@ -29,9 +31,9 @@ class BezierPatch {
       vec3 P3 = curve[3];
 
       //split 3 segments into 2
-      vec3 A = P0 * (1.0-u) + P1 * u;
-      vec3 B = P1 * (1.0-u) + P2 * u;
-      vec3 C = P2 * (1.0-u) + P3 * u;
+      vec3 A = P0 * (1.0f-u) + P1 * u;
+      vec3 B = P1 * (1.0f-u) + P2 * u;
+      vec3 C = P2 * (1.0f-u) + P3 * u;
 
       //split 2 segments into 1
       vec3 D = A * (1.0-u) + B * u;
@@ -86,26 +88,26 @@ class BezierPatch {
     void subdividepatch(void) {
       float epsilon = 0.001;
       int numdiv = ((1+epsilon)/param);
-      
+
       //for each parametric value of u
       for (int iu = 0; iu < numdiv; iu++) {
-	u = iu*param;
+        u = iu*param;
 
-	//for each parametric value v
-	for (int iv = 0; iv<numdiv; iv++) {
-	  v = iv*param;
-	  
-	  //evaluate surface
-	  PointNormal curr = bezpatchinterp(u, v);
-	  savesurfacepointnormal(curr);
-	}
+        //for each parametric value v
+        for (int iv = 0; iv<numdiv; iv++) {
+          v = iv*param;
+
+          //evaluate surface
+          PointNormal curr = bezpatchinterp(u, v);
+          savesurfacepointnormal(curr);
+        }
       }
     }
 
     void savesurfacepointnormal(PointNormal pn) {
       surface_points.push_back(pn);
     }
-    
+
     void render(void) {
       //default: flat shading ("s" goes to smooth)
       //default: filled polygons ("w" goes to wireframe)
@@ -113,19 +115,20 @@ class BezierPatch {
       int horiz_squares = numdiv - 1;
       int vert_squares = numdiv - 1;
       for (int y = 0; y < vert_squares; y++) {
-	for (int x = 0; x < horiz_squares; x++) {
-	//normal before each vertex??
-	  //how to determine shading/color for square??
-	  glBegin(GL_Quad) {
-	    glnormal();
-	    glVertex(surface_points[x+y*numdiv]);
-	    glVertex(surface_points[x+1+y*numdiv]);
-	    glVertex(surface_points[x+1+(y+1)*numdiv]);
-	    glVertex(surface_points[x+(y+1)*numdiv]);
-	    glEnd();
-	  }
-
-
+        for (int x = 0; x < horiz_squares; x++) {
+          //normal before each vertex??
+          //how to determine shading/color for square??
+          glBegin(GL_Quad) {
+            glnormal();
+            glVertex(surface_points[x+y*numdiv]);
+            glVertex(surface_points[x+1+y*numdiv]);
+            glVertex(surface_points[x+1+(y+1)*numdiv]);
+            glVertex(surface_points[x+(y+1)*numdiv]);
+            glEnd();
+          }
+        }
+      }
+    }
 };
 
 #endif

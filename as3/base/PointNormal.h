@@ -19,4 +19,6 @@ class PointNormal {
     point = p;
     normal = n;
   }
-}
+};
+
+#endif
