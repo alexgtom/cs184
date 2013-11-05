@@ -11,9 +11,11 @@ endif
 	
 RM = /bin/rm -f 
 all: clean main 
+headers:
+	$(CC) $(CFLAGS) -fsyntax-only base/*.h
 main: main.o 
 	$(CC) $(CFLAGS) -o main main.o $(LDFLAGS) 
-main.o: main.cpp
+main.o: headers main.cpp 
 	$(CC) $(CFLAGS) -c main.cpp -o main.o
 clean: 
 	$(RM) *.o main
