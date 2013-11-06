@@ -1,4 +1,4 @@
-CC = g++
+CXX = g++
 ifeq ($(shell sw_vers 2>/dev/null | grep Mac | awk '{ print $$2}'),Mac)
 	CFLAGS = -g -DGL_GLEXT_PROTOTYPES -I./include/ -I/usr/X11/include -I./lib -DOSX
 	LDFLAGS = -framework GLUT -framework OpenGL \
@@ -12,10 +12,13 @@ endif
 RM = /bin/rm -f 
 all: clean main 
 headers:
-	$(CC) $(CFLAGS) -fsyntax-only base/*.h
+	$(CXX) $(CFLAGS) -fsyntax-only base/*.h
 main: main.o 
-	$(CC) $(CFLAGS) -o main main.o $(LDFLAGS) 
+	$(CXX) $(CFLAGS) -o main main.o $(LDFLAGS) 
 main.o: headers main.cpp 
-	$(CC) $(CFLAGS) -c main.cpp -o main.o
+	$(CXX) $(CFLAGS) -c main.cpp -o main.o
 clean: 
 	$(RM) *.o main
+
+testbez: main
+	 ./main input/test.bez 0.1
