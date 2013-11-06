@@ -65,7 +65,7 @@ class Scene {
       
       // parse input file and return a patch list
       Parser parser;
-      patch_list = parser.readFile(inputFile);
+      patch_list = parser.readFile(inputFile, subdivisionParameter);
     }
 
     // render the scene in the GLUT loop
