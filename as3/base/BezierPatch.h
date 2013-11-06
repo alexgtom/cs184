@@ -4,6 +4,21 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/time.h>
+#endif
+
+#ifdef OSX
+#include <GLUT/glut.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/glut.h>
+#include <GL/glu.h>
+#endif
+
 #include "BezierPatch.h"
 #include "PointDeriv.h"
 #include "PointNormal.h"
@@ -36,58 +51,61 @@ class BezierPatch {
       vec3 C = P2 * (1.0f-u) + P3 * u;
 
       //split 2 segments into 1
-      vec3 D = A * (1.0-u) + B * u;
-      vec3 E = B * (1.0-u) + C * u;
+      vec3 D = A * (1.0f-u) + B * u;
+      vec3 E = B * (1.0f-u) + C * u;
       
       //pick the point
-      vec3 p = D * (1.0-u) + E * u;
+      vec3 p = D * (1.0f-u) + E * u;
 
       //compute and store derive
-      vec3 dPdu = 3 * (E - D);
+      vec3 dPdu = 3.0f * (E - D);
 
       return PointDeriv(p, dPdu);
     }
 
-    //given control patch and (u,v) fine surface point and normal
-    vec3 bezpatchinterp(float u, float v) {
+    //given control patch and (u,v) find surface point and normal
+    PointNormal bezpatchinterp(float u, float v) {
       
       //Build control points for Patch in V
       PointDeriv vcurve[4];
       vec3 vcurve1[] = {points[0],points[1],points[2],points[3]};
       vec3 vcurve2[] = {points[4],points[5],points[6],points[7]};
       vec3 vcurve3[] = {points[8],points[9],points[10],points[11]};
-      vec3 vcurve4[] = {points[12],points[13],points[14],point[15]};
-      vcurve[0] = bezcurveinterp(vcurve1);
-      vcurve[1] = bezcurveinterp(vcurve2);
-      vcurve[2] = bezcurveinterp(vcurve3);
-      vcurve[3] = bezcurveinterp(vcurve4);
+      vec3 vcurve4[] = {points[12],points[13],points[14],points[15]};
+      vcurve[0] = bezcurveinterp(vcurve1, u);
+      vcurve[1] = bezcurveinterp(vcurve2, u);
+      vcurve[2] = bezcurveinterp(vcurve3, u);
+      vcurve[3] = bezcurveinterp(vcurve4, u);
  
       //Build control point for Patch in U
       PointDeriv ucurve[4];
-      vec3 ucurve1 = {points[0],points[4],points[8],points[12]};
-      vec3 ucurve2 = {points[1],points[5],points[9],points[13]};
-      vec3 ucurve3 = {points[2],points[6],points[10],points[14]};
-      vec3 ucurve4 = {points[3],points[7],points[11],points[15]};
-      ucurve[0] = bezcurveinterp(ucurve1);
-      ucurve[1] = bezcurveinterp(ucurve2);
-      ucurve[2] = bezcurveinterp(ucurve3);
-      ucurve[3] = bezcurveinterp(ucurve4);
+      vec3 ucurve1[] = {points[0],points[4],points[8],points[12]};
+      vec3 ucurve2[] = {points[1],points[5],points[9],points[13]};
+      vec3 ucurve3[] = {points[2],points[6],points[10],points[14]};
+      vec3 ucurve4[] = {points[3],points[7],points[11],points[15]};
+      ucurve[0] = bezcurveinterp(ucurve1, v);
+      ucurve[1] = bezcurveinterp(ucurve2, v);
+      ucurve[2] = bezcurveinterp(ucurve3, v);
+      ucurve[3] = bezcurveinterp(ucurve4, v);
 
       //evaluate surface and derivative for u and v
-      PointDeriv vcurve_point = bezcurveinterp(vcurve, v);
-      PointDeriv ucurve_point = bezcurveinterp(ucurve, u);
+      vec3 vcurve_points [] = {vcurve[0].point, vcurve[1].point, vcurve[2].point, vcurve[3].point};
+      vec3 ucurve_points [] = {ucurve[0].point, ucurve[1].point, ucurve[2].point, ucurve[3].point};
+      PointDeriv vcurve_point = bezcurveinterp(vcurve_points, v);
+      PointDeriv ucurve_point = bezcurveinterp(ucurve_points, u);
 
       //take cross product of partials to find normal
       vec3 n = cross(vcurve_point.derivative, ucurve_point.derivative);
       n = normalize(n);
 
-      return PointNormal(vcurve_point.p, n);
+      return PointNormal(vcurve_point.point, n);
 
     }
 
     void subdividepatch(void) {
       float epsilon = 0.001;
       int numdiv = ((1+epsilon)/param);
+      float u,v;
 
       //for each parametric value of u
       for (int iu = 0; iu < numdiv; iu++) {
@@ -118,14 +136,18 @@ class BezierPatch {
         for (int x = 0; x < horiz_squares; x++) {
           //normal before each vertex??
           //how to determine shading/color for square??
-          glBegin(GL_Quad) {
-            glnormal();
-            glVertex(surface_points[x+y*numdiv]);
-            glVertex(surface_points[x+1+y*numdiv]);
-            glVertex(surface_points[x+1+(y+1)*numdiv]);
-            glVertex(surface_points[x+(y+1)*numdiv]);
-            glEnd();
-          }
+          glBegin(GL_POLYGON);
+          //  glnormal();
+	  vec3 UL = surface_points[x+y*numdiv].point;
+	  vec3 UR = surface_points[x+1+y*numdiv].point;
+	  vec3 LR = surface_points[x+1+(y+1)*numdiv].point;
+	  vec3 LL = surface_points[x+(y+1)*numdiv].point;
+	  glVertex3f(UL.x, UL.y, UL.z);
+	  glVertex3f(UR.x, UR.y, UR.z);
+	  glVertex3f(LR.x, LR.y, LR.z);
+	  glVertex3f(LL.x, LL.y, LL.z);
+	  glEnd();
+          
         }
       }
     }

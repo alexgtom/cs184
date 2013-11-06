@@ -3,8 +3,7 @@
 
 #include <glm/glm.hpp>
 
-#include "BezierPatch.h"
-#include "PointDeriv.h"
+#include "PointNormal.h"
 
 using namespace glm;
 using namespace std;

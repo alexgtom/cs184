@@ -12,6 +12,9 @@ class PointDeriv {
   vec3 point;
   vec3 derivative;
 
+  PointDeriv() {
+  }
+
   PointDeriv(vec3 p, vec3 d) {
     point = p;
     derivative = d;
