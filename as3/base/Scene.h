@@ -16,11 +16,16 @@
 #endif
 
 #include "BezierPatch.h"
+#include "Cube.h"
 #include "Parser.h"
 
 #define SUBDIVISION_ADAPTIVE 0
 #define SUBDIVISION_UNIFORM 1
 #define DEFAULT_SUBDIVISION_PARAMETER 0.1
+
+#define ROTATE_STEP_SIZE 5.0f
+#define ZOOM_STEP_SIZE 0.1f
+#define TRANSLATE_STEP_SIZE 0.1f
 
 using namespace std;
 
@@ -31,12 +36,16 @@ class Scene {
     float subdivisionParameter;
     int subdivisionType;
     vector<BezierPatch> patch_list;
+    static float rotate_x, rotate_y;
+    static float translate_x, translate_y;
+    static float scale;
 
     Scene() {
       width = 400;
       height = 300;
       subdivisionType = SUBDIVISION_UNIFORM;
       subdivisionParameter = DEFAULT_SUBDIVISION_PARAMETER;
+      rotate_x = rotate_y = 0;
     };
     
     // parse arguements from command line and set stuff
@@ -70,24 +79,35 @@ class Scene {
 
     // render the scene in the GLUT loop
     void render() {
+      //Cube c;
+      //c.render();
       for(int i = 0; i < patch_list.size(); i++) {
         patch_list[i].render_wireframe();
       }
     }
 
     // keyboard controls for the scene from the keyboard
-    static void keyboard(unsigned char key, int x, int y)
+    static void keyboard(int key, int x, int y)
     {
       if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
         switch(key) {
           // translations
           case GLUT_KEY_UP:
+            translate_y += TRANSLATE_STEP_SIZE;
             break;
           case GLUT_KEY_DOWN:
+            translate_y -= TRANSLATE_STEP_SIZE;
             break;
           case GLUT_KEY_LEFT:
+            translate_x += TRANSLATE_STEP_SIZE;
             break;
           case GLUT_KEY_RIGHT:
+            translate_x -= TRANSLATE_STEP_SIZE;
+            break;
+
+          // zoom in 
+          case '+':
+            scale += ZOOM_STEP_SIZE;
             break;
         }
       } else {
@@ -101,18 +121,21 @@ class Scene {
 
           // rotations
           case GLUT_KEY_UP:
+            rotate_x += ROTATE_STEP_SIZE;
             break;
           case GLUT_KEY_DOWN:
+            rotate_x -= ROTATE_STEP_SIZE;
             break;
           case GLUT_KEY_LEFT:
+            rotate_y -= ROTATE_STEP_SIZE;
             break;
           case GLUT_KEY_RIGHT:
+            rotate_y += ROTATE_STEP_SIZE;
             break;
 
-          // zoom
-          case '+':
-            break;
+          // zoom out
           case '-':
+            scale -= ZOOM_STEP_SIZE;
             break;
 
           // quit
@@ -126,5 +149,11 @@ class Scene {
       glutPostRedisplay();
     }
 };
+
+float Scene::rotate_x = 0.0f;
+float Scene::rotate_y = 0.0f;
+float Scene::translate_x = 0.0f;
+float Scene::translate_y = 0.0f;
+float Scene::scale = 1.0f;
 
 #endif

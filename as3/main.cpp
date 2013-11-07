@@ -36,10 +36,24 @@ Scene scene;
 //***************************************************
 void myDisplay() {
 
-  glClear(GL_COLOR_BUFFER_BIT);	  // clear the color buffer
+  // clear the color buffer and Z-buffer
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	  
 
-  glMatrixMode(GL_MODELVIEW);			// indicate we are specifying camera transformations
-  glLoadIdentity();				        // make sure transformation is "zero'd"
+  // indicate we are specifying camera transformations
+  glMatrixMode(GL_MODELVIEW);			
+
+  // Reset transformations
+  glLoadIdentity();
+
+  // Translations
+  glTranslatef(scene.translate_x, scene.translate_y, 0.0f);
+
+  // Zoom
+  glScalef(scene.scale, scene.scale, scene.scale);
+
+  // rotations
+  glRotatef(scene.rotate_x, 1.0, 0.0, 0.0);
+  glRotatef(scene.rotate_y, 0.0, 1.0, 0.0);
 
   // Start drawing stuff here
   scene.render();
@@ -58,15 +72,16 @@ int main(int argc, char *argv[]) {
   glutInit(&argc, argv);
 
   //This tells glut to use a double-buffered window with red, green, and blue channels 
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
   //The size and position of the window
   glutInitWindowSize(scene.width, scene.height);
   glutInitWindowPosition(0,0);
   glutCreateWindow(argv[0]);
+  glEnable(GL_DEPTH_TEST);
 
   glutDisplayFunc(myDisplay);				// function to run when its time to draw something
-  glutKeyboardFunc(scene.keyboard);
+  glutSpecialFunc(scene.keyboard);
 
   glutMainLoop();						// 999  //TODO: this is supposed to be infinityloop that will keep drawing and resizing
   // and whatever else

@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <iostream>
 
 
 #ifdef _WIN32
@@ -32,7 +33,8 @@ class BezierPatch {
     vector<vec3> points; 
     float param;
     vector<PointNormal> surface_points;
-
+    
+    BezierPatch() {}
     BezierPatch(vector<vec3> points, float subdivisionParameter) {
       this->points = points;
       this->param = subdivisionParameter;
