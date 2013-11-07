@@ -65,11 +65,14 @@ class Scene {
       
       // parse input file and return a patch list
       Parser parser;
-      patch_list = parser.readFile(inputFile);
+      patch_list = parser.readFile(inputFile, subdivisionParameter);
     }
 
     // render the scene in the GLUT loop
     void render() {
+      for(int i = 0; i < patch_list.size(); i++) {
+        patch_list[i].render();
+      }
     }
 
     // keyboard controls for the scene from the keyboard

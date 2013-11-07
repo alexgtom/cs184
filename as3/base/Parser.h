@@ -16,7 +16,7 @@ using namespace std;
 
 class Parser {
   public:
-    vector<BezierPatch> readFile(string file) {
+    vector<BezierPatch> readFile(string file, float subdivisionParameter) {
       ifstream inpfile(file.c_str());
       int num_patches;
       vector<BezierPatch> patch_list;
@@ -65,7 +65,7 @@ class Parser {
 
         if (row % 4 == 0) {
           row = row % 4;
-          patch_list.push_back(BezierPatch(points));
+          patch_list.push_back(BezierPatch(points, subdivisionParameter));
           points = vector<vec3>();
         }
 
