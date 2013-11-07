@@ -71,7 +71,7 @@ class Scene {
     // render the scene in the GLUT loop
     void render() {
       for(int i = 0; i < patch_list.size(); i++) {
-        patch_list[i].render();
+        patch_list[i].render_wireframe();
       }
     }
 
