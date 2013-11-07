@@ -6,6 +6,8 @@
 
 // Tests 
 #include "ParserTest.h"
+#include "bezcurveintepTest.h"
+#include "bezpatchinterpTest.h"
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);

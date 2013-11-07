@@ -33,6 +33,9 @@ class BezierPatch {
     float param;
     vector<PointNormal> surface_points;
 
+    BezierPatch() {
+    }
+
     BezierPatch(vector<vec3> points) {
       this->points = points;
     }
@@ -126,7 +129,7 @@ class BezierPatch {
       surface_points.push_back(pn);
     }
 
-    void render(void) {
+    void render_wireframe(void) {
       //default: flat shading ("s" goes to smooth)
       //default: filled polygons ("w" goes to wireframe)
       int numdiv = 1.001/param;
@@ -136,8 +139,7 @@ class BezierPatch {
         for (int x = 0; x < horiz_squares; x++) {
           //normal before each vertex??
           //how to determine shading/color for square??
-          glBegin(GL_POLYGON);
-          //  glnormal();
+          glBegin(GL_LINES);
 	  vec3 UL = surface_points[x+y*numdiv].point;
 	  vec3 UR = surface_points[x+1+y*numdiv].point;
 	  vec3 LR = surface_points[x+1+(y+1)*numdiv].point;
@@ -151,6 +153,34 @@ class BezierPatch {
         }
       }
     }
+
+    void render_filled(void) {
+      int numdiv = 1.001/param;
+      int horiz_squares = numdiv - 1;
+      int vert_squares = numdiv - 1;
+      for (int y = 0; y <  vert_squares; y++) {
+	for (int x = 0; x < horiz_squares; x++) {
+	  glBegin(GL_POLYGON);
+	  PointNormal UL = surface_points[x+y*numdiv];
+	  PointNormal UR = surface_points[x+1+y*numdiv];
+	  PointNormal LR = surface_points[x+1+(y+1)*numdiv];
+	  PointNormal LL = surface_points[x+(y+1)*numdiv];
+	  
+	  glNormal3f(UL.normal.x, UL.normal.y, UL.normal.z);
+	  glVertex3f(UL.point.x, UL.point.y, UL.point.z);
+	  glNormal3f(UL.normal.x, UL.normal.y, UL.normal.z);
+	  glVertex3f(UR.point.x, UR.point.y, UR.point.z);
+	  glNormal3f(LR.normal.x, LR.normal.y, LR.normal.z);
+	  glVertex3f(LR.point.x, LR.point.y, LR.point.z);
+	  glNormal3f(LL.normal.x, LL.normal.y, LL.normal.z);
+	  glVertex3f(LL.point.x, LL.point.y, LL.point.z);
+	  glEnd();
+	}
+      }
+    }
+
+
+
 };
 
 #endif
