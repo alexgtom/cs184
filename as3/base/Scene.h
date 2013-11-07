@@ -27,6 +27,12 @@
 #define ZOOM_STEP_SIZE 0.1f
 #define TRANSLATE_STEP_SIZE 0.1f
 
+#define WIREFRAME 0
+#define FILLED 1
+
+#define FLAT 0
+#define SMOOTH 1
+
 using namespace std;
 
 class Scene {
@@ -39,6 +45,8 @@ class Scene {
     static float rotate_x, rotate_y;
     static float translate_x, translate_y;
     static float scale;
+    static int render_mode;
+    static int shading_mode;
 
     Scene() {
       width = 400;
@@ -82,7 +90,10 @@ class Scene {
       //Cube c;
       //c.render();
       for(int i = 0; i < patch_list.size(); i++) {
-        patch_list[i].render_wireframe();
+        if (render_mode == WIREFRAME)
+          patch_list[i].render_wireframe();
+        else
+          patch_list[i].render_filled();
       }
     }
 
@@ -114,9 +125,20 @@ class Scene {
         switch(key) {
           // toggle between flat and smooth shading
           case 's':
+            if (shading_mode == FLAT) {
+              glEnable(GL_FLAT);
+              glShadeModel(GL_FLAT);
+            } else {
+              glEnable(GL_SMOOTH);
+              glShadeModel(GL_SMOOTH);
+            }
             break;
           // toggle between filled and wireframe mode
           case 'w':
+            if (render_mode == WIREFRAME)
+              render_mode = FILLED;
+            else
+              render_mode = WIREFRAME;
             break;
 
           // rotations
@@ -155,5 +177,7 @@ float Scene::rotate_y = 0.0f;
 float Scene::translate_x = 0.0f;
 float Scene::translate_y = 0.0f;
 float Scene::scale = 1.0f;
+int Scene::render_mode = FILLED;
+int Scene::shading_mode = FLAT;
 
 #endif
