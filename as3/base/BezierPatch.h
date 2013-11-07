@@ -38,6 +38,7 @@ class BezierPatch {
     BezierPatch(vector<vec3> points, float subdivisionParameter) {
       this->points = points;
       this->param = subdivisionParameter;
+      subdividepatch();
     }
     
     //given control points and param, find curve point and derivative

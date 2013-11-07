@@ -22,3 +22,6 @@ clean:
 
 testbez: main
 	 ./main input/test.bez 0.1
+
+teapotbez: main
+	 ./main input/teapot.bez 0.1
