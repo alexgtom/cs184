@@ -128,9 +128,11 @@ class Scene {
             if (shading_mode == FLAT) {
               glEnable(GL_FLAT);
               glShadeModel(GL_FLAT);
+              shading_mode = SMOOTH;
             } else {
               glEnable(GL_SMOOTH);
               glShadeModel(GL_SMOOTH);
+              shading_mode = FLAT;
             }
             break;
           // toggle between filled and wireframe mode
