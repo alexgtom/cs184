@@ -24,6 +24,8 @@
 #include "PointDeriv.h"
 #include "PointNormal.h"
 
+#define EPSILON 0.001
+
 using namespace glm;
 using namespace std;
 
@@ -31,17 +33,17 @@ class BezierPatch {
   public:
     // the 16 points that make up the surface
     vector<vec3> points; 
-    float param;
+    float step;
     vector<PointNormal> surface_points;
     
     BezierPatch() {}
     BezierPatch(vector<vec3> points, float subdivisionParameter) {
       this->points = points;
-      this->param = subdivisionParameter;
+      this->step = subdivisionParameter;
       subdividepatch();
     }
     
-    //given control points and param, find curve point and derivative
+    //given control points and step, find curve point and derivative
     PointDeriv bezcurveinterp(vec3 curve[], float u) {
 
       vec3 P0 = curve[0];
@@ -107,17 +109,16 @@ class BezierPatch {
     }
 
     void subdividepatch(void) {
-      float epsilon = 0.001;
-      int numdiv = ((1+epsilon)/param) + 1;
+      int numdiv = ((1+EPSILON)/step) + 1;
       float u,v;
 
-      //for each parametric value of u
+      //for each stepetric value of u
       for (int iu = 0; iu < numdiv; iu++) {
-        u = iu*param;
+        u = iu*step;
 
-        //for each parametric value v
+        //for each stepetric value v
         for (int iv = 0; iv<numdiv; iv++) {
-          v = iv*param;
+          v = iv*step;
 
           //evaluate surface
           PointNormal curr = bezpatchinterp(u, v);
@@ -133,7 +134,7 @@ class BezierPatch {
     void render_wireframe(void) {
       //default: flat shading ("s" goes to smooth)
       //default: filled polygons ("w" goes to wireframe)
-      int numdiv = 1.001/param + 1;
+      int numdiv = (1 + EPSILON)/step + 1;
       int horiz_squares = numdiv - 1;
       int vert_squares = numdiv - 1;
       for (int y = 0; y < vert_squares; y++) {
@@ -141,47 +142,43 @@ class BezierPatch {
           //normal before each vertex??
           //how to determine shading/color for square??
           glBegin(GL_LINES);
-	  vec3 UL = surface_points[x+y*numdiv].point;
-	  vec3 UR = surface_points[x+1+y*numdiv].point;
-	  vec3 LR = surface_points[x+1+(y+1)*numdiv].point;
-	  vec3 LL = surface_points[x+(y+1)*numdiv].point;
-	  glVertex3f(UL.x, UL.y, UL.z);
-	  glVertex3f(UR.x, UR.y, UR.z);
-	  glVertex3f(LR.x, LR.y, LR.z);
-	  glVertex3f(LL.x, LL.y, LL.z);
-	  glEnd();
-          
+          vec3 UL = surface_points[x+y*numdiv].point;
+          vec3 UR = surface_points[x+1+y*numdiv].point;
+          vec3 LR = surface_points[x+1+(y+1)*numdiv].point;
+          vec3 LL = surface_points[x+(y+1)*numdiv].point;
+          glVertex3f(UL.x, UL.y, UL.z);
+          glVertex3f(UR.x, UR.y, UR.z);
+          glVertex3f(LR.x, LR.y, LR.z);
+          glVertex3f(LL.x, LL.y, LL.z);
+          glEnd();
         }
       }
     }
 
     void render_filled(void) {
-      int numdiv = 1.001/param + 1;
+      int numdiv = (1 + EPSILON)/step + 1;
       int horiz_squares = numdiv - 1;
       int vert_squares = numdiv - 1;
       for (int y = 0; y < vert_squares; y++) {
-	for (int x = 0; x < horiz_squares; x++) {
-	  glBegin(GL_POLYGON);
-	  PointNormal UL = surface_points[x+y*numdiv];
-	  PointNormal UR = surface_points[x+1+y*numdiv];
-	  PointNormal LR = surface_points[x+1+(y+1)*numdiv];
-	  PointNormal LL = surface_points[x+(y+1)*numdiv];
-	  
-	  glNormal3f(UL.normal.x, UL.normal.y, UL.normal.z);
-	  glVertex3f(UL.point.x, UL.point.y, UL.point.z);
-	  glNormal3f(UL.normal.x, UL.normal.y, UL.normal.z);
-	  glVertex3f(UR.point.x, UR.point.y, UR.point.z);
-	  glNormal3f(LR.normal.x, LR.normal.y, LR.normal.z);
-	  glVertex3f(LR.point.x, LR.point.y, LR.point.z);
-	  glNormal3f(LL.normal.x, LL.normal.y, LL.normal.z);
-	  glVertex3f(LL.point.x, LL.point.y, LL.point.z);
-	  glEnd();
-	}
+        for (int x = 0; x < horiz_squares; x++) {
+          glBegin(GL_POLYGON);
+          PointNormal UL = surface_points[x+y*numdiv];
+          PointNormal UR = surface_points[x+1+y*numdiv];
+          PointNormal LR = surface_points[x+1+(y+1)*numdiv];
+          PointNormal LL = surface_points[x+(y+1)*numdiv];
+
+          glNormal3f(UL.normal.x, UL.normal.y, UL.normal.z);
+          glVertex3f(UL.point.x, UL.point.y, UL.point.z);
+          glNormal3f(UL.normal.x, UL.normal.y, UL.normal.z);
+          glVertex3f(UR.point.x, UR.point.y, UR.point.z);
+          glNormal3f(LR.normal.x, LR.normal.y, LR.normal.z);
+          glVertex3f(LR.point.x, LR.point.y, LR.point.z);
+          glNormal3f(LL.normal.x, LL.normal.y, LL.normal.z);
+          glVertex3f(LL.point.x, LL.point.y, LL.point.z);
+          glEnd();
+        }
       }
     }
-
-
-
 };
 
 #endif
