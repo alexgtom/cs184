@@ -101,8 +101,11 @@ class BezierPatch {
       PointDeriv ucurve_point = bezcurveinterp(ucurve_points, u);
 
       //take cross product of partials to find normal
-      vec3 n = cross(vcurve_point.derivative, ucurve_point.derivative);
-      n = normalize(n);
+      vec3 n = cross(ucurve_point.derivative, vcurve_point.derivative);
+      
+      // is this correct?
+      if (dot(n, n) != 0.0)
+        n = normalize(n);
 
       return PointNormal(vcurve_point.point, n);
 
