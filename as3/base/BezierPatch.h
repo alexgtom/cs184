@@ -108,7 +108,7 @@ class BezierPatch {
 
     void subdividepatch(void) {
       float epsilon = 0.001;
-      int numdiv = ((1+epsilon)/param);
+      int numdiv = ((1+epsilon)/param) + 1;
       float u,v;
 
       //for each parametric value of u
@@ -133,7 +133,7 @@ class BezierPatch {
     void render_wireframe(void) {
       //default: flat shading ("s" goes to smooth)
       //default: filled polygons ("w" goes to wireframe)
-      int numdiv = 1.001/param;
+      int numdiv = 1.001/param + 1;
       int horiz_squares = numdiv - 1;
       int vert_squares = numdiv - 1;
       for (int y = 0; y < vert_squares; y++) {
@@ -156,10 +156,10 @@ class BezierPatch {
     }
 
     void render_filled(void) {
-      int numdiv = 1.001/param;
+      int numdiv = 1.001/param + 1;
       int horiz_squares = numdiv - 1;
       int vert_squares = numdiv - 1;
-      for (int y = 0; y <  vert_squares; y++) {
+      for (int y = 0; y < vert_squares; y++) {
 	for (int x = 0; x < horiz_squares; x++) {
 	  glBegin(GL_POLYGON);
 	  PointNormal UL = surface_points[x+y*numdiv];
