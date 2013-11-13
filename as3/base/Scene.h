@@ -18,10 +18,7 @@
 #include "BezierPatch.h"
 #include "Cube.h"
 #include "Parser.h"
-
-#define SUBDIVISION_ADAPTIVE 0
-#define SUBDIVISION_UNIFORM 1
-#define DEFAULT_SUBDIVISION_PARAMETER 0.1
+#include "Subdivision.h"
 
 #define ROTATE_STEP_SIZE 5.0f
 #define ZOOM_STEP_SIZE 0.1f
@@ -41,7 +38,7 @@ class Scene {
     string inputFile;
     float subdivisionParameter;
     int subdivisionType;
-    vector<BezierPatch> patch_list;
+    vector<BezierPatch*> patch_list;
     static float rotate_x, rotate_y;
     static float translate_x, translate_y;
     static float scale;
@@ -82,7 +79,7 @@ class Scene {
       
       // parse input file and return a patch list
       Parser parser;
-      patch_list = parser.readFile(inputFile, subdivisionParameter);
+      patch_list = parser.readFile(inputFile, subdivisionParameter, subdivisionType);
     }
 
     // render the scene in the GLUT loop
@@ -91,9 +88,9 @@ class Scene {
       //c.render();
       for(int i = 0; i < patch_list.size(); i++) {
         if (render_mode == WIREFRAME)
-          patch_list[i].render_wireframe();
+          patch_list[i]->render_wireframe();
         else
-          patch_list[i].render_filled();
+          patch_list[i]->render_filled();
       }
 
       // lighting

@@ -10,16 +10,18 @@
 #include <glm/glm.hpp>
 
 #include "BezierPatch.h"
+#include "AdaptiveBezierPatch.h"
+#include "Subdivision.h"
 
 using namespace glm;
 using namespace std;
 
 class Parser {
   public:
-    vector<BezierPatch> readFile(string file, float subdivisionParameter) {
+    vector<BezierPatch*> readFile(string file, float subdivisionParameter, int subdivisionType) {
       ifstream inpfile(file.c_str());
       int num_patches;
-      vector<BezierPatch> patch_list;
+      vector<BezierPatch*> patch_list;
 
       if (!inpfile.is_open()) {
         cerr << "Unable to open file" << endl;
@@ -65,7 +67,14 @@ class Parser {
 
         if (row % 4 == 0) {
           row = row % 4;
-          patch_list.push_back(BezierPatch(points, subdivisionParameter));
+          if (subdivisionType == SUBDIVISION_UNIFORM)
+            patch_list.push_back(new BezierPatch(points, subdivisionParameter));
+          else if (subdivisionType == SUBDIVISION_ADAPTIVE)
+            patch_list.push_back(new AdaptiveBezierPatch(points, subdivisionParameter));
+          else {
+            cerr << "Invalid subdivision type: " << subdivisionParameter << endl;
+            exit(1);
+          }
           points = vector<vec3>();
         }
 

@@ -44,7 +44,7 @@ class BezierPatch {
     }
     
     //given control points and step, find curve point and derivative
-    PointDeriv bezcurveinterp(vec3 curve[], float u) {
+    virtual PointDeriv bezcurveinterp(vec3 curve[], float u) {
 
       vec3 P0 = curve[0];
       vec3 P1 = curve[1];
@@ -70,7 +70,7 @@ class BezierPatch {
     }
 
     //given control patch and (u,v) find surface point and normal
-    PointNormal bezpatchinterp(float u, float v) {
+    virtual PointNormal bezpatchinterp(float u, float v) {
       
       //Build control points for Patch in V
       PointDeriv vcurve[4];
@@ -111,7 +111,7 @@ class BezierPatch {
 
     }
 
-    void subdividepatch(void) {
+    virtual void subdividepatch(void) {
       int numdiv = ((1+EPSILON)/step) + 1;
       float u,v;
 
@@ -130,11 +130,12 @@ class BezierPatch {
       }
     }
 
-    void savesurfacepointnormal(PointNormal pn) {
+    virtual void savesurfacepointnormal(PointNormal pn) {
       surface_points.push_back(pn);
     }
 
-    void render_wireframe(void) {
+    virtual void render_wireframe(void) {
+      cout << "UNIFORM render_wireframe" << endl;
       //default: flat shading ("s" goes to smooth)
       //default: filled polygons ("w" goes to wireframe)
       int numdiv = (1 + EPSILON)/step + 1;
@@ -158,7 +159,8 @@ class BezierPatch {
       }
     }
 
-    void render_filled(void) {
+    virtual void render_filled(void) {
+      cout << "UNIFORM render_filled" << endl;
       int numdiv = (1 + EPSILON)/step + 1;
       int horiz_squares = numdiv - 1;
       int vert_squares = numdiv - 1;
