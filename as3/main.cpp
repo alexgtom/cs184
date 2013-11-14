@@ -55,6 +55,29 @@ void myDisplay() {
   glRotatef(scene.rotate_x, 1.0, 0.0, 0.0);
   glRotatef(scene.rotate_y, 0.0, 1.0, 0.0);
 
+  // Lighting
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHT1);
+  glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_NORMALIZE); // normalize all the normal vectors
+
+  //Add ambient light
+  GLfloat ambientColor[] = {0.0f, 0.2f, 0.0f, 1.0f};
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+
+  //Add positioned light
+  GLfloat lightColor0[] = {0.5f, 0.5f, 0.5f, 1.0f};
+  GLfloat lightPos0[] = {4.0f, 0.0f, 8.0f, 1.0f};
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
+  glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+
+  //Add directed light
+  GLfloat lightColor1[] = {1.0f, 1.0f, 0.0f, 1.0f}; 
+  GLfloat lightPos1[] = {-1.0f, 0.5f, 0.5f, 0.0f};
+  glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
+  glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+
   // Start drawing stuff here
   scene.render();
 

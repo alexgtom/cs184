@@ -135,7 +135,6 @@ class BezierPatch {
     }
 
     virtual void render_wireframe(void) {
-      cout << "UNIFORM render_wireframe" << endl;
       //default: flat shading ("s" goes to smooth)
       //default: filled polygons ("w" goes to wireframe)
       int numdiv = (1 + EPSILON)/step + 1;
@@ -160,7 +159,6 @@ class BezierPatch {
     }
 
     virtual void render_filled(void) {
-      cout << "UNIFORM render_filled" << endl;
       int numdiv = (1 + EPSILON)/step + 1;
       int horiz_squares = numdiv - 1;
       int vert_squares = numdiv - 1;

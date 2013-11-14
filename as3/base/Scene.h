@@ -92,24 +92,6 @@ class Scene {
         else
           patch_list[i]->render_filled();
       }
-
-      // lighting
-      createLight();
-    }
-
-    void createLight() {
-      GLfloat mat_specular[] = { 0.3, 0.3, 0.3, 1.0 };
-      GLfloat mat_shininess[] = { 10.0 };
-      GLfloat light_position[] = { 10.0, 10.0, 10.0, 0.0 };
-      glClearColor(0.0, 0.0, 0.0, 0.0);
-
-      glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-      glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-      glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-      glEnable(GL_LIGHTING);
-      glEnable(GL_LIGHT0);
-      glEnable(GL_COLOR_MATERIAL);
     }
 
     // keyboard controls for the scene from the keyboard
@@ -193,7 +175,7 @@ float Scene::rotate_x = 0.0f;
 float Scene::rotate_y = 0.0f;
 float Scene::translate_x = 0.0f;
 float Scene::translate_y = 0.0f;
-float Scene::scale = 1.0f;
+float Scene::scale = 0.3f;
 int Scene::render_mode = FILLED;
 int Scene::shading_mode = FLAT;
 
