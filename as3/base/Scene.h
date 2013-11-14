@@ -107,10 +107,10 @@ class Scene {
             translate_y -= TRANSLATE_STEP_SIZE;
             break;
           case GLUT_KEY_LEFT:
-            translate_x += TRANSLATE_STEP_SIZE;
+            translate_x -= TRANSLATE_STEP_SIZE;
             break;
           case GLUT_KEY_RIGHT:
-            translate_x -= TRANSLATE_STEP_SIZE;
+            translate_x += TRANSLATE_STEP_SIZE;
             break;
 
           // zoom in 
