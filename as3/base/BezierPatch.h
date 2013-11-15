@@ -107,20 +107,20 @@ class BezierPatch {
       if (dot(n, n) != 0.0)
         n = normalize(n);
 
-      return PointNormal(vcurve_point.point, n);
+      return PointNormal(ucurve_point.point, n);
 
     }
 
     virtual void subdividepatch(void) {
-      int numdiv = ((1+EPSILON)/step) + 1;
+      int numdiv = ((1+EPSILON)/step);//+ 1;
       float u,v;
 
       //for each stepetric value of u
-      for (int iu = 0; iu < numdiv; iu++) {
+      for (int iu = 0; iu <= numdiv; iu++) {
         u = iu*step;
 
         //for each stepetric value v
-        for (int iv = 0; iv<numdiv; iv++) {
+        for (int iv = 0; iv<=numdiv; iv++) {
           v = iv*step;
 
           //evaluate surface
@@ -142,18 +142,30 @@ class BezierPatch {
       int vert_squares = numdiv - 1;
       for (int y = 0; y < vert_squares; y++) {
         for (int x = 0; x < horiz_squares; x++) {
-          //normal before each vertex??
-          //how to determine shading/color for square??
-          glBegin(GL_LINES);
+	  // glBegin(GL_LINES);
           vec3 UL = surface_points[x+y*numdiv].point;
           vec3 UR = surface_points[x+1+y*numdiv].point;
           vec3 LR = surface_points[x+1+(y+1)*numdiv].point;
           vec3 LL = surface_points[x+(y+1)*numdiv].point;
-          glVertex3f(UL.x, UL.y, UL.z);
+          glBegin(GL_LINES);
+	  glVertex3f(UL.x, UL.y, UL.z);
           glVertex3f(UR.x, UR.y, UR.z);
-          glVertex3f(LR.x, LR.y, LR.z);
-          glVertex3f(LL.x, LL.y, LL.z);
-          glEnd();
+	  glEnd();
+	  glBegin(GL_LINES);
+	  glVertex3f(UR.x, UR.y, UR.z);
+	  glVertex3f(LR.x, LR.y, LR.z);
+	  glEnd();
+	  glBegin(GL_LINES);
+	  glVertex3f(LR.x, LR.y, LR.z);
+	  glVertex3f(LL.x, LL.y, LL.z);
+	  glBegin(GL_LINES);
+	  glVertex3f(LL.x, LL.y, LL.z);
+	  glVertex3f(UL.x, UL.y, UL.z);
+	  glEnd();
+	  //glBegin(GL_LINES);
+	  //glVertex3f(LL.x, LL.y, LL.z);
+	  //glVertex3f(UR.x, UR.y, UR.z);
+	  //glEnd();
         }
       }
     }
@@ -161,7 +173,7 @@ class BezierPatch {
     virtual void render_filled(void) {
       int numdiv = (1 + EPSILON)/step + 1;
       int horiz_squares = numdiv - 1;
-      int vert_squares = numdiv - 1;
+	int vert_squares = numdiv - 1;
       for (int y = 0; y < vert_squares; y++) {
         for (int x = 0; x < horiz_squares; x++) {
           glBegin(GL_POLYGON);

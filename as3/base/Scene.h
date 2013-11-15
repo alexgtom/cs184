@@ -113,11 +113,12 @@ class Scene {
             translate_x += TRANSLATE_STEP_SIZE;
             break;
 
-          // zoom in 
-          case '+':
-            scale += ZOOM_STEP_SIZE;
-            break;
-        }
+	    //zoom in
+ 	     case '+':
+	    scale += ZOOM_STEP_SIZE;
+	    break;
+        	}
+      
       } else {
         switch(key) {
           // toggle between flat and smooth shading
@@ -153,12 +154,13 @@ class Scene {
           case GLUT_KEY_RIGHT:
             rotate_y += ROTATE_STEP_SIZE;
             break;
-
+	   
           // zoom out
           case '-':
             scale -= ZOOM_STEP_SIZE;
             break;
 
+ 
           // quit
           case 'q':
           case 27:

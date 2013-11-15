@@ -77,7 +77,7 @@ class AdaptiveBezierPatch : public BezierPatch {
     void subdividepatch() {
       vector<Triangle> triangle_stack;
       triangle_stack.push_back(Triangle(vec2(0.0, 0.0), vec2(1.0, 0.0), vec2(1.0, 1.0)));
-      triangle_stack.push_back(Triangle(vec2(0.0, 0.0), vec2(0.0, 1.0), vec2(1.0, 1.0)));
+      triangle_stack.push_back(Triangle(vec2(1.0, 1.0), vec2(0.0, 1.0), vec2(0.0, 0.0)));
 
       while(triangle_stack.size() > 0) {
         Triangle top = triangle_stack.back();
@@ -123,7 +123,8 @@ class AdaptiveBezierPatch : public BezierPatch {
       PointNormal upper_point_normal = bezpatchinterp(p2.x, p2.y);
       vec3 flat_midpoint = (bottom_point_normal.point + upper_point_normal.point) / 2.0f;
       vec3 dist_vector = mid_point_normal.point - flat_midpoint;
-      return abs(dot(dist_vector, dist_vector)) >= error;
+        return length(dist_vector) >= error;
+        // return abs(dot(dist_vector, dist_vector)) >= error;
     }
 
     vector<Triangle> split_triangle(Triangle tri) {
@@ -191,8 +192,15 @@ class AdaptiveBezierPatch : public BezierPatch {
         glBegin(GL_LINES);
         glVertex3f(p1.point.x, p1.point.y, p1.point.z);
         glVertex3f(p2.point.x, p2.point.y, p2.point.z);
+        glEnd();
+        glBegin(GL_LINES);
+        glVertex3f(p2.point.x, p2.point.y, p2.point.z);
         glVertex3f(p3.point.x, p3.point.y, p3.point.z);
-        glEnd(); 
+        glEnd();
+        glBegin(GL_LINES);
+        glVertex3f(p3.point.x, p3.point.y, p3.point.z);
+        glVertex3f(p1.point.x, p1.point.y, p1.point.z);
+        glEnd();
       }
     }
 
@@ -204,13 +212,17 @@ class AdaptiveBezierPatch : public BezierPatch {
         PointNormal p3 = bezpatchinterp(tri.p3.x, tri.p3.y);
 
         glBegin(GL_TRIANGLES);
-        glVertex3f(p1.point.x, p1.point.y, p1.point.z);
+          glNormal3f(p1.normal.x, p1.normal.y, p1.normal.z);
+          glVertex3f(p1.point.x, p1.point.y, p1.point.z);
+          glNormal3f(p2.normal.x, p2.normal.y, p3.normal.z);
         glVertex3f(p2.point.x, p2.point.y, p2.point.z);
+          glNormal3f(p3.point.x, p3.point.y, p3.point.z);
         glVertex3f(p3.point.x, p3.point.y, p3.point.z);
-
+/**
         glNormal3f(p1.normal.x, p1.normal.y, p1.normal.z);
         glNormal3f(p2.normal.x, p2.normal.y, p2.normal.z);
         glNormal3f(p3.normal.x, p3.normal.y, p3.normal.z);
+ **/
         glEnd(); 
       }
     }
