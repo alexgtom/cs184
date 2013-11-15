@@ -184,7 +184,7 @@ class BezierPatch {
 
           glNormal3f(UL.normal.x, UL.normal.y, UL.normal.z);
           glVertex3f(UL.point.x, UL.point.y, UL.point.z);
-          glNormal3f(UL.normal.x, UL.normal.y, UL.normal.z);
+          glNormal3f(UR.normal.x, UR.normal.y, UR.normal.z);
           glVertex3f(UR.point.x, UR.point.y, UR.point.z);
           glNormal3f(LR.normal.x, LR.normal.y, LR.normal.z);
           glVertex3f(LR.point.x, LR.point.y, LR.point.z);
