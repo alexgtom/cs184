@@ -212,11 +212,11 @@ class AdaptiveBezierPatch : public BezierPatch {
         PointNormal p3 = bezpatchinterp(tri.p3.x, tri.p3.y);
 
         glBegin(GL_TRIANGLES);
-          glNormal3f(p1.normal.x, p1.normal.y, p1.normal.z);
-          glVertex3f(p1.point.x, p1.point.y, p1.point.z);
-          glNormal3f(p2.normal.x, p2.normal.y, p3.normal.z);
+        glNormal3f(p1.normal.x, p1.normal.y, p1.normal.z);
+        glVertex3f(p1.point.x, p1.point.y, p1.point.z);
+        glNormal3f(p2.normal.x, p2.normal.y, p2.normal.z);
         glVertex3f(p2.point.x, p2.point.y, p2.point.z);
-          glNormal3f(p3.point.x, p3.point.y, p3.point.z);
+        glNormal3f(p3.normal.x, p3.normal.y, p3.normal.z);
         glVertex3f(p3.point.x, p3.point.y, p3.point.z);
 /**
         glNormal3f(p1.normal.x, p1.normal.y, p1.normal.z);
