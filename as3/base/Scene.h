@@ -26,6 +26,7 @@
 
 #define WIREFRAME 0
 #define FILLED 1
+#define HIDDEN_LINE 2
 
 #define FLAT 0
 #define SMOOTH 1
@@ -89,8 +90,10 @@ class Scene {
       for(int i = 0; i < patch_list.size(); i++) {
         if (render_mode == WIREFRAME)
           patch_list[i]->render_wireframe();
-        else
+        else if (render_mode == FILLED)
           patch_list[i]->render_filled();
+        else //hidden
+          patch_list[i]->render_hiddenline();
       }
     }
 
@@ -137,7 +140,7 @@ class Scene {
           case 'w':
             if (render_mode == WIREFRAME)
               render_mode = FILLED;
-            else
+            else 
               render_mode = WIREFRAME;
             break;
 
@@ -166,6 +169,15 @@ class Scene {
           case 27:
             exit(0);
             break;
+                
+          //hidden line mode
+          case 'h':
+            if (render_mode == FILLED)
+                render_mode = HIDDEN_LINE;
+            else 
+                render_mode = FILLED;
+            break;
+                
         }
       }
 

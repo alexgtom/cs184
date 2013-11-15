@@ -148,20 +148,21 @@ class BezierPatch {
           vec3 LR = surface_points[x+1+(y+1)*numdiv].point;
           vec3 LL = surface_points[x+(y+1)*numdiv].point;
           glBegin(GL_LINES);
-	  glVertex3f(UL.x, UL.y, UL.z);
+          glVertex3f(UL.x, UL.y, UL.z);
           glVertex3f(UR.x, UR.y, UR.z);
-	  glEnd();
-	  glBegin(GL_LINES);
-	  glVertex3f(UR.x, UR.y, UR.z);
-	  glVertex3f(LR.x, LR.y, LR.z);
-	  glEnd();
-	  glBegin(GL_LINES);
-	  glVertex3f(LR.x, LR.y, LR.z);
-	  glVertex3f(LL.x, LL.y, LL.z);
-	  glBegin(GL_LINES);
-	  glVertex3f(LL.x, LL.y, LL.z);
-	  glVertex3f(UL.x, UL.y, UL.z);
-	  glEnd();
+	      glEnd();
+	      glBegin(GL_LINES);
+	      glVertex3f(UR.x, UR.y, UR.z);
+	      glVertex3f(LR.x, LR.y, LR.z);
+	      glEnd();
+	      glBegin(GL_LINES);
+	      glVertex3f(LR.x, LR.y, LR.z);
+	      glVertex3f(LL.x, LL.y, LL.z);
+          glEnd();
+	      glBegin(GL_LINES);
+	      glVertex3f(LL.x, LL.y, LL.z);
+	      glVertex3f(UL.x, UL.y, UL.z);
+	      glEnd();
 	  //glBegin(GL_LINES);
 	  //glVertex3f(LL.x, LL.y, LL.z);
 	  //glVertex3f(UR.x, UR.y, UR.z);
@@ -194,6 +195,28 @@ class BezierPatch {
         }
       }
     }
+    
+    virtual void render_hiddenline(void) {
+        //use method in glprogramming red book
+        
+        //draw outline in blue
+        glEnable(GL_DEPTH_TEST);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glColor3f(0.0f, 0.0f, 1.0f);
+        render_filled();
+        
+        //cover back layer with black
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glPolygonOffset(1.0f, 1.0f);
+        glColor3f(0.0f, 0.0f, 0.0f);
+        render_filled();
+        glDisable(GL_POLYGON_OFFSET_FILL);
+        
+        glColor3f(1.0f, 1.0f, 1.0f);
+
+    }
+    
 };
 
 #endif
